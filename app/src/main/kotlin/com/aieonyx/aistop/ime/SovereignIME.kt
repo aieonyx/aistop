@@ -65,7 +65,20 @@ class SovereignIME : InputMethodService(), LifecycleOwner, SavedStateRegistryOwn
         mediator = PasteMediator(this)
     }
 
+    override fun onConfigureWindow(win: android.view.Window, isFullscreen: Boolean, isCandidatesOnly: Boolean) {
+        super.onConfigureWindow(win, isFullscreen, isCandidatesOnly)
+        // Set LifecycleOwner on window decorView before ComposeView attaches
+        win.decorView.setViewTreeLifecycleOwner(this)
+        win.decorView.setViewTreeSavedStateRegistryOwner(this)
+    }
+
     override fun onCreateInputView(): View {
+        // Must set LifecycleOwner on the window BEFORE ComposeView attaches
+        window?.window?.decorView?.let {
+            it.setViewTreeLifecycleOwner(this)
+            it.setViewTreeSavedStateRegistryOwner(this)
+        }
+
         imeView = SovereignImeView(this, mediator)
         imeView.setViewTreeLifecycleOwner(this)
         imeView.setViewTreeSavedStateRegistryOwner(this)
