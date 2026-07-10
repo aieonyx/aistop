@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2026 Edison Lepiten / AIEONYX
+  License: Apache-2.0
+-->
+<resources>
+    <color name="sovereign_void">#080A0D</color>
+    <color name="sovereign_blue">#4F80D4</color>
+    <color name="threat_red">#E45F65</color>
+    <color name="caution_amber">#D7A84B</color>
+    <color name="verified_teal">#3EB69F</color>
+    <color name="signal_white">#EDF3FA</color>
+</resources>

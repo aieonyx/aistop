@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2026 Edison Lepiten / AIEONYX
+  License: Apache-2.0
+-->
+<resources>
+    <style name="Theme.AiStop" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#4F80D4</item>
+        <item name="colorPrimaryVariant">#3A5A90</item>
+        <item name="colorOnPrimary">#EDF3FA</item>
+        <item name="colorSecondary">#3EB69F</item>
+        <item name="colorOnSecondary">#080A0D</item>
+        <item name="colorError">#E45F65</item>
+        <item name="android:colorBackground">#080A0D</item>
+        <item name="android:windowBackground">#080A0D</item>
+        <item name="android:statusBarColor">#080A0D</item>
+        <item name="android:navigationBarColor">#080A0D</item>
+    </style>
+
+    <style name="Theme.AiStop.Translucent" parent="Theme.AiStop">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>

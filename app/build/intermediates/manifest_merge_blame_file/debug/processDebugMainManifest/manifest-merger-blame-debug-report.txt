@@ -1,0 +1,273 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<!--
+3  Copyright (c) 2026 Edison Lepiten / AIEONYX
+4  License: Apache-2.0
+5
+6  AI Stop — Sovereign AI Guard
+7  AndroidManifest.xml v1.1 FINAL
+8
+9  PERMISSIONS PHILOSOPHY:
+10  - No SYSTEM_ALERT_WINDOW        (removed v1.0-R)
+11  - No BIND_ACCESSIBILITY_SERVICE (removed v1.0-R)
+12  - No MANAGE_APP_OPS_MODES       (removed v1.0-R)
+13  - No INTERNET in IME process    (verifiable, citable claim)
+14  - No QUERY_ALL_PACKAGES         (removed v1.1 — Play Store hard block)
+15  Primary package detection: explicit <queries> only.
+16-->
+17<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+18    package="com.aieonyx.aistop"
+19    android:versionCode="1"
+20    android:versionName="1.0.0" >
+21
+22    <uses-sdk
+23        android:minSdkVersion="29"
+24        android:targetSdkVersion="34" />
+25
+26    <!-- ── Package visibility: explicit list only ── -->
+27    <!-- QUERY_ALL_PACKAGES intentionally NOT included (v1.1 Gemini finding) -->
+28    <queries>
+28-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:22:5-31:15
+29        <package android:name="com.openai.chatgpt" />
+29-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:23:9-53
+29-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:23:18-51
+30        <package android:name="com.google.android.apps.bard" />
+30-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:24:9-63
+30-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:24:18-61
+31        <package android:name="com.microsoft.copilot" />
+31-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:25:9-56
+31-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:25:18-54
+32        <package android:name="com.anthropic.claude" />
+32-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:26:9-55
+32-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:26:18-53
+33        <package android:name="com.grammarly.android" />
+33-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:27:9-56
+33-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:27:18-54
+34        <package android:name="com.notion.id" />
+34-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:28:9-48
+34-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:28:18-46
+35        <package android:name="com.perplexity.app" />
+35-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:29:9-53
+35-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:29:18-51
+36        <package android:name="ai.perplexity.app" />
+36-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:30:9-52
+36-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:30:18-50
+37    </queries>
+38
+39    <uses-permission android:name="android.permission.USE_BIOMETRIC" /> <!-- suppress DeprecatedClassUsageInspection -->
+39-->[androidx.biometric:biometric:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/42c2d8367832f7babd2b463262da220c/transformed/biometric-1.1.0/AndroidManifest.xml:24:5-72
+39-->[androidx.biometric:biometric:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/42c2d8367832f7babd2b463262da220c/transformed/biometric-1.1.0/AndroidManifest.xml:24:22-69
+40    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+40-->[androidx.biometric:biometric:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/42c2d8367832f7babd2b463262da220c/transformed/biometric-1.1.0/AndroidManifest.xml:27:5-74
+40-->[androidx.biometric:biometric:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/42c2d8367832f7babd2b463262da220c/transformed/biometric-1.1.0/AndroidManifest.xml:27:22-71
+41
+42    <permission
+42-->[androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+43        android:name="com.aieonyx.aistop.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+43-->[androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+44        android:protectionLevel="signature" />
+44-->[androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+45
+46    <uses-permission android:name="com.aieonyx.aistop.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" /> <!-- ── No dangerous permissions in main app process ── -->
+46-->[androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+46-->[androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+47    <!-- IME process ships without INTERNET permission — verifiable claim -->
+48    <application
+48-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:36:5-97:19
+49        android:allowBackup="false"
+49-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:42:9-36
+50        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+50-->[androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
+51        android:debuggable="true"
+52        android:extractNativeLibs="false"
+53        android:fullBackupContent="false"
+53-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:43:9-42
+54        android:icon="@mipmap/ic_launcher"
+54-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:38:9-43
+55        android:label="AI Stop"
+55-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:37:9-32
+56        android:roundIcon="@mipmap/ic_launcher_round"
+56-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:39:9-54
+57        android:supportsRtl="true"
+57-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:40:9-35
+58        android:theme="@style/Theme.AiStop" >
+58-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:41:9-44
+59
+60        <!-- ── Main Activity ── -->
+61        <activity
+61-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:46:9-54:20
+62            android:name="com.aieonyx.aistop.ui.MainActivity"
+62-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:47:13-44
+63            android:exported="true"
+63-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:48:13-36
+64            android:windowSoftInputMode="adjustResize" >
+64-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:49:13-55
+65            <intent-filter>
+65-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:50:13-53:29
+66                <action android:name="android.intent.action.MAIN" />
+66-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:51:17-68
+66-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:51:25-66
+67
+68                <category android:name="android.intent.category.LAUNCHER" />
+68-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:52:17-76
+68-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:52:27-74
+69            </intent-filter>
+70        </activity>
+71
+72        <!-- ── M2 Sovereign IME ── -->
+73        <!-- Play policy: must function as a bona fide keyboard -->
+74        <!-- IME process: zero INTERNET permission -->
+75        <service
+75-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:59:9-70:19
+76            android:name="com.aieonyx.aistop.ime.SovereignIME"
+76-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:60:13-45
+77            android:exported="true"
+77-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:63:13-36
+78            android:label="AI Stop Keyboard"
+78-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:61:13-45
+79            android:permission="android.permission.BIND_INPUT_METHOD" >
+79-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:62:13-70
+80            <intent-filter>
+80-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:64:13-66:29
+81                <action android:name="android.view.InputMethod" />
+81-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:65:17-66
+81-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:65:25-64
+82            </intent-filter>
+83
+84            <meta-data
+84-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:67:13-69:49
+85                android:name="android.view.im"
+85-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:68:17-47
+86                android:resource="@xml/method" />
+86-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:69:17-47
+87        </service>
+88
+89        <!-- ── M3 ScrubShare ── -->
+90        <activity
+90-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:73:9-83:20
+91            android:name="com.aieonyx.aistop.ui.ScrubShareActivity"
+91-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:74:13-50
+92            android:exported="true"
+92-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:75:13-36
+93            android:label="Scrub with AI Stop"
+93-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:76:13-47
+94            android:theme="@style/Theme.AiStop.Translucent" >
+94-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:77:13-60
+95            <intent-filter>
+95-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:78:13-82:29
+96                <action android:name="android.intent.action.SEND" />
+96-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:79:17-68
+96-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:79:25-66
+97
+98                <category android:name="android.intent.category.DEFAULT" />
+98-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:80:17-75
+98-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:80:27-73
+99
+100                <data android:mimeType="text/plain" />
+100-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:81:17-54
+100-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:81:23-52
+101            </intent-filter>
+102        </activity>
+103
+104        <!-- ── v2.0 hook: awp:// registered as no-op ── -->
+105        <activity
+105-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:86:9-95:20
+106            android:name="com.aieonyx.aistop.ui.AwpPlaceholderActivity"
+106-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:87:13-54
+107            android:exported="true" >
+107-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:88:13-36
+108            <intent-filter>
+108-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:89:13-94:29
+109                <action android:name="android.intent.action.VIEW" />
+109-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:90:17-68
+109-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:90:25-66
+110
+111                <category android:name="android.intent.category.DEFAULT" />
+111-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:80:17-75
+111-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:80:27-73
+112                <category android:name="android.intent.category.BROWSABLE" />
+112-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:92:17-77
+112-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:92:27-75
+113
+114                <data android:scheme="awp" />
+114-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:81:17-54
+114-->/home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:93:23-43
+115            </intent-filter>
+116        </activity>
+117
+118        <provider
+118-->[androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+119            android:name="androidx.startup.InitializationProvider"
+119-->[androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+120            android:authorities="com.aieonyx.aistop.androidx-startup"
+120-->[androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+121            android:exported="false" >
+121-->[androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+122            <meta-data
+122-->[androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+123                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+123-->[androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+124                android:value="androidx.startup" />
+124-->[androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+125            <meta-data
+125-->[androidx.lifecycle:lifecycle-process:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/84c4ec76c0066b0a3e11e504510d9b38/transformed/lifecycle-process-2.8.0/AndroidManifest.xml:29:13-31:52
+126                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+126-->[androidx.lifecycle:lifecycle-process:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/84c4ec76c0066b0a3e11e504510d9b38/transformed/lifecycle-process-2.8.0/AndroidManifest.xml:30:17-78
+127                android:value="androidx.startup" />
+127-->[androidx.lifecycle:lifecycle-process:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/84c4ec76c0066b0a3e11e504510d9b38/transformed/lifecycle-process-2.8.0/AndroidManifest.xml:31:17-49
+128            <meta-data
+128-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+129                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+129-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+130                android:value="androidx.startup" />
+130-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+131        </provider>
+132
+133        <service
+133-->[androidx.room:room-runtime:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/4c1ed0d435ca068bee5bd862687196b9/transformed/room-runtime-2.6.1/AndroidManifest.xml:24:9-28:63
+134            android:name="androidx.room.MultiInstanceInvalidationService"
+134-->[androidx.room:room-runtime:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/4c1ed0d435ca068bee5bd862687196b9/transformed/room-runtime-2.6.1/AndroidManifest.xml:25:13-74
+135            android:directBootAware="true"
+135-->[androidx.room:room-runtime:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/4c1ed0d435ca068bee5bd862687196b9/transformed/room-runtime-2.6.1/AndroidManifest.xml:26:13-43
+136            android:exported="false" />
+136-->[androidx.room:room-runtime:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/4c1ed0d435ca068bee5bd862687196b9/transformed/room-runtime-2.6.1/AndroidManifest.xml:27:13-37
+137
+138        <receiver
+138-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+139            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+139-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+140            android:directBootAware="false"
+140-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+141            android:enabled="true"
+141-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+142            android:exported="true"
+142-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+143            android:permission="android.permission.DUMP" >
+143-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+144            <intent-filter>
+144-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+145                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+145-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+145-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+146            </intent-filter>
+147            <intent-filter>
+147-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+148                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+148-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+148-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+149            </intent-filter>
+150            <intent-filter>
+150-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+151                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+151-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+151-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+152            </intent-filter>
+153            <intent-filter>
+153-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+154                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+154-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+154-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+155            </intent-filter>
+156        </receiver>
+157    </application>
+158
+159</manifest>

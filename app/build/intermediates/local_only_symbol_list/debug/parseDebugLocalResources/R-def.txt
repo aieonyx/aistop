@@ -1,0 +1,18 @@
+R_DEF: Internal format may change without notice
+local
+color caution_amber
+color ic_launcher_background
+color signal_white
+color sovereign_blue
+color sovereign_void
+color threat_red
+color verified_teal
+drawable ic_launcher_foreground
+mipmap ic_launcher
+mipmap ic_launcher_round
+string app_name
+string scrub_share_label
+string sovereign_keyboard_name
+style Theme.AiStop
+style Theme.AiStop.Translucent
+xml method

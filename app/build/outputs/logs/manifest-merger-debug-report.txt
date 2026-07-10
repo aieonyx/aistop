@@ -1,0 +1,502 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:17:1-99:12
+INJECTED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:17:1-99:12
+INJECTED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:17:1-99:12
+INJECTED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:17:1-99:12
+MERGED from [com.google.android.material:material:1.12.0] /home/edisonbl/.gradle/caches/transforms-4/045c837ab877f3365dd07df7f37a034d/transformed/material-1.12.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.biometric:biometric:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/42c2d8367832f7babd2b463262da220c/transformed/biometric-1.1.0/AndroidManifest.xml:17:1-29:12
+MERGED from [androidx.appcompat:appcompat-resources:1.7.0] /home/edisonbl/.gradle/caches/transforms-4/22a7c1c30efedd1426c0f9aabf990c0a/transformed/appcompat-resources-1.7.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/edisonbl/.gradle/caches/transforms-4/fdc88cbb4dbcc5dd3f2f5bdb97e76b07/transformed/constraintlayout-2.0.1/AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.appcompat:appcompat:1.7.0] /home/edisonbl/.gradle/caches/transforms-4/74c9ea74fff0599123602965ac024cf4/transformed/appcompat-1.7.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/792d8a3752286632e58e243e241de52e/transformed/emoji2-views-helper-1.3.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/718fbd825355bf693b39658b7378fe25/transformed/viewpager2-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.fragment:fragment:1.5.4] /home/edisonbl/.gradle/caches/transforms-4/a1e614e28d2b488d3898e6646aff7768/transformed/fragment-1.5.4/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.activity:activity-ktx:1.9.0] /home/edisonbl/.gradle/caches/transforms-4/fc3ebfa7f3ab2bcca5ea6c890451d198/transformed/activity-ktx-1.9.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.activity:activity:1.9.0] /home/edisonbl/.gradle/caches/transforms-4/7c6acf3bdff9b96b87bbb4c964d19a0a/transformed/activity-1.9.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.compose.material3:material3-android:1.2.1] /home/edisonbl/.gradle/caches/transforms-4/695027cecf00db018c32e8c9c3b77941/transformed/material3-release/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.activity:activity-compose:1.9.0] /home/edisonbl/.gradle/caches/transforms-4/b2ce1d271425c5e8a110cc2fea1ab2d8/transformed/activity-compose-1.9.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.animation:animation-core-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/d882df60736657fa68972c23d8b79fe5/transformed/animation-core-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-icons-core-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/107e1f4385b5891d039386200c19b262/transformed/material-icons-core-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-ripple-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/d4ef39a1d0f3613345af73558f42feea/transformed/material-ripple-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.animation:animation-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/b9f25d382cfd865025b31cd09501b32d/transformed/animation-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/ac5fb339f9ed2a653b26d335167ae2c1/transformed/foundation-layout-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.foundation:foundation-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/e7a6468f16aafbc110e861fabc9790c1/transformed/foundation-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-unit-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/6b205b40178d7b2459f914c152f79f1b/transformed/ui-unit-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-geometry-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/a04ec8a8662ff236bef454ebef70a978/transformed/ui-geometry-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-util-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/43eb8781390c58624693a1f7725e7a2b/transformed/ui-util-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-text-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/92ee38984bd03979ae124181255291b7/transformed/ui-text-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-graphics-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/5d56daffa1fdea416ccb8b9e7ab08695/transformed/ui-graphics-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/1fb293ce82b412cea76348aa45563466/transformed/ui-tooling-preview-release/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.compose.ui:ui-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/a9b114e213c8491619b92783d0554a17/transformed/ui-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/3870c82f322cfd24d1ea69e7bf047710/transformed/drawerlayout-1.1.1/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/aa222ff8f246c05b7beaae2c80a85b02/transformed/coordinatorlayout-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.transition:transition:1.5.0] /home/edisonbl/.gradle/caches/transforms-4/5abaa9d8ac76e54235559df4ad73e3ed/transformed/transition-1.5.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/13e8a6431d7a2b9aee10773a17afbc23/transformed/dynamicanimation-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/929daa981eca6c81df8550b4af9602ca/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/473e3352d2a639fb9f91a3f2609f8f97/transformed/vectordrawable-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/6365f1830e702d04478db664c16bc9df/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/cd39cc96b7d5fdb6e9ad81fe2f3195e7/transformed/loader-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/7d7e0a17edf3cc149039d11b118f2f45/transformed/viewpager-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/86fae079d1239d3f1cb43f97dd9e3f9a/transformed/recyclerview-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.customview:customview:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/c72e299d094da7df0f478f2ff14b6ded/transformed/customview-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.autofill:autofill:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/28ab048db2fd19f12b1c8ede2d6d7fdc/transformed/autofill-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:17:1-30:12
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /home/edisonbl/.gradle/caches/transforms-4/79c32778f99569eb2cac4317c6f55eb9/transformed/savedstate-ktx-1.2.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.savedstate:savedstate:1.2.1] /home/edisonbl/.gradle/caches/transforms-4/84082dc9ee5c84d8e5d9517c940d8f9c/transformed/savedstate-1.2.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/05acd4e1676de98f900cc3bd4ae10a88/transformed/lifecycle-livedata-core-ktx-2.8.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/7e2774b086e3fb04cbf1e8c3017594b5/transformed/lifecycle-viewmodel-2.8.0/AndroidManifest.xml:2:1-5:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/3de69e921fc1fdc61e49a067b69c57ef/transformed/lifecycle-viewmodel-release/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/e26a91ac5a0e852f8c832dc7eea4b7d9/transformed/lifecycle-runtime-release/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/f6bec2ba329c929921bf38395fed4eee/transformed/lifecycle-livedata-2.8.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/b3cd969625e92a98c1e372d49f820899/transformed/lifecycle-viewmodel-ktx-2.8.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/84c4ec76c0066b0a3e11e504510d9b38/transformed/lifecycle-process-2.8.0/AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/be03fc63900fa95bf7731bad9fcd55c0/transformed/lifecycle-livedata-core-2.8.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/78cbdd6aa4b873d16506af7cf236f804/transformed/lifecycle-runtime-ktx-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/4605dde1b3dc309d1e5ed14f8219ab17/transformed/lifecycle-viewmodel-savedstate-2.8.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/af84c42436682e80608630f71877c0f7/transformed/customview-poolingcontainer-1.0.0/AndroidManifest.xml:17:1-23:12
+MERGED from [androidx.core:core-ktx:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/9b8f9598a8895789b72c541c723a560c/transformed/core-ktx-1.13.1/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.room:room-runtime:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/4c1ed0d435ca068bee5bd862687196b9/transformed/room-runtime-2.6.1/AndroidManifest.xml:17:1-31:12
+MERGED from [androidx.room:room-ktx:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/d415c900e43be0cca4f5eaf8741580d7/transformed/room-ktx-2.6.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/b5137075c2459adc5cf256d07c2ce0ac/transformed/runtime-saveable-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.runtime:runtime-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/7be259b582be91f27d1ad24e9709d1a6/transformed/runtime-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.sqlite:sqlite-framework:2.4.0] /home/edisonbl/.gradle/caches/transforms-4/8f57df01dde91f72a6e1e4a1996a7ab4/transformed/sqlite-framework-2.4.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.sqlite:sqlite:2.4.0] /home/edisonbl/.gradle/caches/transforms-4/a643f01d2e504c1fd223b1193c136738/transformed/sqlite-2.4.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.annotation:annotation-experimental:1.4.0] /home/edisonbl/.gradle/caches/transforms-4/aad01994fed7c1e1d1639df0957f7b90/transformed/annotation-experimental-1.4.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.security:security-crypto:1.1.0-alpha06] /home/edisonbl/.gradle/caches/transforms-4/ff0a9992327c6e83f34c0244a4024c94/transformed/security-crypto-1.1.0-alpha06/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/0c30003d1aeb8c71f8568f6f3be593ec/transformed/cursoradapter-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:17:1-55:12
+MERGED from [androidx.cardview:cardview:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/c75994dcf42d70c52660a9c4bc49936a/transformed/cardview-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /home/edisonbl/.gradle/caches/transforms-4/8b05d69ce319f3665132dbba2e41eb77/transformed/core-runtime-2.2.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/ae6a708770ec619ad3318c41379558d0/transformed/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/1b217f44d886dcd82ec76cab773e2989/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.startup:startup-runtime:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/77cb26a72b88d35c653730772be5685b/transformed/startup-runtime-1.1.1/AndroidManifest.xml:17:1-33:12
+MERGED from [androidx.tracing:tracing:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/264d3369f2da2e6864eba15fce139bb4/transformed/tracing-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.documentfile:documentfile:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/1a21c89746400963c40fd1599d1e56ae/transformed/documentfile-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/24d50f6822517aff1b2a097a731eb252/transformed/localbroadcastmanager-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.print:print:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/1021a1baa040cd17e951ee5d2dea2b1e/transformed/print-1.0.0/AndroidManifest.xml:17:1-22:12
+	package
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:18:5-33
+		INJECTED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:17:11-69
+queries
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:22:5-31:15
+package#com.openai.chatgpt
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:23:9-53
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:23:18-51
+package#com.google.android.apps.bard
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:24:9-63
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:24:18-61
+package#com.microsoft.copilot
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:25:9-56
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:25:18-54
+package#com.anthropic.claude
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:26:9-55
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:26:18-53
+package#com.grammarly.android
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:27:9-56
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:27:18-54
+package#com.notion.id
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:28:9-48
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:28:18-46
+package#com.perplexity.app
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:29:9-53
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:29:18-51
+package#ai.perplexity.app
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:30:9-52
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:30:18-50
+application
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:36:5-97:19
+INJECTED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:36:5-97:19
+MERGED from [com.google.android.material:material:1.12.0] /home/edisonbl/.gradle/caches/transforms-4/045c837ab877f3365dd07df7f37a034d/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.material:material:1.12.0] /home/edisonbl/.gradle/caches/transforms-4/045c837ab877f3365dd07df7f37a034d/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/edisonbl/.gradle/caches/transforms-4/fdc88cbb4dbcc5dd3f2f5bdb97e76b07/transformed/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/edisonbl/.gradle/caches/transforms-4/fdc88cbb4dbcc5dd3f2f5bdb97e76b07/transformed/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
+MERGED from [androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:28:5-89
+MERGED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:28:5-89
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/84c4ec76c0066b0a3e11e504510d9b38/transformed/lifecycle-process-2.8.0/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/84c4ec76c0066b0a3e11e504510d9b38/transformed/lifecycle-process-2.8.0/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.room:room-runtime:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/4c1ed0d435ca068bee5bd862687196b9/transformed/room-runtime-2.6.1/AndroidManifest.xml:23:5-29:19
+MERGED from [androidx.room:room-runtime:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/4c1ed0d435ca068bee5bd862687196b9/transformed/room-runtime-2.6.1/AndroidManifest.xml:23:5-29:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/1b217f44d886dcd82ec76cab773e2989/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/1b217f44d886dcd82ec76cab773e2989/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/77cb26a72b88d35c653730772be5685b/transformed/startup-runtime-1.1.1/AndroidManifest.xml:25:5-31:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/77cb26a72b88d35c653730772be5685b/transformed/startup-runtime-1.1.1/AndroidManifest.xml:25:5-31:19
+	android:extractNativeLibs
+		INJECTED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
+	android:supportsRtl
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:40:9-35
+	android:label
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:37:9-32
+	android:fullBackupContent
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:43:9-42
+	android:roundIcon
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:39:9-54
+	android:icon
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:38:9-43
+	android:allowBackup
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:42:9-36
+	android:theme
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:41:9-44
+activity#com.aieonyx.aistop.ui.MainActivity
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:46:9-54:20
+	android:windowSoftInputMode
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:49:13-55
+	android:exported
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:48:13-36
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:47:13-44
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:50:13-53:29
+action#android.intent.action.MAIN
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:51:17-68
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:51:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:52:17-76
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:52:27-74
+service#com.aieonyx.aistop.ime.SovereignIME
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:59:9-70:19
+	android:label
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:61:13-45
+	android:exported
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:63:13-36
+	android:permission
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:62:13-70
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:60:13-45
+intent-filter#action:name:android.view.InputMethod
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:64:13-66:29
+action#android.view.InputMethod
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:65:17-66
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:65:25-64
+meta-data#android.view.im
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:67:13-69:49
+	android:resource
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:69:17-47
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:68:17-47
+activity#com.aieonyx.aistop.ui.ScrubShareActivity
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:73:9-83:20
+	android:label
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:76:13-47
+	android:exported
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:75:13-36
+	android:theme
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:77:13-60
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:74:13-50
+intent-filter#action:name:android.intent.action.SEND+category:name:android.intent.category.DEFAULT+data:mimeType:text/plain
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:78:13-82:29
+action#android.intent.action.SEND
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:79:17-68
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:79:25-66
+category#android.intent.category.DEFAULT
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:80:17-75
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:80:27-73
+data
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:81:17-54
+	android:scheme
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:93:23-43
+	android:mimeType
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:81:23-52
+activity#com.aieonyx.aistop.ui.AwpPlaceholderActivity
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:86:9-95:20
+	android:exported
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:88:13-36
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:87:13-54
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:scheme:awp
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:89:13-94:29
+action#android.intent.action.VIEW
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:90:17-68
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:90:25-66
+category#android.intent.category.BROWSABLE
+ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:92:17-77
+	android:name
+		ADDED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml:92:27-75
+uses-sdk
+INJECTED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml
+INJECTED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml
+MERGED from [com.google.android.material:material:1.12.0] /home/edisonbl/.gradle/caches/transforms-4/045c837ab877f3365dd07df7f37a034d/transformed/material-1.12.0/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.material:material:1.12.0] /home/edisonbl/.gradle/caches/transforms-4/045c837ab877f3365dd07df7f37a034d/transformed/material-1.12.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.biometric:biometric:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/42c2d8367832f7babd2b463262da220c/transformed/biometric-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.biometric:biometric:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/42c2d8367832f7babd2b463262da220c/transformed/biometric-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.7.0] /home/edisonbl/.gradle/caches/transforms-4/22a7c1c30efedd1426c0f9aabf990c0a/transformed/appcompat-resources-1.7.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.7.0] /home/edisonbl/.gradle/caches/transforms-4/22a7c1c30efedd1426c0f9aabf990c0a/transformed/appcompat-resources-1.7.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/edisonbl/.gradle/caches/transforms-4/fdc88cbb4dbcc5dd3f2f5bdb97e76b07/transformed/constraintlayout-2.0.1/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/edisonbl/.gradle/caches/transforms-4/fdc88cbb4dbcc5dd3f2f5bdb97e76b07/transformed/constraintlayout-2.0.1/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.appcompat:appcompat:1.7.0] /home/edisonbl/.gradle/caches/transforms-4/74c9ea74fff0599123602965ac024cf4/transformed/appcompat-1.7.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.appcompat:appcompat:1.7.0] /home/edisonbl/.gradle/caches/transforms-4/74c9ea74fff0599123602965ac024cf4/transformed/appcompat-1.7.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/792d8a3752286632e58e243e241de52e/transformed/emoji2-views-helper-1.3.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/792d8a3752286632e58e243e241de52e/transformed/emoji2-views-helper-1.3.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/718fbd825355bf693b39658b7378fe25/transformed/viewpager2-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/718fbd825355bf693b39658b7378fe25/transformed/viewpager2-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.5.4] /home/edisonbl/.gradle/caches/transforms-4/a1e614e28d2b488d3898e6646aff7768/transformed/fragment-1.5.4/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.5.4] /home/edisonbl/.gradle/caches/transforms-4/a1e614e28d2b488d3898e6646aff7768/transformed/fragment-1.5.4/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.activity:activity-ktx:1.9.0] /home/edisonbl/.gradle/caches/transforms-4/fc3ebfa7f3ab2bcca5ea6c890451d198/transformed/activity-ktx-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-ktx:1.9.0] /home/edisonbl/.gradle/caches/transforms-4/fc3ebfa7f3ab2bcca5ea6c890451d198/transformed/activity-ktx-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity:1.9.0] /home/edisonbl/.gradle/caches/transforms-4/7c6acf3bdff9b96b87bbb4c964d19a0a/transformed/activity-1.9.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.9.0] /home/edisonbl/.gradle/caches/transforms-4/7c6acf3bdff9b96b87bbb4c964d19a0a/transformed/activity-1.9.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.material3:material3-android:1.2.1] /home/edisonbl/.gradle/caches/transforms-4/695027cecf00db018c32e8c9c3b77941/transformed/material3-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.material3:material3-android:1.2.1] /home/edisonbl/.gradle/caches/transforms-4/695027cecf00db018c32e8c9c3b77941/transformed/material3-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity-compose:1.9.0] /home/edisonbl/.gradle/caches/transforms-4/b2ce1d271425c5e8a110cc2fea1ab2d8/transformed/activity-compose-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-compose:1.9.0] /home/edisonbl/.gradle/caches/transforms-4/b2ce1d271425c5e8a110cc2fea1ab2d8/transformed/activity-compose-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-core-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/d882df60736657fa68972c23d8b79fe5/transformed/animation-core-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-core-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/d882df60736657fa68972c23d8b79fe5/transformed/animation-core-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-core-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/107e1f4385b5891d039386200c19b262/transformed/material-icons-core-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-core-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/107e1f4385b5891d039386200c19b262/transformed/material-icons-core-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-ripple-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/d4ef39a1d0f3613345af73558f42feea/transformed/material-ripple-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-ripple-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/d4ef39a1d0f3613345af73558f42feea/transformed/material-ripple-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/b9f25d382cfd865025b31cd09501b32d/transformed/animation-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/b9f25d382cfd865025b31cd09501b32d/transformed/animation-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/ac5fb339f9ed2a653b26d335167ae2c1/transformed/foundation-layout-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/ac5fb339f9ed2a653b26d335167ae2c1/transformed/foundation-layout-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/e7a6468f16aafbc110e861fabc9790c1/transformed/foundation-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/e7a6468f16aafbc110e861fabc9790c1/transformed/foundation-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-unit-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/6b205b40178d7b2459f914c152f79f1b/transformed/ui-unit-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-unit-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/6b205b40178d7b2459f914c152f79f1b/transformed/ui-unit-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-geometry-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/a04ec8a8662ff236bef454ebef70a978/transformed/ui-geometry-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-geometry-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/a04ec8a8662ff236bef454ebef70a978/transformed/ui-geometry-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-util-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/43eb8781390c58624693a1f7725e7a2b/transformed/ui-util-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-util-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/43eb8781390c58624693a1f7725e7a2b/transformed/ui-util-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-text-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/92ee38984bd03979ae124181255291b7/transformed/ui-text-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-text-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/92ee38984bd03979ae124181255291b7/transformed/ui-text-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-graphics-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/5d56daffa1fdea416ccb8b9e7ab08695/transformed/ui-graphics-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-graphics-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/5d56daffa1fdea416ccb8b9e7ab08695/transformed/ui-graphics-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/1fb293ce82b412cea76348aa45563466/transformed/ui-tooling-preview-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/1fb293ce82b412cea76348aa45563466/transformed/ui-tooling-preview-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/a9b114e213c8491619b92783d0554a17/transformed/ui-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/a9b114e213c8491619b92783d0554a17/transformed/ui-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/3870c82f322cfd24d1ea69e7bf047710/transformed/drawerlayout-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/3870c82f322cfd24d1ea69e7bf047710/transformed/drawerlayout-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/aa222ff8f246c05b7beaae2c80a85b02/transformed/coordinatorlayout-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/aa222ff8f246c05b7beaae2c80a85b02/transformed/coordinatorlayout-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.transition:transition:1.5.0] /home/edisonbl/.gradle/caches/transforms-4/5abaa9d8ac76e54235559df4ad73e3ed/transformed/transition-1.5.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.transition:transition:1.5.0] /home/edisonbl/.gradle/caches/transforms-4/5abaa9d8ac76e54235559df4ad73e3ed/transformed/transition-1.5.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/13e8a6431d7a2b9aee10773a17afbc23/transformed/dynamicanimation-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/13e8a6431d7a2b9aee10773a17afbc23/transformed/dynamicanimation-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/929daa981eca6c81df8550b4af9602ca/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/929daa981eca6c81df8550b4af9602ca/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/473e3352d2a639fb9f91a3f2609f8f97/transformed/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/473e3352d2a639fb9f91a3f2609f8f97/transformed/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/6365f1830e702d04478db664c16bc9df/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/6365f1830e702d04478db664c16bc9df/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/cd39cc96b7d5fdb6e9ad81fe2f3195e7/transformed/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/cd39cc96b7d5fdb6e9ad81fe2f3195e7/transformed/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/7d7e0a17edf3cc149039d11b118f2f45/transformed/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/7d7e0a17edf3cc149039d11b118f2f45/transformed/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/86fae079d1239d3f1cb43f97dd9e3f9a/transformed/recyclerview-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/86fae079d1239d3f1cb43f97dd9e3f9a/transformed/recyclerview-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.customview:customview:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/c72e299d094da7df0f478f2ff14b6ded/transformed/customview-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.customview:customview:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/c72e299d094da7df0f478f2ff14b6ded/transformed/customview-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.autofill:autofill:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/28ab048db2fd19f12b1c8ede2d6d7fdc/transformed/autofill-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.autofill:autofill:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/28ab048db2fd19f12b1c8ede2d6d7fdc/transformed/autofill-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /home/edisonbl/.gradle/caches/transforms-4/79c32778f99569eb2cac4317c6f55eb9/transformed/savedstate-ktx-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /home/edisonbl/.gradle/caches/transforms-4/79c32778f99569eb2cac4317c6f55eb9/transformed/savedstate-ktx-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] /home/edisonbl/.gradle/caches/transforms-4/84082dc9ee5c84d8e5d9517c940d8f9c/transformed/savedstate-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] /home/edisonbl/.gradle/caches/transforms-4/84082dc9ee5c84d8e5d9517c940d8f9c/transformed/savedstate-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/05acd4e1676de98f900cc3bd4ae10a88/transformed/lifecycle-livedata-core-ktx-2.8.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/05acd4e1676de98f900cc3bd4ae10a88/transformed/lifecycle-livedata-core-ktx-2.8.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/7e2774b086e3fb04cbf1e8c3017594b5/transformed/lifecycle-viewmodel-2.8.0/AndroidManifest.xml:4:5-43
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/7e2774b086e3fb04cbf1e8c3017594b5/transformed/lifecycle-viewmodel-2.8.0/AndroidManifest.xml:4:5-43
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/3de69e921fc1fdc61e49a067b69c57ef/transformed/lifecycle-viewmodel-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/3de69e921fc1fdc61e49a067b69c57ef/transformed/lifecycle-viewmodel-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/e26a91ac5a0e852f8c832dc7eea4b7d9/transformed/lifecycle-runtime-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/e26a91ac5a0e852f8c832dc7eea4b7d9/transformed/lifecycle-runtime-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/f6bec2ba329c929921bf38395fed4eee/transformed/lifecycle-livedata-2.8.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/f6bec2ba329c929921bf38395fed4eee/transformed/lifecycle-livedata-2.8.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/b3cd969625e92a98c1e372d49f820899/transformed/lifecycle-viewmodel-ktx-2.8.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/b3cd969625e92a98c1e372d49f820899/transformed/lifecycle-viewmodel-ktx-2.8.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/84c4ec76c0066b0a3e11e504510d9b38/transformed/lifecycle-process-2.8.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/84c4ec76c0066b0a3e11e504510d9b38/transformed/lifecycle-process-2.8.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/be03fc63900fa95bf7731bad9fcd55c0/transformed/lifecycle-livedata-core-2.8.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/be03fc63900fa95bf7731bad9fcd55c0/transformed/lifecycle-livedata-core-2.8.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/78cbdd6aa4b873d16506af7cf236f804/transformed/lifecycle-runtime-ktx-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/78cbdd6aa4b873d16506af7cf236f804/transformed/lifecycle-runtime-ktx-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/4605dde1b3dc309d1e5ed14f8219ab17/transformed/lifecycle-viewmodel-savedstate-2.8.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/4605dde1b3dc309d1e5ed14f8219ab17/transformed/lifecycle-viewmodel-savedstate-2.8.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/af84c42436682e80608630f71877c0f7/transformed/customview-poolingcontainer-1.0.0/AndroidManifest.xml:20:5-21:38
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/af84c42436682e80608630f71877c0f7/transformed/customview-poolingcontainer-1.0.0/AndroidManifest.xml:20:5-21:38
+MERGED from [androidx.core:core-ktx:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/9b8f9598a8895789b72c541c723a560c/transformed/core-ktx-1.13.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-ktx:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/9b8f9598a8895789b72c541c723a560c/transformed/core-ktx-1.13.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.room:room-runtime:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/4c1ed0d435ca068bee5bd862687196b9/transformed/room-runtime-2.6.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.room:room-runtime:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/4c1ed0d435ca068bee5bd862687196b9/transformed/room-runtime-2.6.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.room:room-ktx:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/d415c900e43be0cca4f5eaf8741580d7/transformed/room-ktx-2.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.room:room-ktx:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/d415c900e43be0cca4f5eaf8741580d7/transformed/room-ktx-2.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/b5137075c2459adc5cf256d07c2ce0ac/transformed/runtime-saveable-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/b5137075c2459adc5cf256d07c2ce0ac/transformed/runtime-saveable-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/7be259b582be91f27d1ad24e9709d1a6/transformed/runtime-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-android:1.6.7] /home/edisonbl/.gradle/caches/transforms-4/7be259b582be91f27d1ad24e9709d1a6/transformed/runtime-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.sqlite:sqlite-framework:2.4.0] /home/edisonbl/.gradle/caches/transforms-4/8f57df01dde91f72a6e1e4a1996a7ab4/transformed/sqlite-framework-2.4.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite-framework:2.4.0] /home/edisonbl/.gradle/caches/transforms-4/8f57df01dde91f72a6e1e4a1996a7ab4/transformed/sqlite-framework-2.4.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite:2.4.0] /home/edisonbl/.gradle/caches/transforms-4/a643f01d2e504c1fd223b1193c136738/transformed/sqlite-2.4.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite:2.4.0] /home/edisonbl/.gradle/caches/transforms-4/a643f01d2e504c1fd223b1193c136738/transformed/sqlite-2.4.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.4.0] /home/edisonbl/.gradle/caches/transforms-4/aad01994fed7c1e1d1639df0957f7b90/transformed/annotation-experimental-1.4.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.4.0] /home/edisonbl/.gradle/caches/transforms-4/aad01994fed7c1e1d1639df0957f7b90/transformed/annotation-experimental-1.4.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.security:security-crypto:1.1.0-alpha06] /home/edisonbl/.gradle/caches/transforms-4/ff0a9992327c6e83f34c0244a4024c94/transformed/security-crypto-1.1.0-alpha06/AndroidManifest.xml:20:5-44
+MERGED from [androidx.security:security-crypto:1.1.0-alpha06] /home/edisonbl/.gradle/caches/transforms-4/ff0a9992327c6e83f34c0244a4024c94/transformed/security-crypto-1.1.0-alpha06/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/0c30003d1aeb8c71f8568f6f3be593ec/transformed/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/0c30003d1aeb8c71f8568f6f3be593ec/transformed/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/c75994dcf42d70c52660a9c4bc49936a/transformed/cardview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/c75994dcf42d70c52660a9c4bc49936a/transformed/cardview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /home/edisonbl/.gradle/caches/transforms-4/8b05d69ce319f3665132dbba2e41eb77/transformed/core-runtime-2.2.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /home/edisonbl/.gradle/caches/transforms-4/8b05d69ce319f3665132dbba2e41eb77/transformed/core-runtime-2.2.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/ae6a708770ec619ad3318c41379558d0/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/ae6a708770ec619ad3318c41379558d0/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/1b217f44d886dcd82ec76cab773e2989/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/1b217f44d886dcd82ec76cab773e2989/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.startup:startup-runtime:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/77cb26a72b88d35c653730772be5685b/transformed/startup-runtime-1.1.1/AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.startup:startup-runtime:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/77cb26a72b88d35c653730772be5685b/transformed/startup-runtime-1.1.1/AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.tracing:tracing:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/264d3369f2da2e6864eba15fce139bb4/transformed/tracing-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.tracing:tracing:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/264d3369f2da2e6864eba15fce139bb4/transformed/tracing-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.documentfile:documentfile:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/1a21c89746400963c40fd1599d1e56ae/transformed/documentfile-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/1a21c89746400963c40fd1599d1e56ae/transformed/documentfile-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/24d50f6822517aff1b2a097a731eb252/transformed/localbroadcastmanager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/24d50f6822517aff1b2a097a731eb252/transformed/localbroadcastmanager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/1021a1baa040cd17e951ee5d2dea2b1e/transformed/print-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] /home/edisonbl/.gradle/caches/transforms-4/1021a1baa040cd17e951ee5d2dea2b1e/transformed/print-1.0.0/AndroidManifest.xml:20:5-44
+	android:targetSdkVersion
+		INJECTED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /home/edisonbl/projects/aistop/app/src/main/AndroidManifest.xml
+uses-permission#android.permission.USE_BIOMETRIC
+ADDED from [androidx.biometric:biometric:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/42c2d8367832f7babd2b463262da220c/transformed/biometric-1.1.0/AndroidManifest.xml:24:5-72
+	android:name
+		ADDED from [androidx.biometric:biometric:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/42c2d8367832f7babd2b463262da220c/transformed/biometric-1.1.0/AndroidManifest.xml:24:22-69
+uses-permission#android.permission.USE_FINGERPRINT
+ADDED from [androidx.biometric:biometric:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/42c2d8367832f7babd2b463262da220c/transformed/biometric-1.1.0/AndroidManifest.xml:27:5-74
+	android:name
+		ADDED from [androidx.biometric:biometric:1.1.0] /home/edisonbl/.gradle/caches/transforms-4/42c2d8367832f7babd2b463262da220c/transformed/biometric-1.1.0/AndroidManifest.xml:27:22-71
+provider#androidx.startup.InitializationProvider
+ADDED from [androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/84c4ec76c0066b0a3e11e504510d9b38/transformed/lifecycle-process-2.8.0/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/84c4ec76c0066b0a3e11e504510d9b38/transformed/lifecycle-process-2.8.0/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.startup:startup-runtime:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/77cb26a72b88d35c653730772be5685b/transformed/startup-runtime-1.1.1/AndroidManifest.xml:26:9-30:34
+MERGED from [androidx.startup:startup-runtime:1.1.1] /home/edisonbl/.gradle/caches/transforms-4/77cb26a72b88d35c653730772be5685b/transformed/startup-runtime-1.1.1/AndroidManifest.xml:26:9-30:34
+	tools:node
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:28:13-31
+	android:authorities
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+	android:exported
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+meta-data#androidx.emoji2.text.EmojiCompatInitializer
+ADDED from [androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /home/edisonbl/.gradle/caches/transforms-4/13ae871bd1ab68f24c169695c06f98a0/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+permission#com.aieonyx.aistop.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+uses-permission#com.aieonyx.aistop.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.13.1] /home/edisonbl/.gradle/caches/transforms-4/91a01b7546b8a068cc5ec07b65fcdd0a/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+meta-data#androidx.lifecycle.ProcessLifecycleInitializer
+ADDED from [androidx.lifecycle:lifecycle-process:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/84c4ec76c0066b0a3e11e504510d9b38/transformed/lifecycle-process-2.8.0/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.lifecycle:lifecycle-process:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/84c4ec76c0066b0a3e11e504510d9b38/transformed/lifecycle-process-2.8.0/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.lifecycle:lifecycle-process:2.8.0] /home/edisonbl/.gradle/caches/transforms-4/84c4ec76c0066b0a3e11e504510d9b38/transformed/lifecycle-process-2.8.0/AndroidManifest.xml:30:17-78
+service#androidx.room.MultiInstanceInvalidationService
+ADDED from [androidx.room:room-runtime:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/4c1ed0d435ca068bee5bd862687196b9/transformed/room-runtime-2.6.1/AndroidManifest.xml:24:9-28:63
+	android:exported
+		ADDED from [androidx.room:room-runtime:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/4c1ed0d435ca068bee5bd862687196b9/transformed/room-runtime-2.6.1/AndroidManifest.xml:27:13-37
+	tools:ignore
+		ADDED from [androidx.room:room-runtime:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/4c1ed0d435ca068bee5bd862687196b9/transformed/room-runtime-2.6.1/AndroidManifest.xml:28:13-60
+	android:directBootAware
+		ADDED from [androidx.room:room-runtime:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/4c1ed0d435ca068bee5bd862687196b9/transformed/room-runtime-2.6.1/AndroidManifest.xml:26:13-43
+	android:name
+		ADDED from [androidx.room:room-runtime:2.6.1] /home/edisonbl/.gradle/caches/transforms-4/4c1ed0d435ca068bee5bd862687196b9/transformed/room-runtime-2.6.1/AndroidManifest.xml:25:13-74
+meta-data#androidx.profileinstaller.ProfileInstallerInitializer
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+receiver#androidx.profileinstaller.ProfileInstallReceiver
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+	android:enabled
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+	android:exported
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+	android:permission
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+	android:directBootAware
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+intent-filter#action:name:androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+action#androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+intent-filter#action:name:androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+action#androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+intent-filter#action:name:androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+action#androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+intent-filter#action:name:androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+action#androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/edisonbl/.gradle/caches/transforms-4/e8842e77d9a2482c085f62e4e9b94a41/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92

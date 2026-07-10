@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2026 Edison Lepiten / AIEONYX
+  License: Apache-2.0
+
+  AI Stop — Sovereign AI Guard
+  AndroidManifest.xml v1.1 FINAL
+
+  PERMISSIONS PHILOSOPHY:
+  - No SYSTEM_ALERT_WINDOW        (removed v1.0-R)
+  - No BIND_ACCESSIBILITY_SERVICE (removed v1.0-R)
+  - No MANAGE_APP_OPS_MODES       (removed v1.0-R)
+  - No INTERNET in IME process    (verifiable, citable claim)
+  - No QUERY_ALL_PACKAGES         (removed v1.1 — Play Store hard block)
+  Primary package detection: explicit <queries> only.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.aieonyx.aistop">
+
+    <!-- ── Package visibility: explicit list only ── -->
+    <!-- QUERY_ALL_PACKAGES intentionally NOT included (v1.1 Gemini finding) -->
+    <queries>
+        <package android:name="com.openai.chatgpt"/>
+        <package android:name="com.google.android.apps.bard"/>
+        <package android:name="com.microsoft.copilot"/>
+        <package android:name="com.anthropic.claude"/>
+        <package android:name="com.grammarly.android"/>
+        <package android:name="com.notion.id"/>
+        <package android:name="com.perplexity.app"/>
+        <package android:name="ai.perplexity.app"/>
+    </queries>
+
+    <!-- ── No dangerous permissions in main app process ── -->
+    <!-- IME process ships without INTERNET permission — verifiable claim -->
+
+    <application
+        android:label="AI Stop"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AiStop"
+        android:allowBackup="false"
+        android:fullBackupContent="false">
+
+        <!-- ── Main Activity ── -->
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <!-- ── M2 Sovereign IME ── -->
+        <!-- Play policy: must function as a bona fide keyboard -->
+        <!-- IME process: zero INTERNET permission -->
+        <service
+            android:name=".ime.SovereignIME"
+            android:label="AI Stop Keyboard"
+            android:permission="android.permission.BIND_INPUT_METHOD"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.view.InputMethod"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.view.im"
+                android:resource="@xml/method"/>
+        </service>
+
+        <!-- ── M3 ScrubShare ── -->
+        <activity
+            android:name=".ui.ScrubShareActivity"
+            android:exported="true"
+            android:label="Scrub with AI Stop"
+            android:theme="@style/Theme.AiStop.Translucent">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+        </activity>
+
+        <!-- ── v2.0 hook: awp:// registered as no-op ── -->
+        <activity
+            android:name=".ui.AwpPlaceholderActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="awp"/>
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>

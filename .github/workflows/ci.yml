@@ -1,0 +1,136 @@
+# Copyright (c) 2026 Edison Lepiten / AIEONYX
+# License: Apache-2.0
+#
+# AI Stop CI — GitHub Actions
+# Rule: CI must be green before any phase is declared complete.
+# Toolchain pinned. No drift.
+
+name: AI Stop CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+  # Pin NDK version — never let toolchain drift
+  NDK_VERSION: "26.3.11579264"
+  CARGO_NDK_VERSION: "3.5.4"
+
+jobs:
+
+  # ── Rust core tests ──────────────────────────────────────────────────────
+  rust-tests:
+    name: Rust Core Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust stable (pinned via rust-toolchain.toml)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Add Android targets
+        run: |
+          rustup target add aarch64-linux-android
+          rustup target add x86_64-linux-android
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: aistop-core
+
+      - name: Run Rust tests
+        working-directory: aistop-core
+        run: cargo test --all-features 2>&1
+
+      - name: Check Rust formatting
+        working-directory: aistop-core
+        run: cargo fmt --check
+
+      - name: Clippy (deny warnings)
+        working-directory: aistop-core
+        run: cargo clippy -- -D warnings
+
+  # ── Android build ────────────────────────────────────────────────────────
+  android-build:
+    name: Android Debug Build
+    runs-on: ubuntu-latest
+    needs: rust-tests
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Add Android targets
+        run: |
+          rustup target add aarch64-linux-android
+          rustup target add x86_64-linux-android
+
+      - name: Install cargo-ndk (pinned)
+        run: cargo install cargo-ndk --version ${{ env.CARGO_NDK_VERSION }}
+
+      - name: Set up Android SDK + NDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install NDK (pinned version)
+        run: |
+          sdkmanager "ndk;${{ env.NDK_VERSION }}"
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+
+      - name: Build Rust core for Android (arm64 + x86_64)
+        working-directory: aistop-core
+        run: |
+          cargo ndk \
+            -t arm64-v8a \
+            -t x86_64 \
+            -o ../app/src/main/jniLibs \
+            build --release
+
+      - name: Build Android debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aistop-debug
+          path: app/build/outputs/apk/debug/*.apk
+
+  # ── Copyright check ──────────────────────────────────────────────────────
+  copyright-check:
+    name: Copyright Headers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check copyright headers
+        run: |
+          echo "Checking Rust files..."
+          for f in $(find aistop-core/src -name "*.rs"); do
+            if ! grep -q "Copyright (c) 2026 Edison Lepiten / AIEONYX" "$f"; then
+              echo "MISSING copyright: $f"
+              exit 1
+            fi
+          done
+          echo "Checking Kotlin files..."
+          for f in $(find app/src -name "*.kt"); do
+            if ! grep -q "Copyright (c) 2026 Edison Lepiten / AIEONYX" "$f"; then
+              echo "MISSING copyright: $f"
+              exit 1
+            fi
+          done
+          echo "All copyright headers present."

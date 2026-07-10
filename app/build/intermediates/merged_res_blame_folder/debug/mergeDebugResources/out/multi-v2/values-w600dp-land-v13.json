@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.aieonyx.aistop.app-mergeDebugResources-58:/values-w600dp-land-v13/values-w600dp-land-v13.xml",
+            "map": [
+                {
+                    "source": "/home/edisonbl/.gradle/caches/transforms-4/045c837ab877f3365dd07df7f37a034d/transformed/material-1.12.0/res/values-w600dp-land-v13/values-w600dp-land-v13.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "54",
+                        "endOffsets": "105"
+                    }
+                }
+            ]
+        }
+    ]
+}

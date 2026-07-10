@@ -1,0 +1,8 @@
+[toolchain]
+channel = "stable"
+targets = [
+    "aarch64-linux-android",
+    "x86_64-linux-android"
+]
+# armeabi-v7a intentionally dropped (Gemini confirmed: fine in 2026)
+# Pin this file. Never let toolchain drift on weekend-cadence solo dev.

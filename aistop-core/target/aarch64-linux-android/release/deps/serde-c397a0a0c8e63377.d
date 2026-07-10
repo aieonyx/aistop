@@ -1,0 +1,14 @@
+/home/edisonbl/projects/aistop/aistop-core/target/aarch64-linux-android/release/deps/serde-c397a0a0c8e63377.d: /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/edisonbl/projects/aistop/aistop-core/target/aarch64-linux-android/release/build/serde-8d8220cd98a44340/out/private.rs
+
+/home/edisonbl/projects/aistop/aistop-core/target/aarch64-linux-android/release/deps/libserde-c397a0a0c8e63377.rlib: /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/edisonbl/projects/aistop/aistop-core/target/aarch64-linux-android/release/build/serde-8d8220cd98a44340/out/private.rs
+
+/home/edisonbl/projects/aistop/aistop-core/target/aarch64-linux-android/release/deps/libserde-c397a0a0c8e63377.rmeta: /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/edisonbl/projects/aistop/aistop-core/target/aarch64-linux-android/release/build/serde-8d8220cd98a44340/out/private.rs
+
+/home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs:
+/home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs:
+/home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs:
+/home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs:
+/home/edisonbl/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs:
+/home/edisonbl/projects/aistop/aistop-core/target/aarch64-linux-android/release/build/serde-8d8220cd98a44340/out/private.rs:
+
+# env-dep:OUT_DIR=/home/edisonbl/projects/aistop/aistop-core/target/aarch64-linux-android/release/build/serde-8d8220cd98a44340/out
