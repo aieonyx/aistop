@@ -15,3 +15,10 @@ local.properties
 
 # Rust
 Cargo.lock
+
+# Stray terminal paste artifacts
+/A
+/Get
+/Run
+app/build/
+build/
