@@ -21,6 +21,17 @@ object TrustDatabase {
 
     const val DB_VERSION = "1.0.0"
 
+    val KNOWN_AI_PACKAGES = setOf(
+        "com.openai.chatgpt",
+        "com.google.android.apps.bard",
+        "com.microsoft.copilot",
+        "com.anthropic.claude",
+        "com.grammarly.android",
+        "com.notion.id",
+        "com.perplexity.app",
+        "ai.perplexity.app"
+    )
+
     data class TrustEntry(
         val retentionScore:    Int,  // 0-100
         val transparencyScore: Int,
