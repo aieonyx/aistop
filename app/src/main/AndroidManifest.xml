@@ -103,6 +103,30 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
+    
+        <!-- Sovereign Accessibility Service — auto paste intercept -->
+        <service
+            android:name=".accessibility.SovereignAccessibilityService"
+            android:exported="true"
+            android:label="AI Stop Sovereign Guard"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service"/>
+        </service>
+
+        <!-- Sovereign Overlay — paste decision sheet -->
+        <activity
+            android:name=".ui.SovereignOverlayActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AiStop.Translucent"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:launchMode="singleInstance"/>
+
     </application>
 
 </manifest>

@@ -128,10 +128,19 @@ object PermissionScanner {
         val packages = try { pm.getInstalledPackages(flags) }
                        catch (e: Exception) { return emptyList() }
         val skip = setOf("com.android.", "android.", "com.google.android.", "com.samsung.")
+        // Only flag apps whose package name or label suggests AI/assistant functionality
+        val aiKeywords = setOf(
+            "ai", "gpt", "llm", "chat", "assistant", "copilot", "gemini",
+            "claude", "perplexity", "notion", "grammarly", "write", "genius",
+            "smart", "intelligence", "neural", "bot", "predict", "ml"
+        )
         for (pkg in packages) {
-            val name = pkg.packageName
-            if (name in known) continue
+            val name = pkg.packageName.lowercase()
+            if (pkg.packageName in known) continue
             if (skip.any { name.startsWith(it) }) continue
+            // Must contain an AI keyword in package name
+            val hasAiKeyword = aiKeywords.any { name.contains(it) }
+            if (!hasAiKeyword) continue
             val perms = pkg.requestedPermissions?.toSet() ?: continue
             val hasNet = "android.permission.INTERNET" in perms
             val risky  = "android.permission.RECORD_AUDIO" in perms ||
@@ -141,9 +150,9 @@ object PermissionScanner {
             if (hasNet && risky) {
                 val label = try {
                     pm.getApplicationLabel(pkg.applicationInfo).toString()
-                } catch (e: Exception) { name }
+                } catch (e: Exception) { pkg.packageName }
                 result.add(AuditedApp(
-                    packageName = name,
+                    packageName = pkg.packageName,
                     label       = label,
                     permissions = perms.toList(),
                     trustScore  = 45,

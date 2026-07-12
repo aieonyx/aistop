@@ -22,6 +22,7 @@ object TrustDatabase {
     const val DB_VERSION = "1.0.0"
 
     val KNOWN_AI_PACKAGES = setOf(
+        // Tier 1 — Major AI assistants
         "com.openai.chatgpt",
         "com.google.android.apps.bard",
         "com.microsoft.copilot",
@@ -29,7 +30,28 @@ object TrustDatabase {
         "com.grammarly.android",
         "com.notion.id",
         "com.perplexity.app",
-        "ai.perplexity.app"
+        "ai.perplexity.app",
+        // Tier 2 — AI productivity and creative tools
+        "com.jasper.android",
+        "com.writesonic.app",
+        "io.talkpal.ai",
+        "com.pixverse.app",
+        "com.character.ai",
+        "ai.character.app",
+        "com.inflection.pi",
+        "com.poe.android",
+        "com.otter.ai",
+        "com.fireflies.ai",
+        "com.eleutheriai.lm",
+        "com.mistral.android",
+        "com.cohere.android",
+        "com.you.app",
+        "com.ideogram.ai",
+        "com.midjourney.android",
+        "com.runway.app",
+        "com.heygen.android",
+        "com.klingai.android",
+        "ai.pixverse.app"
     )
 
     data class TrustEntry(
@@ -220,6 +242,23 @@ object TrustDatabase {
             "Exercise caution when sharing sensitive information",
             "Review the app privacy policy directly for full details"
         )
+    }
+
+    fun appLabel(pkg: String): String = when (pkg) {
+        "com.openai.chatgpt"            -> "ChatGPT"
+        "com.google.android.apps.bard"  -> "Gemini"
+        "com.microsoft.copilot"         -> "Copilot"
+        "com.anthropic.claude"          -> "Claude"
+        "com.grammarly.android"         -> "Grammarly"
+        "com.notion.id"                 -> "Notion"
+        "com.perplexity.app",
+        "ai.perplexity.app"             -> "Perplexity"
+        "io.talkpal.ai"                 -> "Talkpal"
+        "com.character.ai",
+        "ai.character.app"              -> "Character.AI"
+        "com.inflection.pi"             -> "Pi"
+        "com.poe.android"               -> "Poe"
+        else                            -> pkg.substringAfterLast(".")
     }
 
 }

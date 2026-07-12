@@ -7,4 +7,5 @@
     <string name="app_name">AI Stop</string>
     <string name="sovereign_keyboard_name">AI Stop Keyboard</string>
     <string name="scrub_share_label">Scrub with AI Stop</string>
+    <string name="accessibility_service_description">AI Stop monitors paste events in AI apps to protect your sensitive data. All processing happens on-device.</string>
 </resources>

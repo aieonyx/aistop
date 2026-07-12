@@ -3,6 +3,9 @@
 package com.aieonyx.aistop.ui
 
 import android.os.Bundle
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.aieonyx.aistop.R
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -39,11 +42,18 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AiStopApp() {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    var showOnboarding by remember { mutableStateOf(!isOnboardingComplete(context)) }
     var selectedTab by remember { mutableStateOf(0) }
+
+    if (showOnboarding) {
+        OnboardingScreen(onComplete = { showOnboarding = false })
+        return@AiStopApp
+    }
 
     val tabs = listOf(
         Pair(R.drawable.ic_nav_dashboard, "Dashboard"),
-        Pair(R.drawable.ic_nav_scrub,     "Scrub"),
+        Pair(R.drawable.ic_nav_shield,    "Stats"),
         Pair(R.drawable.ic_nav_log,       "Log"),
         Pair(R.drawable.ic_nav_settings,  "Settings")
     )
@@ -57,7 +67,7 @@ fun AiStopApp() {
         Box(Modifier.weight(1f)) {
             when (selectedTab) {
                 0 -> AuditScreen()
-                1 -> ScrubTabScreen()
+                1 -> SovereignStatsScreen()
                 2 -> LogScreen()
                 3 -> SettingsScreen()
             }
@@ -134,25 +144,147 @@ fun ScrubTabScreen() {
 
 @Composable
 fun SettingsScreen() {
-    Box(
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val packageInfo = remember {
+        try { context.packageManager.getPackageInfo(context.packageName, 0) }
+        catch (e: Exception) { null }
+    }
+
+    androidx.compose.foundation.lazy.LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(SovereignVoid),
-        contentAlignment = Alignment.Center
+        contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = 24.dp)
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "Settings",
+                    color = SignalWhite, fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+
+        // Protection section
+        item { SettingsSectionHeader("PROTECTION") }
+        item {
+            SettingsCard {
+                SettingsRow("Sovereign Guard", "Accessibility service for auto paste intercept", SovereignBlue)
+                Divider(color = Color(0x14EDF3FA))
+                SettingsRow("AI Stop Keyboard", "IME-based paste interception", SovereignBlue)
+                Divider(color = Color(0x14EDF3FA))
+                SettingsRow("ScrubShare", "Share sheet PII scrubber", SovereignBlue)
+            }
+        }
+
+        // Data section
+        item { SettingsSectionHeader("DATA") }
+        item {
+            SettingsCard {
+                SettingsRow("Retention period", "30 days (local only)", SubText)
+                Divider(color = Color(0x14EDF3FA))
+                SettingsRow("Export format", "Ed25519 signed JSON", SubText)
+                Divider(color = Color(0x14EDF3FA))
+                SettingsRow("Storage", "On-device only · No cloud", SubText)
+            }
+        }
+
+        // Methodology section
+        item { SettingsSectionHeader("TRUST SCORES") }
+        item {
+            SettingsCard {
+                SettingsRow("Data Retention", "Weight: 40%", SubText)
+                Divider(color = Color(0x14EDF3FA))
+                SettingsRow("Transparency", "Weight: 30%", SubText)
+                Divider(color = Color(0x14EDF3FA))
+                SettingsRow("Opt-out Controls", "Weight: 20%", SubText)
+                Divider(color = Color(0x14EDF3FA))
+                SettingsRow("Third-party Sharing", "Weight: 10%", SubText)
+                Divider(color = Color(0x14EDF3FA))
+                SettingsRow("Source", "Public privacy policies · 2026", SubText)
+            }
+        }
+
+        // About section
+        item { SettingsSectionHeader("ABOUT") }
+        item {
+            SettingsCard {
+                SettingsRow("Version", "v${packageInfo?.versionName ?: "1.0.0"}", SubText)
+                Divider(color = Color(0x14EDF3FA))
+                SettingsRow("Developer", "AIEONYX", SovereignBlue)
+                Divider(color = Color(0x14EDF3FA))
+                SettingsRow("License", "Apache 2.0", SubText)
+                Divider(color = Color(0x14EDF3FA))
+                SettingsRow("Mission", "Revenue funds sovereign open-source computing", SubText)
+            }
+        }
+
+        item {
+            Spacer(Modifier.height(12.dp))
             Text(
-                "Settings",
-                color    = SignalWhite,
-                fontSize = 18.sp
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                "Phase 6",
-                color    = SubText,
-                fontSize = 11.sp,
-                fontFamily = FontFamily.Monospace
+                "Copyright (c) 2026 Edison Lepiten / AIEONYX",
+                color = SubText.copy(alpha = 0.4f),
+                fontSize = 9.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.padding(horizontal = 18.dp)
             )
         }
+    }
+}
+
+@Composable
+private fun SettingsSectionHeader(title: String) {
+    Text(
+        title,
+        color = SubText,
+        fontSize = 10.sp,
+        fontFamily = FontFamily.Monospace,
+        letterSpacing = 0.5.sp,
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+    )
+}
+
+@Composable
+private fun SettingsCard(content: @Composable ColumnScope.() -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 14.dp)
+            .background(Color(0x0AEDF3FA), RoundedCornerShape(14.dp)),
+        content = content
+    )
+    Spacer(Modifier.height(4.dp))
+}
+
+@Composable
+private fun SettingsRow(label: String, value: String, valueColor: Color) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 14.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Top
+    ) {
+        Text(
+            label,
+            color    = SignalWhite,
+            fontSize = 13.sp,
+            modifier = Modifier.weight(0.45f)
+        )
+        Text(
+            value,
+            color      = valueColor,
+            fontSize   = 11.sp,
+            fontFamily = FontFamily.Monospace,
+            textAlign  = androidx.compose.ui.text.style.TextAlign.End,
+            lineHeight = 15.sp,
+            modifier   = Modifier.weight(0.55f)
+        )
     }
 }

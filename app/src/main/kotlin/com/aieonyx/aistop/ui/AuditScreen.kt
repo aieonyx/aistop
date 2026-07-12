@@ -58,6 +58,15 @@ fun AuditScreen() {
     var scrubsToday  by remember { mutableStateOf(0) }
     var loading      by remember { mutableStateOf(true) }
     var selectedApp  by remember { mutableStateOf<PermissionScanner.AuditedApp?>(null) }
+    var sovereignMode by remember { mutableStateOf(true) }
+
+    // Check if AI Stop IME is actually enabled
+    LaunchedEffect(Unit) {
+        val imeManager = context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE)
+            as android.view.inputmethod.InputMethodManager
+        val enabledMethods = imeManager.enabledInputMethodList
+        sovereignMode = enabledMethods.any { it.packageName == "com.aieonyx.aistop" }
+    }
 
     // Show detail screen if app selected
     selectedApp?.let { app ->
@@ -72,9 +81,8 @@ fun AuditScreen() {
 
     LaunchedEffect(Unit) {
         scope.launch {
-            val known   = PermissionScanner.scanInstalledAiApps(context.packageManager)
-            val unknown = PermissionScanner.scanUnknownAiApps(context.packageManager)
-            apps = (known + unknown).distinctBy { it.packageName }.sortedBy { it.trustScore }
+            apps = PermissionScanner.scanInstalledAiApps(context.packageManager)
+                .sortedBy { it.trustScore }
             val midnight = midnightTs()
             val dao = ExposureDatabase.getInstance(context).exposureDao()
             blockedToday = dao.countBlockedToday(midnight)
@@ -97,20 +105,36 @@ fun AuditScreen() {
                     .padding(horizontal = 16.dp, vertical = 14.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    "AI STOP",
-                    color      = White,
-                    fontSize   = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp,
-                    modifier   = Modifier.weight(1f)
-                )
-                Icon(
-                    painter             = painterResource(R.drawable.ic_nav_settings),
-                    contentDescription  = "Settings",
-                    tint                = Sub,
-                    modifier            = Modifier.size(22.dp)
-                )
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        "AI STOP",
+                        color      = White,
+                        fontSize   = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp
+                    )
+                    Text(
+                        "SOVEREIGN AI GUARD",
+                        color      = Blue,
+                        fontSize   = 8.sp,
+                        fontFamily = FontFamily.Monospace,
+                        letterSpacing = 0.5.sp
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Box(
+                        Modifier.size(6.dp)
+                            .background(Teal, RoundedCornerShape(3.dp))
+                    )
+                    Text(
+                        "ON-DEVICE",
+                        color = Teal, fontSize = 8.sp,
+                        fontFamily = FontFamily.Monospace
+                    )
+                }
             }
         }
 
@@ -133,7 +157,7 @@ fun AuditScreen() {
                     contentAlignment = Alignment.Center
                 ) {
                     androidx.compose.foundation.Image(
-                        painter            = painterResource(R.drawable.ic_nav_shield),
+                        painter            = painterResource(R.drawable.ic_launcher_foreground),
                         contentDescription = null,
                         colorFilter        = androidx.compose.ui.graphics.ColorFilter.tint(Blue),
                         modifier           = Modifier.size(26.dp)
@@ -259,7 +283,7 @@ fun AuditScreen() {
                         )
                         Spacer(Modifier.height(6.dp))
                         Text(
-                            "Install ChatGPT, Gemini or Grammarly and they will appear here.",
+                            "Install any monitored AI app (ChatGPT, Gemini, Claude, Copilot, Grammarly, Perplexity, Notion, Character.AI, Poe) and it will appear here.",
                             color    = Sub.copy(alpha = 0.6f),
                             fontSize = 11.sp,
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center
