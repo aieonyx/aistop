@@ -117,4 +117,43 @@ object PermissionScanner {
         }
         return (100 - deduction).coerceAtLeast(0)
     }
+    /**
+     * Detect unknown AI-like apps by suspicious permission combinations.
+     * Not in known list + INTERNET + sensitive permission = flagged at 45.
+     */
+    fun scanUnknownAiApps(pm: android.content.pm.PackageManager): List<AuditedApp> {
+        val known = TrustDatabase.KNOWN_AI_PACKAGES
+        val result = mutableListOf<AuditedApp>()
+        val flags = android.content.pm.PackageManager.GET_PERMISSIONS
+        val packages = try { pm.getInstalledPackages(flags) }
+                       catch (e: Exception) { return emptyList() }
+        val skip = setOf("com.android.", "android.", "com.google.android.", "com.samsung.")
+        for (pkg in packages) {
+            val name = pkg.packageName
+            if (name in known) continue
+            if (skip.any { name.startsWith(it) }) continue
+            val perms = pkg.requestedPermissions?.toSet() ?: continue
+            val hasNet = "android.permission.INTERNET" in perms
+            val risky  = "android.permission.RECORD_AUDIO" in perms ||
+                         "android.permission.READ_CONTACTS" in perms ||
+                         "android.permission.ACCESS_FINE_LOCATION" in perms ||
+                         perms.any { it.contains("CLIPBOARD") }
+            if (hasNet && risky) {
+                val label = try {
+                    pm.getApplicationLabel(pkg.applicationInfo).toString()
+                } catch (e: Exception) { name }
+                result.add(AuditedApp(
+                    packageName = name,
+                    label       = label,
+                    permissions = perms.toList(),
+                    trustScore  = 45,
+                    trustBand   = "Amber",
+                    trustLabel  = "Caution",
+                    dataAsOf    = "unassessed"
+                ))
+            }
+        }
+        return result.take(5)
+    }
+
 }

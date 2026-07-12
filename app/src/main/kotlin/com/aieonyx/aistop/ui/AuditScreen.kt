@@ -72,7 +72,9 @@ fun AuditScreen() {
 
     LaunchedEffect(Unit) {
         scope.launch {
-            apps = PermissionScanner.scanInstalledAiApps(context.packageManager)
+            val known   = PermissionScanner.scanInstalledAiApps(context.packageManager)
+            val unknown = PermissionScanner.scanUnknownAiApps(context.packageManager)
+            apps = (known + unknown).distinctBy { it.packageName }.sortedBy { it.trustScore }
             val midnight = midnightTs()
             val dao = ExposureDatabase.getInstance(context).exposureDao()
             blockedToday = dao.countBlockedToday(midnight)
