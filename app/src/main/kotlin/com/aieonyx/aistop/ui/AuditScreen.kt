@@ -3,6 +3,7 @@
 package com.aieonyx.aistop.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,31 +12,42 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aieonyx.aistop.R
 import com.aieonyx.aistop.core.PermissionScanner
-import com.aieonyx.aistop.db.EventType
 import com.aieonyx.aistop.db.ExposureDatabase
 import kotlinx.coroutines.launch
 
-private val SovereignVoid  = Color(0xFF080A0D)
-private val SovereignBlue  = Color(0xFF4F80D4)
-private val ThreatRed      = Color(0xFFE45F65)
-private val CautionAmber   = Color(0xFFD7A84B)
-private val VerifiedTeal   = Color(0xFF3EB69F)
-private val SignalWhite    = Color(0xFFEDF3FA)
-private val SubText        = Color(0x8CEDF3FA)
-private val Surface1       = Color(0x0AEDF3FA)
-private val Surface2       = Color(0x12EDF3FA)
+private val Void    = Color(0xFF080A0D)
+private val Blue    = Color(0xFF4F80D4)
+private val Red     = Color(0xFFE45F65)
+private val Amber   = Color(0xFFD7A84B)
+private val Teal    = Color(0xFF3EB69F)
+private val White   = Color(0xFFEDF3FA)
+private val Sub     = Color(0x8CEDF3FA)
+private val Surf1   = Color(0x0AEDF3FA)
+private val Surf2   = Color(0x14EDF3FA)
+private val Divider = Color(0x1AEDF3FA)
 
-/**
- * Dashboard / AI App Audit screen.
- * Shows installed AI apps with Trust Scores and risk metrics.
- */
+// AI app brand colors matching ChatGPT design
+private val appColors = mapOf(
+    "com.openai.chatgpt"            to Color(0xFF10A37F),
+    "com.google.android.apps.bard"  to Color(0xFF1A1A2E),
+    "com.microsoft.copilot"         to Color(0xFF1A1A2E),
+    "com.anthropic.claude"          to Color(0xFFCC785C),
+    "com.grammarly.android"         to Color(0xFF15C39A),
+    "com.notion.id"                 to Color(0xFF1A1A2E),
+    "com.perplexity.app"            to Color(0xFF1A1A2E),
+    "ai.perplexity.app"             to Color(0xFF1A1A2E),
+)
+
 @Composable
 fun AuditScreen() {
     val context = LocalContext.current
@@ -45,13 +57,22 @@ fun AuditScreen() {
     var blockedToday by remember { mutableStateOf(0) }
     var scrubsToday  by remember { mutableStateOf(0) }
     var loading      by remember { mutableStateOf(true) }
+    var selectedApp  by remember { mutableStateOf<PermissionScanner.AuditedApp?>(null) }
+
+    // Show detail screen if app selected
+    selectedApp?.let { app ->
+        AppDetailScreen(
+            packageName = app.packageName,
+            appLabel    = app.label,
+            trustScore  = app.trustScore,
+            onBack      = { selectedApp = null }
+        )
+        return@AuditScreen
+    }
 
     LaunchedEffect(Unit) {
         scope.launch {
-            // Scan AI apps
             apps = PermissionScanner.scanInstalledAiApps(context.packageManager)
-
-            // Load today stats
             val midnight = midnightTs()
             val dao = ExposureDatabase.getInstance(context).exposureDao()
             blockedToday = dao.countBlockedToday(midnight)
@@ -60,275 +81,314 @@ fun AuditScreen() {
         }
     }
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(SovereignVoid)
+            .background(Void),
+        contentPadding = PaddingValues(bottom = 16.dp)
     ) {
-        // ── Header ──
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(Modifier.weight(1f)) {
+        // ── Top bar ──
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     "AI STOP",
-                    color      = SignalWhite,
+                    color      = White,
                     fontSize   = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    letterSpacing = 2.sp
+                    letterSpacing = 1.sp,
+                    modifier   = Modifier.weight(1f)
                 )
-                Text(
-                    "SOVEREIGN AI GUARD",
-                    color    = SovereignBlue,
-                    fontSize = 9.sp,
-                    fontFamily = FontFamily.Monospace,
-                    letterSpacing = 1.sp
-                )
-            }
-            // On-device indicator
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Box(
-                    Modifier
-                        .size(6.dp)
-                        .background(VerifiedTeal, RoundedCornerShape(3.dp))
-                )
-                Text(
-                    "ON-DEVICE",
-                    color      = VerifiedTeal,
-                    fontSize   = 8.sp,
-                    fontFamily = FontFamily.Monospace
+                Icon(
+                    painter             = painterResource(R.drawable.ic_nav_settings),
+                    contentDescription  = "Settings",
+                    tint                = Sub,
+                    modifier            = Modifier.size(22.dp)
                 )
             }
         }
 
         // ── Sovereign Mode card ──
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 14.dp)
-                .background(Surface1, RoundedCornerShape(12.dp))
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(Modifier.weight(1f)) {
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 14.dp)
+                    .background(Surf1, RoundedCornerShape(14.dp))
+                    .padding(14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // Shield icon with gate mark
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .background(Blue.copy(alpha = 0.15f), RoundedCornerShape(10.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    androidx.compose.foundation.Image(
+                        painter            = painterResource(R.drawable.ic_nav_shield),
+                        contentDescription = null,
+                        colorFilter        = androidx.compose.ui.graphics.ColorFilter.tint(Blue),
+                        modifier           = Modifier.size(26.dp)
+                    )
+                }
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        "SOVEREIGN MODE",
+                        color      = White,
+                        fontSize   = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        letterSpacing = 0.5.sp
+                    )
+                    Text(
+                        "AI Stop is protecting your input",
+                        color    = Sub,
+                        fontSize = 11.sp
+                    )
+                }
+                Switch(
+                    checked        = true,
+                    onCheckedChange = {},
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = White,
+                        checkedTrackColor = Blue
+                    )
+                )
+            }
+            Spacer(Modifier.height(10.dp))
+        }
+
+        // ── Stats card — single wide card ──
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 14.dp)
+                    .background(Surf1, RoundedCornerShape(14.dp))
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                StatItem(
+                    value = apps.count { it.trustScore < 40 }.toString(),
+                    label = "Apps at risk",
+                    color = Red
+                )
+                Box(
+                    Modifier
+                        .width(1.dp)
+                        .height(44.dp)
+                        .background(Divider)
+                )
+                StatItem(
+                    value = blockedToday.toString(),
+                    label = "Paste events blocked",
+                    color = Amber
+                )
+                Box(
+                    Modifier
+                        .width(1.dp)
+                        .height(44.dp)
+                        .background(Divider)
+                )
+                StatItem(
+                    value = scrubsToday.toString(),
+                    label = "Scrubs done today",
+                    color = Teal
+                )
+            }
+            Spacer(Modifier.height(10.dp))
+        }
+
+        // ── AI Apps Audit section ──
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 6.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(
-                    "SOVEREIGN MODE",
-                    color      = SovereignBlue,
-                    fontSize   = 11.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    "AI APPS AUDIT",
+                    color    = Sub,
+                    fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace,
                     letterSpacing = 0.5.sp
                 )
                 Text(
-                    "AI Stop is protecting your input",
-                    color    = SubText,
-                    fontSize = 10.sp
+                    "${apps.size} found",
+                    color    = Sub,
+                    fontSize = 11.sp,
+                    fontFamily = FontFamily.Monospace
                 )
             }
-            Switch(
-                checked = true,
-                onCheckedChange = {},
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor  = SignalWhite,
-                    checkedTrackColor  = SovereignBlue
-                )
-            )
         }
 
-        Spacer(Modifier.height(12.dp))
-
-        // ── Stats row ──
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 14.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            StatCard(
-                value = apps.count { it.trustScore < 40 }.toString(),
-                label = "APPS AT RISK",
-                color = ThreatRed,
-                modifier = Modifier.weight(1f)
-            )
-            StatCard(
-                value = blockedToday.toString(),
-                label = "BLOCKED TODAY",
-                color = CautionAmber,
-                modifier = Modifier.weight(1f)
-            )
-            StatCard(
-                value = scrubsToday.toString(),
-                label = "SCRUBS DONE",
-                color = VerifiedTeal,
-                modifier = Modifier.weight(1f)
-            )
-        }
-
-        Spacer(Modifier.height(12.dp))
-
-        // ── AI Apps list ──
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                "AI APPS AUDIT",
-                color      = SubText,
-                fontSize   = 9.sp,
-                fontFamily = FontFamily.Monospace,
-                letterSpacing = 0.8.sp
-            )
-            Text(
-                "${apps.size} found",
-                color      = SubText,
-                fontSize   = 9.sp,
-                fontFamily = FontFamily.Monospace
-            )
-        }
-
+        // ── App list ──
         if (loading) {
-            Box(
-                Modifier.fillMaxWidth().padding(32.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = SovereignBlue, strokeWidth = 2.dp)
+            item {
+                Box(
+                    Modifier.fillMaxWidth().padding(48.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Blue, strokeWidth = 2.dp)
+                }
             }
         } else if (apps.isEmpty()) {
-            Box(
-                Modifier.fillMaxWidth().padding(32.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    "No monitored AI apps found",
-                    color    = SubText,
-                    fontSize = 13.sp
-                )
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 14.dp)
+                        .background(Surf1, RoundedCornerShape(14.dp))
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            "No monitored AI apps found",
+                            color      = Sub,
+                            fontSize   = 14.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Spacer(Modifier.height(6.dp))
+                        Text(
+                            "Install ChatGPT, Gemini or Grammarly and they will appear here.",
+                            color    = Sub.copy(alpha = 0.6f),
+                            fontSize = 11.sp,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                    }
+                }
             }
         } else {
-            LazyColumn(
-                modifier       = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                items(apps) { app -> AppRow(app) }
+            // Apps in a single card with dividers
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 14.dp)
+                        .background(Surf1, RoundedCornerShape(14.dp))
+                ) {
+                    apps.forEachIndexed { index, app ->
+                        AppRow(app, onClick = { selectedApp = app })
+                        if (index < apps.size - 1) {
+                            HorizontalDivider(
+                                color     = Divider,
+                                thickness = 1.dp,
+                                modifier  = Modifier.padding(horizontal = 14.dp)
+                            )
+                        }
+                    }
+                }
             }
+        }
+
+        // ── Last audit line ──
+        item {
+            Text(
+                "Last audit: Just now  ·  Re-audit",
+                color    = Sub.copy(alpha = 0.5f),
+                fontSize = 10.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp)
+            )
         }
     }
 }
 
 @Composable
-private fun StatCard(
-    value:    String,
-    label:    String,
-    color:    Color,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .background(Surface1, RoundedCornerShape(10.dp))
-            .padding(10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+private fun StatItem(value: String, label: String, color: Color) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             value,
             color      = color,
-            fontSize   = 22.sp,
+            fontSize   = 32.sp,
             fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Monospace
+            fontFamily = FontFamily.Monospace,
+            lineHeight = 36.sp
         )
         Text(
             label,
-            color      = SubText,
-            fontSize   = 7.sp,
-            fontFamily = FontFamily.Monospace,
-            letterSpacing = 0.3.sp
+            color      = Sub,
+            fontSize   = 11.sp,
+            textAlign  = androidx.compose.ui.text.style.TextAlign.Center,
+            lineHeight = 14.sp
         )
     }
 }
 
 @Composable
-private fun AppRow(app: PermissionScanner.AuditedApp) {
+private fun AppRow(app: PermissionScanner.AuditedApp, onClick: () -> Unit = {}) {
     val scoreColor = when {
-        app.trustScore < 40 -> ThreatRed
-        app.trustScore < 70 -> CautionAmber
-        else                -> VerifiedTeal
+        app.trustScore < 40 -> Red
+        app.trustScore < 70 -> Amber
+        else                -> Teal
     }
     val scoreLabel = when {
-        app.trustScore < 40 -> "Low Trust"
+        app.trustScore < 40 -> "High Risk"
         app.trustScore < 70 -> "Caution"
         else                -> "Trusted"
     }
-    val borderColor = when {
-        app.trustScore < 40 -> ThreatRed.copy(alpha = 0.25f)
-        app.trustScore < 70 -> CautionAmber.copy(alpha = 0.2f)
-        else                -> Surface2
-    }
+    val bgColor = appColors[app.packageName] ?: Color(0xFF1A1A2E)
+    val initial = app.label.take(1).uppercase()
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Surface1, RoundedCornerShape(10.dp))
-            .padding(10.dp),
+            .clickable { onClick() }
+            .padding(horizontal = 14.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
+        horizontalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        // App icon placeholder
+        // App icon — colored rounded square with initial
         Box(
             modifier = Modifier
-                .size(36.dp)
-                .background(Surface2, RoundedCornerShape(9.dp)),
+                .size(46.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(bgColor),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                app.label.take(1),
-                color      = SovereignBlue,
-                fontSize   = 14.sp,
+                initial,
+                color      = White,
+                fontSize   = 18.sp,
                 fontWeight = FontWeight.Bold
             )
         }
 
-        // App info
+        // App name + package
         Column(Modifier.weight(1f)) {
             Text(
                 app.label,
-                color      = SignalWhite,
-                fontSize   = 13.sp,
+                color      = White,
+                fontSize   = 15.sp,
                 fontWeight = FontWeight.Medium
-            )
-            Text(
-                app.packageName,
-                color      = SubText,
-                fontSize   = 8.sp,
-                fontFamily = FontFamily.Monospace
             )
         }
 
-        // Trust score
+        // Score + label
         Column(horizontalAlignment = Alignment.End) {
             Text(
                 "${app.trustScore}",
                 color      = scoreColor,
-                fontSize   = 16.sp,
+                fontSize   = 20.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Monospace
             )
             Text(
                 scoreLabel,
                 color      = scoreColor,
-                fontSize   = 8.sp,
+                fontSize   = 10.sp,
                 fontFamily = FontFamily.Monospace
             )
         }
 
-        Text("›", color = SubText, fontSize = 14.sp)
+        Text("›", color = Sub, fontSize = 18.sp)
     }
 }
 

@@ -3,6 +3,7 @@
 package com.aieonyx.aistop.ui
 
 import android.os.Bundle
+import com.aieonyx.aistop.R
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -41,10 +42,10 @@ fun AiStopApp() {
     var selectedTab by remember { mutableStateOf(0) }
 
     val tabs = listOf(
-        "⊞" to "Dashboard",
-        "✂" to "Scrub",
-        "📋" to "Log",
-        "⚙" to "Settings"
+        Pair(R.drawable.ic_nav_dashboard, "Dashboard"),
+        Pair(R.drawable.ic_nav_scrub,     "Scrub"),
+        Pair(R.drawable.ic_nav_log,       "Log"),
+        Pair(R.drawable.ic_nav_settings,  "Settings")
     )
 
     Column(
@@ -71,7 +72,7 @@ fun AiStopApp() {
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            tabs.forEachIndexed { index, (icon, label) ->
+            tabs.forEachIndexed { index, (iconRes, label) ->
                 val active = selectedTab == index
                 Column(
                     modifier = Modifier
@@ -79,10 +80,13 @@ fun AiStopApp() {
                         .padding(horizontal = 16.dp, vertical = 4.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        icon,
-                        fontSize = 18.sp,
-                        color    = if (active) SovereignBlue else SubText
+                    androidx.compose.foundation.Image(
+                        painter = androidx.compose.ui.res.painterResource(id = iconRes),
+                        contentDescription = label,
+                        colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(
+                            if (active) SovereignBlue else SubText
+                        ),
+                        modifier = Modifier.size(22.dp)
                     )
                     Text(
                         label,

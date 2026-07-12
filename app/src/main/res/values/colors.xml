@@ -10,4 +10,5 @@
     <color name="caution_amber">#D7A84B</color>
     <color name="verified_teal">#3EB69F</color>
     <color name="signal_white">#EDF3FA</color>
+    <color name="nav_icon_color">#4F80D4</color>
 </resources>

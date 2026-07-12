@@ -134,4 +134,92 @@ object TrustDatabase {
     )
 
     fun dataAsOf(pkg: String): String = entry(pkg).dataAsOf
+    data class ScoreItem(val label: String, val detail: String, val score: Int)
+
+    fun brandColor(pkg: String): Long = when (pkg) {
+        "com.openai.chatgpt"            -> 0xFF10A37FL
+        "com.google.android.apps.bard"  -> 0xFF1A1A2EL
+        "com.microsoft.copilot"         -> 0xFF1A1A2EL
+        "com.anthropic.claude"          -> 0xFFCC785CL
+        "com.grammarly.android"         -> 0xFF15C39AL
+        else                            -> 0xFF1A1A2EL
+    }
+
+    fun getBreakdown(pkg: String): List<ScoreItem> = when (pkg) {
+        "com.openai.chatgpt" -> listOf(
+            ScoreItem("Data Retention", "Retains data up to 3 years with account", 15),
+            ScoreItem("Transparency", "Opt-out requires multiple steps", 35),
+            ScoreItem("Opt-out Controls", "Training opt-out available but not default", 20),
+            ScoreItem("Third-party Sharing", "Data shared with Microsoft and partners", 10)
+        )
+        "com.google.android.apps.bard" -> listOf(
+            ScoreItem("Data Retention", "Gemini activity stored 18 months by default", 25),
+            ScoreItem("Transparency", "Privacy policy is detailed and accessible", 65),
+            ScoreItem("Opt-out Controls", "Auto-delete available; activity can be paused", 55),
+            ScoreItem("Third-party Sharing", "Data used within Google ecosystem", 40)
+        )
+        "com.microsoft.copilot" -> listOf(
+            ScoreItem("Data Retention", "Retention period not clearly disclosed", 10),
+            ScoreItem("Transparency", "Policy references multiple Microsoft products", 30),
+            ScoreItem("Opt-out Controls", "Limited opt-out; tied to Microsoft account", 15),
+            ScoreItem("Third-party Sharing", "Data may be shared with OpenAI and partners", 20)
+        )
+        "com.anthropic.claude" -> listOf(
+            ScoreItem("Data Retention", "Retention period not explicitly disclosed", 20),
+            ScoreItem("Transparency", "Policy readable but incomplete on retention", 45),
+            ScoreItem("Opt-out Controls", "No clear training opt-out for free tier", 30),
+            ScoreItem("Third-party Sharing", "Limited third-party sharing disclosed", 50)
+        )
+        "com.grammarly.android" -> listOf(
+            ScoreItem("Data Retention", "Retains text snippets for service improvement", 35),
+            ScoreItem("Transparency", "Clear policy with specific data categories", 65),
+            ScoreItem("Opt-out Controls", "Premium users have more control", 50),
+            ScoreItem("Third-party Sharing", "No sale of personal data stated", 60)
+        )
+        else -> listOf(
+            ScoreItem("Data Retention", "Retention policy not assessed", 50),
+            ScoreItem("Transparency", "Privacy policy not assessed", 50),
+            ScoreItem("Opt-out Controls", "Opt-out options not assessed", 50),
+            ScoreItem("Third-party Sharing", "Sharing practices not assessed", 50)
+        )
+    }
+
+    fun getImplications(pkg: String): List<String> = when (pkg) {
+        "com.openai.chatgpt" -> listOf(
+            "Text you paste may be used to train future AI models",
+            "Data retained for up to 3 years with an account",
+            "Opt-out from training requires Settings > Data Controls",
+            "Microsoft has access to your conversation data"
+        )
+        "com.google.android.apps.bard" -> listOf(
+            "Gemini activity stored for 18 months by default",
+            "Human reviewers may read conversations to improve quality",
+            "Auto-delete can be set to 3 or 18 months",
+            "Data integrated with your broader Google account"
+        )
+        "com.microsoft.copilot" -> listOf(
+            "Retention period for conversations is not clearly disclosed",
+            "Data may flow between Microsoft and OpenAI infrastructure",
+            "Opt-out options are limited compared to competitors",
+            "Enterprise and consumer data handled under different policies"
+        )
+        "com.anthropic.claude" -> listOf(
+            "Free tier conversations may be used for model improvement",
+            "No clear opt-out from training for non-enterprise users",
+            "Retention period not explicitly disclosed in consumer policy",
+            "Pro and Enterprise tiers offer stronger data protections"
+        )
+        "com.grammarly.android" -> listOf(
+            "Text you type is processed on Grammarly servers",
+            "Snippets retained for service improvement",
+            "Broad accessibility permissions required for full functionality",
+            "No sale of personal data per current privacy policy"
+        )
+        else -> listOf(
+            "Privacy policy has not been fully assessed",
+            "Exercise caution when sharing sensitive information",
+            "Review the app privacy policy directly for full details"
+        )
+    }
+
 }
