@@ -48,23 +48,44 @@ class ScrubShareActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Extract shared text
+        // Extract shared content — text or image
         val sharedText = when (intent?.action) {
             Intent.ACTION_SEND -> intent.getStringExtra(Intent.EXTRA_TEXT) ?: ""
             else               -> ""
         }
 
-        if (sharedText.isBlank()) {
-            Toast.makeText(this, "No text to scrub", Toast.LENGTH_SHORT).show()
-            finish()
-            return
+        // Handle image share
+        val imageUri = when (intent?.action) {
+            Intent.ACTION_SEND -> {
+                val mime = intent.type ?: ""
+                if (mime.startsWith("image/")) {
+                    intent.getParcelableExtra<android.net.Uri>(Intent.EXTRA_STREAM)
+                } else null
+            }
+            else -> null
         }
 
-        setContent {
-            ScrubShareScreen(
-                inputText  = sharedText,
-                onDismiss  = { finish() }
-            )
+        when {
+            imageUri != null -> {
+                setContent {
+                    ImageScrubScreen(
+                        imageUri  = imageUri,
+                        onDismiss = { finish() }
+                    )
+                }
+            }
+            sharedText.isNotBlank() -> {
+                setContent {
+                    ScrubShareScreen(
+                        inputText  = sharedText,
+                        onDismiss  = { finish() }
+                    )
+                }
+            }
+            else -> {
+                Toast.makeText(this, "No content to scrub", Toast.LENGTH_SHORT).show()
+                finish()
+            }
         }
     }
 }
@@ -415,4 +436,187 @@ private fun midnightTs(): Long {
     cal.set(java.util.Calendar.SECOND, 0)
     cal.set(java.util.Calendar.MILLISECOND, 0)
     return cal.timeInMillis
+}
+
+
+// ── Image Scrub Screen ────────────────────────────────────────────────────────
+
+@Composable
+fun ImageScrubScreen(imageUri: android.net.Uri, onDismiss: () -> Unit) {
+    val context       = LocalContext.current
+    var scrubResult   by remember { mutableStateOf<com.aieonyx.aistop.scrub.ExifScrubber.ScrubResult?>(null) }
+    var processing    by remember { mutableStateOf(true) }
+    var shared        by remember { mutableStateOf(false) }
+
+    LaunchedEffect(imageUri) {
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            scrubResult = com.aieonyx.aistop.scrub.ExifScrubber.scrubImage(context, imageUri)
+            processing  = false
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(SovereignVoid.copy(alpha = 0.96f)),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFF0F1318), RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                .padding(20.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "Image Scrub",
+                    color = SignalWhite, fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                )
+                TextButton(onClick = onDismiss) {
+                    Text("✕", color = SubText)
+                }
+            }
+
+            Spacer(Modifier.height(12.dp))
+
+            if (processing) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    CircularProgressIndicator(
+                        color = SovereignBlue,
+                        strokeWidth = 2.dp,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text("Scanning image metadata...", color = SubText, fontSize = 12.sp)
+                }
+            } else {
+                val result = scrubResult
+                if (result != null) {
+                    // GPS warning
+                    if (result.hadGps) {
+                        Surface(
+                            color = ThreatRed.copy(alpha = 0.10f),
+                            shape = RoundedCornerShape(8.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(10.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Text("📍", fontSize = 14.sp)
+                                Column {
+                                    Text(
+                                        "GPS location removed",
+                                        color = ThreatRed,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                    Text(
+                                        "This photo contained your exact location",
+                                        color = SubText, fontSize = 10.sp
+                                    )
+                                }
+                            }
+                        }
+                        Spacer(Modifier.height(8.dp))
+                    }
+
+                    // Device info warning
+                    if (result.hadDeviceInfo) {
+                        Surface(
+                            color = CautionAmber.copy(alpha = 0.08f),
+                            shape = RoundedCornerShape(8.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(10.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Text("📱", fontSize = 14.sp)
+                                Column {
+                                    Text(
+                                        "Device info removed",
+                                        color = CautionAmber,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                    Text(
+                                        "Camera make, model and serial stripped",
+                                        color = SubText, fontSize = 10.sp
+                                    )
+                                }
+                            }
+                        }
+                        Spacer(Modifier.height(8.dp))
+                    }
+
+                    // Summary
+                    Surface(
+                        color = Color(0x0AEDF3FA),
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            "${result.tagsRemoved.size} metadata fields removed · Image content unchanged",
+                            color = SubText,
+                            fontSize = 10.sp,
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    // Share clean image
+                    Button(
+                        onClick = {
+                            val uri = androidx.core.content.FileProvider.getUriForFile(
+                                context,
+                                "${context.packageName}.fileprovider",
+                                result.cleanFile
+                            )
+                            val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                                type = "image/jpeg"
+                                putExtra(android.content.Intent.EXTRA_STREAM, uri)
+                                addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            }
+                            context.startActivity(
+                                android.content.Intent.createChooser(shareIntent, "Share clean image")
+                            )
+                            shared = true
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = SovereignBlue),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text(
+                            if (shared) "✓ Shared clean image" else "Share without metadata",
+                            fontWeight = FontWeight.SemiBold, fontSize = 13.sp
+                        )
+                    }
+                } else {
+                    Text(
+                        "Could not process this image format",
+                        color = SubText, fontSize = 12.sp
+                    )
+                }
+
+                Spacer(Modifier.height(8.dp))
+                OutlinedButton(
+                    onClick = onDismiss,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = SubText)
+                ) {
+                    Text("Close", fontSize = 13.sp)
+                }
+            }
+            Spacer(Modifier.height(16.dp))
+        }
+    }
 }

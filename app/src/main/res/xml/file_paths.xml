@@ -5,4 +5,5 @@
 -->
 <paths>
     <files-path name="exports" path="exports/"/>
+    <cache-path name="scrub_cache" path="./"/>
 </paths>
