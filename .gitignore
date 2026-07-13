@@ -22,3 +22,4 @@ Cargo.lock
 /Run
 app/build/
 build/
+gradle.properties
