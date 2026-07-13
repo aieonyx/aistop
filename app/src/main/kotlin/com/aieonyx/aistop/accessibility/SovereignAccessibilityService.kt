@@ -10,7 +10,7 @@ import android.content.Intent
 import android.view.accessibility.AccessibilityEvent
 import com.aieonyx.aistop.core.TrustDatabase
 import com.aieonyx.aistop.jni.AiStopCore
-import com.aieonyx.aistop.db.ExposureDatabase
+import com.aieonyx.aistop.db.EdisonExposureDatabase as ExposureDatabase
 import com.aieonyx.aistop.db.ExposureEvent
 import com.aieonyx.aistop.db.EventType
 import kotlinx.coroutines.CoroutineScope

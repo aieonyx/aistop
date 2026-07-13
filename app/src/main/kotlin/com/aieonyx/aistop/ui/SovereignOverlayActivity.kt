@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aieonyx.aistop.core.TrustDatabase
-import com.aieonyx.aistop.db.ExposureDatabase
+import com.aieonyx.aistop.db.EdisonExposureDatabase as ExposureDatabase
 import com.aieonyx.aistop.db.EventType
 import com.aieonyx.aistop.jni.AiStopCore
 import kotlinx.coroutines.CoroutineScope

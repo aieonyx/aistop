@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aieonyx.aistop.db.EventType
-import com.aieonyx.aistop.db.ExposureDatabase
+import com.aieonyx.aistop.db.EdisonExposureDatabase as ExposureDatabase
 import com.aieonyx.aistop.db.ExposureEvent
 
 private val Void  = Color(0xFF080A0D)

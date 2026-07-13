@@ -5,7 +5,7 @@ package com.aieonyx.aistop.export
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.FileProvider
-import com.aieonyx.aistop.db.ExposureDatabase
+import com.aieonyx.aistop.db.EdisonExposureDatabase as ExposureDatabase
 import com.aieonyx.aistop.db.ExposureEvent
 import com.aieonyx.aistop.identity.SovereignIdentity
 import com.aieonyx.aistop.jni.AiStopCore

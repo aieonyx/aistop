@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aieonyx.aistop.R
 import com.aieonyx.aistop.core.PermissionScanner
-import com.aieonyx.aistop.db.ExposureDatabase
+import com.aieonyx.aistop.db.EdisonExposureDatabase as ExposureDatabase
 import kotlinx.coroutines.launch
 
 private val Void    = Color(0xFF080A0D)
