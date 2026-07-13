@@ -24,7 +24,7 @@ pub fn blake3_hash_str(input: &str) -> String {
 /// Called after Kotlin/Keystore returns the Ed25519 signature bytes.
 pub fn assemble_signature_block(
     payload_json: &str,
-    hash_hex:     &str,
+    hash_hex: &str,
     signature_hex: &str,
 ) -> Result<String, String> {
     let block = serde_json::json!({
@@ -62,9 +62,7 @@ mod tests {
 
     #[test]
     fn assemble_block_contains_schema() {
-        let block = assemble_signature_block(
-            r#"{"events":[]}"#, "aabbcc", "ddeeff"
-        ).unwrap();
+        let block = assemble_signature_block(r#"{"events":[]}"#, "aabbcc", "ddeeff").unwrap();
         assert!(block.contains("aistop.exposure.v1"));
         assert!(block.contains("aabbcc"));
     }

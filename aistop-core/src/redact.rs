@@ -5,20 +5,20 @@
 // Token mapping stored locally, encrypted, session-expiring (Kotlin layer).
 // restore() reverses tokens in AI reply text.
 
-use serde::{Deserialize, Serialize};
 use crate::pii::detector::{DetectionReport, PiiClass};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RedactedOutput {
-    pub text:    String,
+    pub text: String,
     pub mapping: Vec<TokenMapping>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TokenMapping {
-    pub token:    String,  // e.g. "[NAME_1]"
-    pub original: String,  // original value — kept in encrypted local store
-    pub class:    String,
+    pub token: String,    // e.g. "[NAME_1]"
+    pub original: String, // original value — kept in encrypted local store
+    pub class: String,
 }
 
 /// Redact all PII matches in text, return redacted string + mapping.
@@ -45,7 +45,10 @@ pub fn redact(text: &str, report: &DetectionReport) -> RedactedOutput {
         });
     }
 
-    RedactedOutput { text: result, mapping }
+    RedactedOutput {
+        text: result,
+        mapping,
+    }
 }
 
 /// Restore tokens in AI reply text using the saved mapping.
@@ -62,22 +65,23 @@ pub fn restore(text: &str, mapping: &[TokenMapping]) -> String {
 
 fn class_key(class: &PiiClass) -> String {
     match class {
-        PiiClass::FullName    => "NAME",
-        PiiClass::Email       => "EMAIL",
-        PiiClass::Phone       => "PHONE",
+        PiiClass::FullName => "NAME",
+        PiiClass::Email => "EMAIL",
+        PiiClass::Phone => "PHONE",
         PiiClass::DateOfBirth => "DOB",
-        PiiClass::Address     => "ADDRESS",
-        PiiClass::IdNumber    => "ID",
-        PiiClass::ApiKey      => "API_KEY",
-        PiiClass::CreditCard  => "CARD",
-        PiiClass::IpAddress   => "IP",
+        PiiClass::Address => "ADDRESS",
+        PiiClass::IdNumber => "ID",
+        PiiClass::ApiKey => "API_KEY",
+        PiiClass::CreditCard => "CARD",
+        PiiClass::IpAddress => "IP",
         PiiClass::CryptoWallet => "CRYPTO",
-        PiiClass::Financial   => "FINANCIAL",
+        PiiClass::Financial => "FINANCIAL",
         PiiClass::GovernmentId => "GOV_ID",
-        PiiClass::Location    => "LOCATION",
-        PiiClass::DeviceId    => "DEVICE_ID",
-        PiiClass::Custom(s)   => return s.to_uppercase(),
-    }.to_string()
+        PiiClass::Location => "LOCATION",
+        PiiClass::DeviceId => "DEVICE_ID",
+        PiiClass::Custom(s) => return s.to_uppercase(),
+    }
+    .to_string()
 }
 
 #[cfg(test)]
@@ -86,19 +90,21 @@ mod tests {
     use crate::pii::detector::PiiMatch;
 
     fn make_report(matches: Vec<PiiMatch>) -> DetectionReport {
-        DetectionReport { matches, char_count: 100 }
+        DetectionReport {
+            matches,
+            char_count: 100,
+        }
     }
 
     #[test]
     fn redacts_email() {
         let text = "Email john@example.com please";
-        let report = make_report(vec![
-            PiiMatch {
-                class: PiiClass::Email,
-                start: 6, end: 22,
-                masked: "jo••••@ex•••.com".into(),
-            }
-        ]);
+        let report = make_report(vec![PiiMatch {
+            class: PiiClass::Email,
+            start: 6,
+            end: 22,
+            masked: "jo••••@ex•••.com".into(),
+        }]);
         let out = redact(text, &report);
         assert!(out.text.contains("[EMAIL_1]"));
         assert!(!out.text.contains("john@example.com"));
@@ -108,13 +114,12 @@ mod tests {
     #[test]
     fn restore_reverses_redaction() {
         let text = "Email john@example.com here";
-        let report = make_report(vec![
-            PiiMatch {
-                class: PiiClass::Email,
-                start: 6, end: 22,
-                masked: "".into(),
-            }
-        ]);
+        let report = make_report(vec![PiiMatch {
+            class: PiiClass::Email,
+            start: 6,
+            end: 22,
+            masked: "".into(),
+        }]);
         let redacted = redact(text, &report);
         let restored = restore(&redacted.text, &redacted.mapping);
         assert!(restored.contains("john@example.com"));
@@ -124,8 +129,18 @@ mod tests {
     fn multiple_same_class_get_numbered_tokens() {
         let text = "a@a.com and b@b.com";
         let report = make_report(vec![
-            PiiMatch { class: PiiClass::Email, start: 0, end: 7, masked: "".into() },
-            PiiMatch { class: PiiClass::Email, start: 12, end: 19, masked: "".into() },
+            PiiMatch {
+                class: PiiClass::Email,
+                start: 0,
+                end: 7,
+                masked: "".into(),
+            },
+            PiiMatch {
+                class: PiiClass::Email,
+                start: 12,
+                end: 19,
+                masked: "".into(),
+            },
         ]);
         let out = redact(text, &report);
         assert!(out.text.contains("[EMAIL_1]") || out.text.contains("[EMAIL_2]"));

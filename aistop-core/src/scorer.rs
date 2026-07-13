@@ -9,49 +9,53 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppRiskProfile {
-    pub package:             String,
-    pub permissions_score:   u8,   // 0-100 already weighted
-    pub retention_score:     u8,
-    pub transparency_score:  u8,
-    pub opt_out_score:       u8,
+    pub package: String,
+    pub permissions_score: u8, // 0-100 already weighted
+    pub retention_score: u8,
+    pub transparency_score: u8,
+    pub opt_out_score: u8,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TrustResult {
-    pub package:   String,
-    pub score:     u8,
-    pub band:      TrustBand,
+    pub package: String,
+    pub score: u8,
+    pub band: TrustBand,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TrustBand {
-    Red,    // < 40
-    Amber,  // 40-69
-    Green,  // 70+
+    Red,   // < 40
+    Amber, // 40-69
+    Green, // 70+
 }
 
 /// Compute trust score from a risk profile.
 /// Returns 0-100 where higher = more trustworthy.
 pub fn compute_trust(profile: &AppRiskProfile) -> TrustResult {
-    let score = (profile.permissions_score  as f32 * 0.40
-               + profile.retention_score    as f32 * 0.30
-               + profile.transparency_score as f32 * 0.20
-               + profile.opt_out_score      as f32 * 0.10)
-               .round() as u8;
+    let score = (profile.permissions_score as f32 * 0.40
+        + profile.retention_score as f32 * 0.30
+        + profile.transparency_score as f32 * 0.20
+        + profile.opt_out_score as f32 * 0.10)
+        .round() as u8;
 
     let band = match score {
-        0..=39  => TrustBand::Red,
+        0..=39 => TrustBand::Red,
         40..=69 => TrustBand::Amber,
-        _       => TrustBand::Green,
+        _ => TrustBand::Green,
     };
 
-    TrustResult { package: profile.package.clone(), score, band }
+    TrustResult {
+        package: profile.package.clone(),
+        score,
+        band,
+    }
 }
 
 /// Parse a JSON array of AppRiskProfile, compute scores, return JSON array of TrustResult.
 pub fn compute_trust_batch(profiles_json: &str) -> Result<String, String> {
-    let profiles: Vec<AppRiskProfile> = serde_json::from_str(profiles_json)
-        .map_err(|e| e.to_string())?;
+    let profiles: Vec<AppRiskProfile> =
+        serde_json::from_str(profiles_json).map_err(|e| e.to_string())?;
     let results: Vec<TrustResult> = profiles.iter().map(compute_trust).collect();
     serde_json::to_string(&results).map_err(|e| e.to_string())
 }
@@ -63,10 +67,10 @@ mod tests {
     fn profile(p: u8, r: u8, t: u8, o: u8) -> AppRiskProfile {
         AppRiskProfile {
             package: "test.pkg".into(),
-            permissions_score:  p,
-            retention_score:    r,
+            permissions_score: p,
+            retention_score: r,
             transparency_score: t,
-            opt_out_score:      o,
+            opt_out_score: o,
         }
     }
 

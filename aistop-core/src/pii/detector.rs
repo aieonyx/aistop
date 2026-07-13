@@ -26,16 +26,16 @@ pub enum PiiClass {
 /// A single matched PII span in the input text.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PiiMatch {
-    pub class:      PiiClass,
-    pub start:      usize,
-    pub end:        usize,
-    pub masked:     String,  // e.g. "ed••••@gm•••.com" — shown in IME sheet
+    pub class: PiiClass,
+    pub start: usize,
+    pub end: usize,
+    pub masked: String, // e.g. "ed••••@gm•••.com" — shown in IME sheet
 }
 
 /// Full detection report returned to Kotlin via JNI.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DetectionReport {
-    pub matches:    Vec<PiiMatch>,
+    pub matches: Vec<PiiMatch>,
     pub char_count: usize,
 }
 
@@ -45,7 +45,7 @@ pub struct DetectionReport {
 pub enum DetectionResult {
     PiiFound(DetectionReport),
     NoPiiFound,
-    Unavailable,  // null or restricted InputConnection — pass through safely
+    Unavailable, // null or restricted InputConnection — pass through safely
 }
 
 /// Pluggable detector trait.

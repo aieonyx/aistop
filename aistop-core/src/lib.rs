@@ -6,10 +6,10 @@
 // Same crate serves Android (JNI), iOS (C FFI), desktop.
 
 pub mod auditor;
-pub mod scorer;
+pub mod export;
+pub mod hasher;
+pub mod jni_bridge;
 pub mod pii;
 pub mod redact;
-pub mod hasher;
+pub mod scorer;
 pub mod store;
-pub mod export;
-pub mod jni_bridge;

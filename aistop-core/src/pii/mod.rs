@@ -8,5 +8,5 @@ pub mod detector;
 pub mod regex_detector;
 pub mod rules;
 
-pub use detector::{DetectionResult, DetectionReport, PiiMatch, PiiClass};
+pub use detector::{DetectionReport, DetectionResult, PiiClass, PiiMatch};
 pub use regex_detector::RegexDetector;

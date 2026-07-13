@@ -9,12 +9,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ExposureEvent {
-    pub id:          Option<i64>,
-    pub ts:          i64,       // epoch ms
-    pub package:     String,
-    pub app_label:   String,
-    pub event_type:  EventType,
-    pub preview_20:  String,    // first 20 chars only — NEVER full content
+    pub id: Option<i64>,
+    pub ts: i64, // epoch ms
+    pub package: String,
+    pub app_label: String,
+    pub event_type: EventType,
+    pub preview_20: String, // first 20 chars only — NEVER full content
     pub trust_score: u8,
     pub pii_classes: Vec<String>, // JSON-serialised PiiClass names
 }
@@ -31,8 +31,8 @@ pub enum EventType {
 #[derive(Debug, Clone, Default)]
 pub struct LogFilter {
     pub event_type: Option<EventType>,
-    pub since_ts:   Option<i64>,
-    pub limit:      Option<usize>,
+    pub since_ts: Option<i64>,
+    pub limit: Option<usize>,
 }
 
 /// Pluggable storage backend trait.

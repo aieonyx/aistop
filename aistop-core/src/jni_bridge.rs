@@ -7,15 +7,15 @@
 
 #![allow(non_snake_case)]
 
-use jni::JNIEnv;
 use jni::objects::{JClass, JString};
 use jni::sys::jstring;
+use jni::JNIEnv;
 
-use crate::pii::regex_detector::RegexDetector;
+use crate::export::{finalise_export, prepare_export};
+use crate::hasher::{assemble_signature_block, blake3_hash_str};
 use crate::pii::detector::PiiDetector;
+use crate::pii::regex_detector::RegexDetector;
 use crate::scorer::compute_trust_batch;
-use crate::hasher::{blake3_hash_str, assemble_signature_block};
-use crate::export::{prepare_export, finalise_export};
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -24,19 +24,21 @@ fn jstring_to_str(env: &mut JNIEnv, s: JString) -> String {
 }
 
 fn str_to_jstring(env: &mut JNIEnv, s: &str) -> jstring {
-    env.new_string(s).map(|j| j.into_raw()).unwrap_or_else(|_| std::ptr::null_mut())
+    env.new_string(s)
+        .map(|j| j.into_raw())
+        .unwrap_or_else(|_| std::ptr::null_mut())
 }
 
 // ── M6 TrustScorer ───────────────────────────────────────────────────────────
 
 #[no_mangle]
 pub extern "system" fn Java_com_aieonyx_aistop_jni_AiStopCore_trustComputeBatch(
-    mut env: JNIEnv, _class: JClass, profiles_json: JString,
+    mut env: JNIEnv,
+    _class: JClass,
+    profiles_json: JString,
 ) -> jstring {
     let input = jstring_to_str(&mut env, profiles_json);
-    let result = compute_trust_batch(&input).unwrap_or_else(|e| {
-        format!(r#"{{"error":"{}"}}"#, e)
-    });
+    let result = compute_trust_batch(&input).unwrap_or_else(|e| format!(r#"{{"error":"{}"}}"#, e));
     str_to_jstring(&mut env, &result)
 }
 
@@ -44,14 +46,14 @@ pub extern "system" fn Java_com_aieonyx_aistop_jni_AiStopCore_trustComputeBatch(
 
 #[no_mangle]
 pub extern "system" fn Java_com_aieonyx_aistop_jni_AiStopCore_piiDetect(
-    mut env: JNIEnv, _class: JClass, text: JString,
+    mut env: JNIEnv,
+    _class: JClass,
+    text: JString,
 ) -> jstring {
     let input = jstring_to_str(&mut env, text);
     let detector = RegexDetector;
     let result = detector.detect(&input);
-    let json = serde_json::to_string(&result).unwrap_or_else(|e| {
-        format!(r#"{{"error":"{}"}}"#, e)
-    });
+    let json = serde_json::to_string(&result).unwrap_or_else(|e| format!(r#"{{"error":"{}"}}"#, e));
     str_to_jstring(&mut env, &json)
 }
 
@@ -63,7 +65,9 @@ pub extern "system" fn Java_com_aieonyx_aistop_jni_AiStopCore_piiDetect(
 
 #[no_mangle]
 pub extern "system" fn Java_com_aieonyx_aistop_jni_AiStopCore_blake3Hash(
-    mut env: JNIEnv, _class: JClass, payload: JString,
+    mut env: JNIEnv,
+    _class: JClass,
+    payload: JString,
 ) -> jstring {
     let input = jstring_to_str(&mut env, payload);
     let hash = blake3_hash_str(&input);
@@ -72,11 +76,14 @@ pub extern "system" fn Java_com_aieonyx_aistop_jni_AiStopCore_blake3Hash(
 
 #[no_mangle]
 pub extern "system" fn Java_com_aieonyx_aistop_jni_AiStopCore_assembleSignatureBlock(
-    mut env: JNIEnv, _class: JClass,
-    payload_json: JString, hash_hex: JString, signature_hex: JString,
+    mut env: JNIEnv,
+    _class: JClass,
+    payload_json: JString,
+    hash_hex: JString,
+    signature_hex: JString,
 ) -> jstring {
-    let payload   = jstring_to_str(&mut env, payload_json);
-    let hash      = jstring_to_str(&mut env, hash_hex);
+    let payload = jstring_to_str(&mut env, payload_json);
+    let hash = jstring_to_str(&mut env, hash_hex);
     let signature = jstring_to_str(&mut env, signature_hex);
     let result = assemble_signature_block(&payload, &hash, &signature)
         .unwrap_or_else(|e| format!(r#"{{"error":"{}"}}"#, e));
@@ -87,12 +94,15 @@ pub extern "system" fn Java_com_aieonyx_aistop_jni_AiStopCore_assembleSignatureB
 
 #[no_mangle]
 pub extern "system" fn Java_com_aieonyx_aistop_jni_AiStopCore_prepareExport(
-    mut env: JNIEnv, _class: JClass,
-    events_json: JString, device_pubkey: JString, exported_at: JString,
+    mut env: JNIEnv,
+    _class: JClass,
+    events_json: JString,
+    device_pubkey: JString,
+    exported_at: JString,
 ) -> jstring {
     let events_str = jstring_to_str(&mut env, events_json);
-    let pubkey     = jstring_to_str(&mut env, device_pubkey);
-    let ts         = jstring_to_str(&mut env, exported_at);
+    let pubkey = jstring_to_str(&mut env, device_pubkey);
+    let ts = jstring_to_str(&mut env, exported_at);
 
     let events: Vec<crate::store::ExposureEvent> =
         serde_json::from_str(&events_str).unwrap_or_default();
@@ -110,11 +120,14 @@ pub extern "system" fn Java_com_aieonyx_aistop_jni_AiStopCore_prepareExport(
 
 #[no_mangle]
 pub extern "system" fn Java_com_aieonyx_aistop_jni_AiStopCore_finaliseExport(
-    mut env: JNIEnv, _class: JClass,
-    payload_json: JString, hash_hex: JString, signature_hex: JString,
+    mut env: JNIEnv,
+    _class: JClass,
+    payload_json: JString,
+    hash_hex: JString,
+    signature_hex: JString,
 ) -> jstring {
-    let payload   = jstring_to_str(&mut env, payload_json);
-    let hash      = jstring_to_str(&mut env, hash_hex);
+    let payload = jstring_to_str(&mut env, payload_json);
+    let hash = jstring_to_str(&mut env, hash_hex);
     let signature = jstring_to_str(&mut env, signature_hex);
     let result = finalise_export(&payload, &hash, &signature)
         .unwrap_or_else(|e| format!(r#"{{"error":"{}"}}"#, e));
