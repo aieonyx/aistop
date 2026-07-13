@@ -83,7 +83,7 @@ fn mask(raw: &str, class: &super::detector::PiiClass) -> String {
             }
         }
         _ => {
-            let visible = (raw.len() / 3).max(2).min(4);
+            let visible = ((raw.len() / 3).clamp(2, 4));
             format!("{}••••", &raw[..visible.min(raw.len())])
         }
     }
