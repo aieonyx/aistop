@@ -145,9 +145,18 @@ fun ScrubTabScreen() {
 @Composable
 fun SettingsScreen() {
     val context = androidx.compose.ui.platform.LocalContext.current
+    var showDisclosure by remember { mutableStateOf(false) }
     val packageInfo = remember {
         try { context.packageManager.getPackageInfo(context.packageName, 0) }
         catch (e: Exception) { null }
+    }
+
+    if (showDisclosure) {
+        AccessibilityDisclosureScreen(
+            onAccept  = { showDisclosure = false },
+            onDecline = { showDisclosure = false }
+        )
+        return
     }
 
     androidx.compose.foundation.lazy.LazyColumn(
@@ -175,7 +184,21 @@ fun SettingsScreen() {
         item { SettingsSectionHeader("PROTECTION") }
         item {
             SettingsCard {
-                SettingsRow("Sovereign Guard", "Accessibility service for auto paste intercept", SovereignBlue)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showDisclosure = true }
+                        .padding(horizontal = 14.dp, vertical = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Text("Sovereign Guard", color = SignalWhite, fontSize = 13.sp,
+                        modifier = Modifier.weight(0.45f))
+                    Text("Tap to enable →", color = SovereignBlue, fontSize = 11.sp,
+                        fontFamily = FontFamily.Monospace,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.End,
+                        modifier = Modifier.weight(0.55f))
+                }
                 Divider(color = Color(0x14EDF3FA))
                 SettingsRow("AI Stop Keyboard", "IME-based paste interception", SovereignBlue)
                 Divider(color = Color(0x14EDF3FA))
