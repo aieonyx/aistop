@@ -15,13 +15,14 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  # Pin NDK version — never let toolchain drift
-  NDK_VERSION: "26.3.11579264"
+  NDK_VERSION:      "26.3.11579264"
   CARGO_NDK_VERSION: "3.5.4"
 
 jobs:
 
   # ── Rust core tests ──────────────────────────────────────────────────────
+  # Excludes 'mobile' feature — mobile requires cargo-ndk + Android targets
+  # which are only available in the android-build job below.
   rust-tests:
     name: Rust Core Tests
     runs-on: ubuntu-latest
@@ -31,29 +32,24 @@ jobs:
       - name: Install Rust stable (pinned via rust-toolchain.toml)
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Add Android targets
-        run: |
-          rustup target add aarch64-linux-android
-          rustup target add x86_64-linux-android
-
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: aistop-core
 
-      - name: Run Rust tests
+      - name: Run Rust tests (host features only)
         working-directory: aistop-core
-        run: cargo test --all-features 2>&1
+        run: cargo test --no-default-features 2>&1
 
       - name: Check Rust formatting
         working-directory: aistop-core
         run: cargo fmt --check
 
-      - name: Clippy (deny warnings)
+      - name: Clippy (deny warnings, host only)
         working-directory: aistop-core
-        run: cargo clippy -- -D warnings
+        run: cargo clippy --no-default-features -- -D warnings
 
-  # ── Android build ────────────────────────────────────────────────────────
+  # ── Android build (includes mobile feature + cargo-ndk) ──────────────────
   android-build:
     name: Android Debug Build
     runs-on: ubuntu-latest
@@ -82,8 +78,7 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Install NDK (pinned version)
-        run: |
-          sdkmanager "ndk;${{ env.NDK_VERSION }}"
+        run: sdkmanager "ndk;${{ env.NDK_VERSION }}"
 
       - name: Cache Gradle
         uses: actions/cache@v4
