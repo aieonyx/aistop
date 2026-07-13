@@ -71,6 +71,11 @@ fn class_key(class: &PiiClass) -> String {
         PiiClass::ApiKey      => "API_KEY",
         PiiClass::CreditCard  => "CARD",
         PiiClass::IpAddress   => "IP",
+        PiiClass::CryptoWallet => "CRYPTO",
+        PiiClass::Financial   => "FINANCIAL",
+        PiiClass::GovernmentId => "GOV_ID",
+        PiiClass::Location    => "LOCATION",
+        PiiClass::DeviceId    => "DEVICE_ID",
         PiiClass::Custom(s)   => return s.to_uppercase(),
     }.to_string()
 }

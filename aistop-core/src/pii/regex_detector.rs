@@ -134,4 +134,64 @@ mod tests {
         assert!(masked.contains("••••"));
         assert!(!masked.contains("john"));
     }
+    #[test]
+    fn detects_openai_key() {
+        let r = detect("my key is sk-abc123XYZ789abc123XYZ789abc123XYZ7");
+        assert!(matches!(r, DetectionResult::PiiFound(_)));
+    }
+
+    #[test]
+    fn detects_github_token() {
+        let r = detect("token: ghp_aBcDeFgHiJkLmNoPqRsTuVwXyZ12345678");
+        assert!(matches!(r, DetectionResult::PiiFound(_)));
+    }
+
+    #[test]
+    fn detects_aws_key() {
+        let r = detect("access key AKIAIOSFODNN7EXAMPLE");
+        assert!(matches!(r, DetectionResult::PiiFound(_)));
+    }
+
+    #[test]
+    fn detects_jwt() {
+        let r = detect("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
+        assert!(matches!(r, DetectionResult::PiiFound(_)));
+    }
+
+    #[test]
+    fn detects_ethereum_address() {
+        let r = detect("send to 0x742d35Cc6634C0532925a3b844Bc454e4438f44e");
+        assert!(matches!(r, DetectionResult::PiiFound(_)));
+    }
+
+    #[test]
+    fn detects_iban() {
+        let r = detect("bank account CZ6508000000192000145399");
+        assert!(matches!(r, DetectionResult::PiiFound(_)));
+    }
+
+    #[test]
+    fn detects_us_ssn() {
+        let r = detect("SSN: 123-45-6789");
+        assert!(matches!(r, DetectionResult::PiiFound(_)));
+    }
+
+    #[test]
+    fn detects_gps_coordinates() {
+        let r = detect("location: 50.0755, 14.4378");
+        assert!(matches!(r, DetectionResult::PiiFound(_)));
+    }
+
+    #[test]
+    fn detects_mac_address() {
+        let r = detect("MAC: 00:1A:2B:3C:4D:5E");
+        assert!(matches!(r, DetectionResult::PiiFound(_)));
+    }
+
+    #[test]
+    fn detects_pem_key() {
+        let r = detect("-----BEGIN RSA PRIVATE KEY-----");
+        assert!(matches!(r, DetectionResult::PiiFound(_)));
+    }
+
 }

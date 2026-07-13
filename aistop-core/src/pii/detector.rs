@@ -12,9 +12,14 @@ pub enum PiiClass {
     DateOfBirth,
     Address,
     IdNumber,
-    ApiKey,       // developer tier — paid custom detector
+    ApiKey,
     CreditCard,
     IpAddress,
+    CryptoWallet,
+    Financial,
+    GovernmentId,
+    Location,
+    DeviceId,
     Custom(String),
 }
 
