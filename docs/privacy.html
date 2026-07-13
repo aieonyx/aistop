@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Stop — Privacy Policy</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #080A0D;
+    color: #EDF3FA;
+    line-height: 1.7;
+    padding: 40px 20px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  header { margin-bottom: 40px; border-bottom: 1px solid #1AEDF3FA; padding-bottom: 24px; }
+  .logo { font-size: 11px; letter-spacing: 2px; color: #4F80D4; font-family: monospace; margin-bottom: 8px; }
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .meta { color: rgba(237,243,250,0.55); font-size: 13px; font-family: monospace; }
+  h2 { font-size: 16px; font-weight: 700; color: #4F80D4; letter-spacing: 0.5px;
+       margin: 32px 0 12px; text-transform: uppercase; font-family: monospace; }
+  p { color: rgba(237,243,250,0.8); margin-bottom: 12px; font-size: 15px; }
+  ul { padding-left: 20px; margin-bottom: 12px; }
+  li { color: rgba(237,243,250,0.8); margin-bottom: 6px; font-size: 15px; }
+  .highlight {
+    background: rgba(79,128,212,0.08);
+    border: 1px solid rgba(79,128,212,0.2);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 24px 0;
+  }
+  .highlight p { margin: 0; color: #EDF3FA; font-weight: 500; }
+  a { color: #4F80D4; text-decoration: none; }
+  footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(237,243,250,0.1);
+           color: rgba(237,243,250,0.35); font-size: 11px; font-family: monospace; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">AIEONYX · SOVEREIGN COMPUTING</div>
+  <h1>AI Stop Privacy Policy</h1>
+  <div class="meta">Effective date: July 13, 2026 · Version 1.0.0</div>
+</header>
+
+<div class="highlight">
+  <p>AI Stop processes all data exclusively on your device. No data is ever transmitted to AIEONYX, our servers, or any third party. We have no backend infrastructure and collect nothing.</p>
+</div>
+
+<h2>1. Who We Are</h2>
+<p>AI Stop is developed by Edison Lepiten / AIEONYX, a sovereign computing project based in Prague, Czech Republic. Contact: <a href="mailto:aieonyx.eu@gmail.com">aieonyx.eu@gmail.com</a></p>
+
+<h2>2. Data We Do NOT Collect</h2>
+<p>We collect zero data. Specifically, AI Stop never collects, stores remotely, or transmits:</p>
+<ul>
+  <li>Text you type or paste</li>
+  <li>Clipboard contents</li>
+  <li>Personal identifiable information (PII) detected during scans</li>
+  <li>Device identifiers, advertising IDs, or fingerprints</li>
+  <li>Location data</li>
+  <li>Usage analytics or crash reports</li>
+  <li>Names, emails, or account information</li>
+  <li>Photos or image content</li>
+</ul>
+
+<h2>3. Data Processed On-Device</h2>
+<p>AI Stop processes the following data locally on your device to provide its protection features:</p>
+<ul>
+  <li><strong>Clipboard text</strong> — scanned for PII patterns using on-device Rust engine. Never stored in full; only a 20-character preview is retained in the local exposure log.</li>
+  <li><strong>Photo EXIF metadata</strong> — read and stripped locally when you use Image Scrub. Original image content is never read or stored.</li>
+  <li><strong>Installed app list</strong> — scanned locally to identify AI apps for Trust Score display. Never transmitted.</li>
+  <li><strong>Exposure log</strong> — a local timestamped record of interception events (app name, PII type detected, 20-char preview, action taken). Stored in EdisonDB on your device. Automatically purged after 30 days.</li>
+</ul>
+
+<h2>4. Local Storage</h2>
+<p>All data is stored in EdisonDB, a sovereign embedded database that runs entirely on your device. Storage is protected by Android's application sandbox. No other app can access AI Stop's data.</p>
+<p>You can export your exposure log at any time from the MORE tab as a signed JSON file. You can delete all data by uninstalling the app.</p>
+
+<h2>5. Permissions</h2>
+<ul>
+  <li><strong>Accessibility Service</strong> — used to monitor paste events in AI apps when Sovereign Guard is enabled. AI Stop monitors only window focus changes and clipboard access events for known AI app packages. No keystrokes are logged.</li>
+  <li><strong>Foreground Service</strong> — keeps protection active while AI apps are in use.</li>
+  <li><strong>Notifications</strong> — used to notify you when AI Stop blocks data in AutoPilot mode.</li>
+</ul>
+<p>AI Stop does not request internet, contacts, microphone, camera, or location permissions.</p>
+
+<h2>6. Third-Party Services</h2>
+<p>AI Stop contains no third-party SDKs, analytics libraries, advertising networks, or crash reporting tools. There are no third-party services of any kind embedded in the app.</p>
+
+<h2>7. Children's Privacy</h2>
+<p>AI Stop is not directed at children under 13. We do not knowingly collect any information from children.</p>
+
+<h2>8. Your Rights (GDPR)</h2>
+<p>Since all data is stored locally on your device, you have complete control at all times:</p>
+<ul>
+  <li><strong>Access</strong> — export your exposure log from the MORE tab at any time</li>
+  <li><strong>Deletion</strong> — uninstall the app to delete all local data permanently</li>
+  <li><strong>Portability</strong> — export as signed JSON at any time</li>
+  <li><strong>Erasure</strong> — EdisonDB implements GDPR Art.17 erasure via cryptographic key destruction</li>
+</ul>
+
+<h2>9. Data Security</h2>
+<p>All exposure log records are protected with BLAKE3 cryptographic integrity hashes and ARPi provenance headers. Exports are signed with Ed25519. The app enforces FLAG_SECURE to prevent screenshots of sensitive screens.</p>
+
+<h2>10. Changes to This Policy</h2>
+<p>We will update this policy if our practices change. The effective date at the top of this page will reflect any updates. Continued use of the app after changes constitutes acceptance.</p>
+
+<h2>11. Contact</h2>
+<p>Questions about this privacy policy: <a href="mailto:aieonyx.eu@gmail.com">aieonyx.eu@gmail.com</a></p>
+<p>GitHub: <a href="https://github.com/aieonyx/aistop">github.com/aieonyx/aistop</a></p>
+
+<footer>
+  Copyright (c) 2026 Edison Lepiten / AIEONYX · Apache 2.0 · Built on sovereign computing principles
+</footer>
+
+</body>
+</html>
