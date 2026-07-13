@@ -19,7 +19,10 @@ package com.aieonyx.aistop.core
  */
 object TrustDatabase {
 
-    const val DB_VERSION = "1.0.0"
+    const val DB_VERSION      = "1.0.0"
+    const val DATASET_DATE    = "2026-07"
+    const val DATASET_VERSION = "aistop-trust-db-v1.0.0"
+    const val DATASET_NOTE    = "Scores derived from public privacy policies. Not legal advice."
 
     val KNOWN_AI_PACKAGES = setOf(
         // Tier 1 — Major AI assistants

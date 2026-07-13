@@ -125,9 +125,15 @@ fun AppDetailScreen(
             }
             Spacer(Modifier.height(8.dp))
             Text(
-                "Score based on public privacy policy · data as of 2026",
+                "Score based on public privacy policy",
                 color    = Sub.copy(alpha = 0.6f),
                 fontSize = 10.sp
+            )
+            Text(
+                "Last reviewed: ${com.aieonyx.aistop.core.TrustDatabase.DATASET_DATE} · ${com.aieonyx.aistop.core.TrustDatabase.DATASET_VERSION}",
+                color      = Sub.copy(alpha = 0.5f),
+                fontSize   = 9.sp,
+                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
             )
         }
 

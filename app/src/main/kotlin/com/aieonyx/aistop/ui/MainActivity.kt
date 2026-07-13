@@ -34,6 +34,11 @@ private val SignalWhite   = Color(0xFFEDF3FA)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // FLAG_SECURE: prevent screenshots and screen recording of sensitive data
+        window.setFlags(
+            android.view.WindowManager.LayoutParams.FLAG_SECURE,
+            android.view.WindowManager.LayoutParams.FLAG_SECURE
+        )
         setContent {
             AiStopApp()
         }
@@ -146,6 +151,7 @@ fun ScrubTabScreen() {
 fun SettingsScreen() {
     val context = androidx.compose.ui.platform.LocalContext.current
     var showDisclosure by remember { mutableStateOf(false) }
+    var showCoverage   by remember { mutableStateOf(false) }
     val packageInfo = remember {
         try { context.packageManager.getPackageInfo(context.packageName, 0) }
         catch (e: Exception) { null }
@@ -156,6 +162,11 @@ fun SettingsScreen() {
             onAccept  = { showDisclosure = false },
             onDecline = { showDisclosure = false }
         )
+        return
+    }
+
+    if (showCoverage) {
+        CoverageMatrixScreen(onBack = { showCoverage = false })
         return
     }
 
@@ -199,10 +210,26 @@ fun SettingsScreen() {
                         textAlign = androidx.compose.ui.text.style.TextAlign.End,
                         modifier = Modifier.weight(0.55f))
                 }
-                Divider(color = Color(0x14EDF3FA))
+                HorizontalDivider(color = Color(0x14EDF3FA))
                 SettingsRow("AI Stop Keyboard", "IME-based paste interception", SovereignBlue)
-                Divider(color = Color(0x14EDF3FA))
+                HorizontalDivider(color = Color(0x14EDF3FA))
                 SettingsRow("ScrubShare", "Share sheet PII scrubber", SovereignBlue)
+                HorizontalDivider(color = Color(0x14EDF3FA))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showCoverage = true }
+                        .padding(horizontal = 14.dp, vertical = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Coverage matrix", color = SignalWhite, fontSize = 13.sp,
+                        modifier = Modifier.weight(0.45f))
+                    Text("What AI Stop covers →", color = SovereignBlue, fontSize = 11.sp,
+                        fontFamily = FontFamily.Monospace,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.End,
+                        modifier = Modifier.weight(0.55f))
+                }
             }
         }
 
@@ -211,9 +238,9 @@ fun SettingsScreen() {
         item {
             SettingsCard {
                 SettingsRow("Retention period", "30 days (local only)", SubText)
-                Divider(color = Color(0x14EDF3FA))
+                HorizontalDivider(color = Color(0x14EDF3FA))
                 SettingsRow("Export format", "Ed25519 signed JSON", SubText)
-                Divider(color = Color(0x14EDF3FA))
+                HorizontalDivider(color = Color(0x14EDF3FA))
                 SettingsRow("Storage", "On-device only · No cloud", SubText)
             }
         }
@@ -223,13 +250,13 @@ fun SettingsScreen() {
         item {
             SettingsCard {
                 SettingsRow("Data Retention", "Weight: 40%", SubText)
-                Divider(color = Color(0x14EDF3FA))
+                HorizontalDivider(color = Color(0x14EDF3FA))
                 SettingsRow("Transparency", "Weight: 30%", SubText)
-                Divider(color = Color(0x14EDF3FA))
+                HorizontalDivider(color = Color(0x14EDF3FA))
                 SettingsRow("Opt-out Controls", "Weight: 20%", SubText)
-                Divider(color = Color(0x14EDF3FA))
+                HorizontalDivider(color = Color(0x14EDF3FA))
                 SettingsRow("Third-party Sharing", "Weight: 10%", SubText)
-                Divider(color = Color(0x14EDF3FA))
+                HorizontalDivider(color = Color(0x14EDF3FA))
                 SettingsRow("Source", "Public privacy policies · 2026", SubText)
             }
         }
@@ -239,11 +266,11 @@ fun SettingsScreen() {
         item {
             SettingsCard {
                 SettingsRow("Version", "v${packageInfo?.versionName ?: "1.0.0"}", SubText)
-                Divider(color = Color(0x14EDF3FA))
+                HorizontalDivider(color = Color(0x14EDF3FA))
                 SettingsRow("Developer", "AIEONYX", SovereignBlue)
-                Divider(color = Color(0x14EDF3FA))
+                HorizontalDivider(color = Color(0x14EDF3FA))
                 SettingsRow("License", "Apache 2.0", SubText)
-                Divider(color = Color(0x14EDF3FA))
+                HorizontalDivider(color = Color(0x14EDF3FA))
                 SettingsRow("Mission", "Revenue funds sovereign open-source computing", SubText)
             }
         }
