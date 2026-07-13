@@ -25,7 +25,7 @@ pub struct TokenMapping {
 pub fn redact(text: &str, report: &DetectionReport) -> RedactedOutput {
     // Sort matches by start position descending so we can replace without offset shift
     let mut matches = report.matches.clone();
-    matches.sort_by(|a, b| b.start.cmp(&a.start));
+    matches.sort_by_key(|b| std::cmp::Reverse(b.start));
 
     let mut result = text.to_string();
     let mut mapping: Vec<TokenMapping> = Vec::new();
@@ -53,7 +53,7 @@ pub fn restore(text: &str, mapping: &[TokenMapping]) -> String {
     let mut result = text.to_string();
     // Restore in order — longer tokens first to avoid partial replacement
     let mut sorted = mapping.to_vec();
-    sorted.sort_by(|a, b| b.token.len().cmp(&a.token.len()));
+    sorted.sort_by_key(|b| std::cmp::Reverse(b.token.len()));
     for m in &sorted {
         result = result.replace(&m.token, &m.original);
     }
