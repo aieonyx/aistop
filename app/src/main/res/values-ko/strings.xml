@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2026 Edison Lepiten / AIEONYX
+  License: Apache-2.0
+-->
+<resources>
+    <string name="app_name">AI Stop</string>
+    <string name="sovereign_keyboard_name">AI Stop 키보드</string>
+    <string name="scrub_share_label">AI Stop으로 스크럽</string>
+    <string name="accessibility_service_description">AI Stop은 AI 앱의 붙여넣기 이벤트를 모니터링하여 민감한 데이터를 보호합니다. 모든 처리는 기기에서 이루어집니다.</string>
+</resources>

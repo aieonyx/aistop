@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2026 Edison Lepiten / AIEONYX
+  License: Apache-2.0
+-->
+<resources>
+    <string name="app_name">AI Stop</string>
+    <string name="sovereign_keyboard_name">Clavier AI Stop</string>
+    <string name="scrub_share_label">Nettoyer avec AI Stop</string>
+    <string name="accessibility_service_description">AI Stop surveille les événements de collage dans les applications IA pour protéger vos données sensibles. Tout le traitement s\'effectue sur l\'appareil.</string>
+</resources>

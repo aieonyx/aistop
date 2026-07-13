@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2026 Edison Lepiten / AIEONYX
+  License: Apache-2.0
+-->
+<resources>
+    <string name="app_name">AI Stop</string>
+    <string name="sovereign_keyboard_name">AI Stop キーボード</string>
+    <string name="scrub_share_label">AI Stop でスクラブ</string>
+    <string name="accessibility_service_description">AI StopはAIアプリへの貼り付けを監視し、機密データを保護します。すべての処理はデバイス上で行われます。</string>
+</resources>
