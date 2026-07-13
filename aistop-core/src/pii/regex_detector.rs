@@ -4,18 +4,19 @@
 // RegexDetector — v1.1 implementation of PiiDetector trait.
 // Compiled once at startup via once_cell::sync::Lazy.
 
-use once_cell::sync::Lazy;
-use regex::Regex;
 use super::detector::{DetectionReport, DetectionResult, PiiDetector, PiiMatch};
 use super::rules::RULES;
+use once_cell::sync::Lazy;
+use regex::Regex;
 
 static COMPILED: Lazy<Vec<(super::detector::PiiClass, Regex)>> = Lazy::new(|| {
-    RULES.iter().filter_map(|rule| {
-        match Regex::new(rule.pattern) {
+    RULES
+        .iter()
+        .filter_map(|rule| match Regex::new(rule.pattern) {
             Ok(re) => Some((rule.class.clone(), re)),
             Err(_) => None,
-        }
-    }).collect()
+        })
+        .collect()
 });
 
 pub struct RegexDetector;
@@ -30,9 +31,9 @@ impl PiiDetector for RegexDetector {
             for m in re.find_iter(text) {
                 let raw = &text[m.start()..m.end()];
                 matches.push(PiiMatch {
-                    class:  class.clone(),
-                    start:  m.start(),
-                    end:    m.end(),
+                    class: class.clone(),
+                    start: m.start(),
+                    end: m.end(),
                     masked: mask(raw, class),
                 });
             }
@@ -59,9 +60,11 @@ fn mask(raw: &str, class: &super::detector::PiiClass) -> String {
                 } else {
                     "••••".into()
                 };
-                let masked_domain = domain.chars().enumerate().map(|(i, c)| {
-                    if i < 3 || c == '.' { c } else { '•' }
-                }).collect::<String>();
+                let masked_domain = domain
+                    .chars()
+                    .enumerate()
+                    .map(|(i, c)| if i < 3 || c == '.' { c } else { '•' })
+                    .collect::<String>();
                 format!("{}{}", masked_local, masked_domain)
             } else {
                 "••••@••••".into()
@@ -70,20 +73,20 @@ fn mask(raw: &str, class: &super::detector::PiiClass) -> String {
         Phone => {
             let digits: String = raw.chars().filter(|c| c.is_ascii_digit()).collect();
             if digits.len() > 4 {
-                format!("{}••• ••• {}", &raw[..2], &digits[digits.len()-3..])
+                format!("{}••• ••• {}", &raw[..2], &digits[digits.len() - 3..])
             } else {
                 "•••••".into()
             }
         }
         ApiKey => {
             if raw.len() > 8 {
-                format!("{}••••••••{}", &raw[..4], &raw[raw.len()-4..])
+                format!("{}••••••••{}", &raw[..4], &raw[raw.len() - 4..])
             } else {
                 "••••••••".into()
             }
         }
         _ => {
-            let visible = ((raw.len() / 3).clamp(2, 4));
+            let visible = (raw.len() / 3).clamp(2, 4);
             format!("{}••••", &raw[..visible.min(raw.len())])
         }
     }
@@ -129,8 +132,7 @@ mod tests {
 
     #[test]
     fn masked_email_format() {
-        let masked = mask("john@example.com",
-            &super::super::detector::PiiClass::Email);
+        let masked = mask("john@example.com", &super::super::detector::PiiClass::Email);
         assert!(masked.contains("••••"));
         assert!(!masked.contains("john"));
     }
@@ -154,7 +156,9 @@ mod tests {
 
     #[test]
     fn detects_jwt() {
-        let r = detect("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
+        let r = detect(
+            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        );
         assert!(matches!(r, DetectionResult::PiiFound(_)));
     }
 
@@ -193,5 +197,4 @@ mod tests {
         let r = detect("-----BEGIN RSA PRIVATE KEY-----");
         assert!(matches!(r, DetectionResult::PiiFound(_)));
     }
-
 }
