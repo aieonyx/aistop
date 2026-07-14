@@ -46,6 +46,11 @@
     <!-- ── No dangerous permissions in main app process ── -->
     <!-- IME process ships without INTERNET permission — verifiable claim -->
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:label="AI Stop"
         android:icon="@mipmap/ic_launcher"
@@ -139,6 +144,33 @@
             android:excludeFromRecents="true"
             android:taskAffinity=""
             android:launchMode="singleInstance"/>
+
+        <!-- Clipboard Sentinel Service -->
+        <service
+            android:name=".sentinel.ClipboardSentinelService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+        <!-- Photo Scanner Activity (share target) -->
+        <activity
+            android:name=".sentinel.PhotoScannerActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
+
+        <!-- Boot receiver -->
+        <receiver
+            android:name=".sentinel.SentinelBootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

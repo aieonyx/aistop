@@ -38,6 +38,7 @@ class SovereignAccessibilityService : AccessibilityService() {
 
     private var currentPackage    = ""
     private var clipboardManager: ClipboardManager? = null
+    private var lastSentinelText  = "" // debounce global clipboard scan
 
     // High-confidence PII classes — Default mode blocks without prompt
     private val highConfidenceClasses = setOf(
@@ -58,18 +59,49 @@ class SovereignAccessibilityService : AccessibilityService() {
         serviceInfo = AccessibilityServiceInfo().apply {
             eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED or
                          AccessibilityEvent.TYPE_VIEW_FOCUSED or
-                         AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED
+                         AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED or
+                         AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED
             feedbackType  = AccessibilityServiceInfo.FEEDBACK_GENERIC
             flags         = AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS or
                             AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
             notificationTimeout = 100
-            packageNames  = TrustDatabase.KNOWN_AI_PACKAGES.toTypedArray()
+            // Monitor all packages for global clipboard sentinel
+            // Known AI packages filtered in onAccessibilityEvent
+            packageNames  = null
+        }
+
+        // Global clipboard sentinel — Accessibility Service CAN read clipboard
+        // on Android 10+ unlike background services
+        clipboardManager?.addPrimaryClipChangedListener {
+            val prefs = getSharedPreferences("aistop_prefs", Context.MODE_PRIVATE)
+            if (!prefs.getBoolean("sentinel_enabled", false)) return@addPrimaryClipChangedListener
+            val clip = clipboardManager?.primaryClip ?: return@addPrimaryClipChangedListener
+            if (clip.itemCount == 0) return@addPrimaryClipChangedListener
+            val text = clip.getItemAt(0).coerceToText(this).toString()
+            if (text.isBlank() || text.length < 4 || text == lastSentinelText) return@addPrimaryClipChangedListener
+            lastSentinelText = text
+            scanClipboardGlobal(text)
         }
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         event ?: return
         val pkg = event.packageName?.toString() ?: return
+
+        // Global sentinel — scan text changes in ANY app
+        if (event.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
+            val prefs = getSharedPreferences("aistop_prefs", Context.MODE_PRIVATE)
+            if (prefs.getBoolean("sentinel_enabled", false)) {
+                val text = event.text.joinToString(" ").trim()
+                if (text.length >= 4 && text != lastSentinelText) {
+                    lastSentinelText = text
+                    scanClipboardGlobal(text)
+                }
+            }
+            return
+        }
+
+        // AI app specific clipboard monitoring
         if (pkg !in TrustDatabase.KNOWN_AI_PACKAGES) return
         currentPackage = pkg
 
@@ -212,6 +244,63 @@ class SovereignAccessibilityService : AccessibilityService() {
                 .map { matches.getJSONObject(it).getString("class") }
                 .distinct()
         } catch (e: Exception) { emptyList() }
+    }
+
+    private fun scanClipboardGlobal(text: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = runCatching { AiStopCore.piiDetect(text) }.getOrElse {
+                android.util.Log.e("AiStopSentinel", "PII detect failed: ${it.message}")
+                return@launch
+            }
+            android.util.Log.d("AiStopSentinel", "PII result: $result")
+            val hasPii = try { JSONObject(result).has("PiiFound") } catch (e: Exception) { false }
+            android.util.Log.d("AiStopSentinel", "Has PII: $hasPii")
+            if (!hasPii) return@launch
+
+            val piiClasses = parsePiiClasses(result)
+            val mode       = loadSovereignMode(this@SovereignAccessibilityService)
+            android.util.Log.d("AiStopSentinel", "PII classes: $piiClasses, mode: $mode")
+
+            // Log to EdisonDB — non-fatal, don't let DB failure kill notification
+            runCatching {
+                logEvent("clipboard.sentinel", EventType.PASTE_BLOCKED, text, piiClasses, 0)
+            }
+
+            when (mode) {
+                SovereignMode.AUTOPILOT -> {
+                    clearClipboard()
+                    lastSentinelText = ""
+                    showSentinelNotification(piiClasses, silent = true)
+                }
+                SovereignMode.DEFAULT -> {
+                    val highConf = setOf("ApiKey","AwsKey","GitHubToken","JWT",
+                        "PemKey","Password","Ssn","CreditCard","CryptoWallet")
+                    if (piiClasses.any { it in highConf }) {
+                        showSentinelNotification(piiClasses, silent = false)
+                    }
+                }
+                SovereignMode.MANUAL -> {
+                    showSentinelNotification(piiClasses, silent = false)
+                }
+            }
+        }
+    }
+
+    private fun showSentinelNotification(piiClasses: List<String>, silent: Boolean) {
+        val nm      = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val classes = piiClasses.take(3).joinToString(", ")
+        val title   = if (silent) "🛡 Clipboard cleared — sensitive data blocked"
+                      else "⚠ Sensitive data detected in clipboard"
+        val text    = "Detected: $classes"
+
+        val notif = androidx.core.app.NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .build()
+        nm.notify(1002, notif)
     }
 
     override fun onInterrupt() {}

@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aieonyx.aistop.sentinel.ClipboardSentinelService
 import com.aieonyx.aistop.ui.theme.AiStopTheme
 import java.util.Locale
 
@@ -62,6 +63,9 @@ fun ProtectScreen(
     var showModePicker by remember { mutableStateOf(false) }
     var currentMode    by remember { mutableStateOf(loadSovereignMode(context)) }
 
+    var sentinelActive by remember {
+        mutableStateOf(ClipboardSentinelService.isRunning(context))
+    }
     val (guardActive, keyboardActive, scrubActive) = remember {
         getProtectionStatus(context)
     }
@@ -326,16 +330,21 @@ fun ProtectScreen(
             Triple("✂", "SCRUBSHARE",
                 "Share any text to AI Stop to scrub PII"),
             Triple("🖼", "IMAGE SCRUB",
-                "Strip GPS, camera, serial numbers from photos")
+                "Strip GPS, camera, serial numbers from photos"),
+            Triple("👁", "CLIPBOARD SENTINEL",
+                if (sentinelActive) "Watching clipboard for sensitive data 24/7"
+                else "Tap to enable always-on clipboard monitoring")
         ).forEachIndexed { i, (icon, label, detail) ->
             val isOn = when (i) {
                 0 -> guardActive
                 1 -> keyboardActive
+                4 -> sentinelActive
                 else -> true
             }
             val needsAction = when (i) {
                 0 -> !guardActive
                 1 -> !keyboardActive
+                4 -> !sentinelActive
                 else -> false
             }
             NewToolCard(
@@ -349,6 +358,18 @@ fun ProtectScreen(
                 onClick     = when (i) {
                     0 -> ({ showDisclosure = true })
                     1 -> ({ context.startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)) })
+                    4 -> ({
+                        if (sentinelActive) {
+                            ClipboardSentinelService.stop(context)
+                            sentinelActive = false
+                        } else {
+                            ClipboardSentinelService.start(context)
+                            sentinelActive = true
+                            // Save preference for boot restart
+                            context.getSharedPreferences("aistop_prefs", android.content.Context.MODE_PRIVATE)
+                                .edit().putBoolean("sentinel_enabled", true).apply()
+                        }
+                    })
                     else -> null
                 }
             )
