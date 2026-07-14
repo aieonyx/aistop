@@ -30,7 +30,7 @@ private const val TAB_PROTECT = 0
 private const val TAB_AUDIT   = 1
 private const val TAB_MORE    = 2
 
-class MainActivity : ComponentActivity() {
+class MainActivity : androidx.fragment.app.FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFlags(

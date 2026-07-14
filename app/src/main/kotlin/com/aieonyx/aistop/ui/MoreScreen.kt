@@ -132,6 +132,9 @@ fun MoreScreen() {
             }
         }
 
+        // ── Sovereign Vault ──
+        item { VaultScreen() }
+
         // ── About ──
         item { MoreSectionHeader("ABOUT", colors, typo) }
         item {

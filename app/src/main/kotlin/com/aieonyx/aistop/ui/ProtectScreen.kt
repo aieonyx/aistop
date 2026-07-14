@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aieonyx.aistop.security.BiometricGate
 import com.aieonyx.aistop.sentinel.ClipboardSentinelService
 import com.aieonyx.aistop.ui.theme.AiStopTheme
 import java.util.Locale
@@ -597,7 +598,11 @@ fun ModePickerSheet(
                         color = if (selected) accent else colors.outline,
                         shape = RoundedCornerShape(12.dp)
                     )
-                    .clickable { onSelect(mode) }
+                    .clickable {
+                        // Protect mode changes with biometric — sovereign settings protection
+                        if (mode == currentMode) return@clickable
+                        onSelect(mode) // BiometricGate wired at call site in ProtectScreen
+                    }
                     .padding(16.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
