@@ -1,3 +1,5 @@
+![AI Stop — Sovereign AI Guard](.github/banner.jpg)
+
 # AI Stop — Sovereign AI Guard
 
 **Copyright (c) 2026 Edison Lepiten / AIEONYX · Apache-2.0**
