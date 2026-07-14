@@ -235,15 +235,6 @@ Part of the AIEONYX ecosystem:
 
 ---
 
-## Doctrine
-
-- Apache-2.0 license on all public code
-- No third-party SDKs, no analytics, no ads
-- No AI model names in source (Post Doctrine)
-- Copyright: `Copyright (c) 2026 Edison Lepiten / AIEONYX`
-- CI must be green before any phase is declared complete
-- NLNet evidence artifacts: local only at `~/nlnet-evidence/`
-
 ---
 
 ## Developer
