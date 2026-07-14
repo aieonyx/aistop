@@ -4,7 +4,20 @@
 
 **Copyright (c) 2026 Edison Lepiten / AIEONYX · Apache-2.0**
 
-> Your words belong to you — not to a model.
+>  **Every time you paste into an AI app, your data leaves your device.**
+> ChatGPT retains conversations for up to 3 years. Gemini enables human review by default.
+> DeepSeek stores your data in China under PRC law. Grok shares everything with X Corp.
+> Most users have no idea this is happening — and no way to stop it.
+>
+> **AI Stop is the answer.**
+>
+> Built by AIEONYX on sovereign computing principles, AI Stop sits between your clipboard
+> and every AI app on your phone. It detects sensitive data — API keys, passwords, SSNs,
+> health records, crypto wallets, GPS coordinates — and intercepts it before it ever leaves
+> your device. No cloud processing. No accounts. No subscriptions. No compromises.
+>
+> This is not another privacy dashboard that shows you what already happened.
+> AI Stop stops it **before** it happens.
 
 [![CI](https://github.com/aieonyx/aistop/actions/workflows/ci.yml/badge.svg)](https://github.com/aieonyx/aistop/actions)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
