@@ -252,6 +252,31 @@ Part of the AIEONYX ecosystem:
 
 ---
 
+## Support AIEONYX
+
+AI Stop is a mobile project of **AIEONYX** — a sovereign computing platform built in Prague by a solo founder.
+
+AIEONYX is building the infrastructure for a world where individuals own their digital identity, their data, and their computing environment. AI Stop is the first consumer product in that mission.
+
+**Every download directly funds:**
+- Continued development of AI Stop
+- The AXONYX sovereign compiler
+- EdisonDB sovereign database
+- HANIEL rendering engine
+- Onyxia sovereign browser
+- The broader AIEONYX open-source ecosystem
+
+### 📲 Download AI Stop on Google Play
+
+> **One-time purchase. No subscription. All future updates included — forever.**
+
+When you download AI Stop, you are not buying a service.
+You are funding sovereign open-source computing.
+
+[![Get it on Google Play](https://img.shields.io/badge/Google%20Play-Download%20AI%20Stop-3DDC84?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=com.aieonyx.aistop)
+
+---
+
 ## Developer
 
 **Edison Lepiten / AIEONYX**
@@ -259,4 +284,4 @@ Prague, Czech Republic
 [github.com/aieonyx](https://github.com/aieonyx)
 [aieonyx.eu@gmail.com](mailto:aieonyx.eu@gmail.com)
 
-*Revenue from AI Stop funds sovereign open-source computing.*
+*Every purchase funds sovereign open-source computing. Thank you for your support.*
