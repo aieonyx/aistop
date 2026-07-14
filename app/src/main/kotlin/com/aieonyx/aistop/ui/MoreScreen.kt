@@ -3,6 +3,11 @@
 package com.aieonyx.aistop.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.runtime.rememberCoroutineScope
+import com.aieonyx.aistop.export.ExportManager
+import com.aieonyx.aistop.security.BiometricGate
+import com.aieonyx.aistop.vault.SovereignVault
+import kotlinx.coroutines.launch
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -30,6 +35,10 @@ fun MoreScreen() {
     var showDisclosure by remember { mutableStateOf(false) }
     var showCoverage   by remember { mutableStateOf(false) }
 
+    val scope       = rememberCoroutineScope()
+    var exporting   by remember { mutableStateOf(false) }
+    var exportDone  by remember { mutableStateOf(false) }
+    val activity    = context as? androidx.fragment.app.FragmentActivity
     val packageInfo = remember {
         try { context.packageManager.getPackageInfo(context.packageName, 0) }
         catch (e: Exception) { null }
@@ -68,7 +77,61 @@ fun MoreScreen() {
         item { MoreSectionHeader("EXPORT", colors, typo) }
         item {
             MoreCard(colors) {
-                MoreActionRow("EXPORT EXPOSURE LOG", "Ed25519 signed JSON · EdisonDB chain", colors.accentPrimary, "EXPORT →", colors, typo) {}
+                MoreActionRow(
+                    "EXPORT EXPOSURE LOG",
+                    if (exporting) "Signing with Ed25519…"
+                    else if (exportDone) "Export ready — check share sheet"
+                    else "Ed25519 signed JSON · EdisonDB chain",
+                    if (exportDone) colors.success else colors.accentPrimary,
+                    if (exporting) "…" else "EXPORT →",
+                    colors, typo
+                ) {
+                    if (exporting) return@MoreActionRow
+                    // Gate export behind biometric
+                    if (activity != null) {
+                        BiometricGate.authenticate(
+                            activity    = activity,
+                            actionTitle = "Export Exposure Log",
+                            subtitle    = "Verify identity to export signed report"
+                        ) { result ->
+                            when (result) {
+                                is BiometricGate.AuthResult.Success,
+                                is BiometricGate.AuthResult.NoHardware -> {
+                                    scope.launch {
+                                        exporting = true
+                                        try {
+                                            val result2 = ExportManager.exportSignedReport(context)
+                                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                                ExportManager.shareExport(context, result2.file)
+                                                exportDone = true
+                                            }
+                                        } catch (e: Exception) {
+                                            android.util.Log.e("AiStop", "Export failed: ${e.message}")
+                                        } finally {
+                                            exporting = false
+                                        }
+                                    }
+                                }
+                                else -> {}
+                            }
+                        }
+                    } else {
+                        scope.launch {
+                            exporting = true
+                            try {
+                                val result2 = ExportManager.exportSignedReport(context)
+                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    ExportManager.shareExport(context, result2.file)
+                                    exportDone = true
+                                }
+                            } catch (e: Exception) {
+                                android.util.Log.e("AiStop", "Export failed: ${e.message}")
+                            } finally {
+                                exporting = false
+                            }
+                        }
+                    }
+                }
                 HorizontalDivider(color = colors.divider)
                 MoreRow("Export format", "BLAKE3 + ARPi header per record", colors.textSecondary, colors, typo)
                 HorizontalDivider(color = colors.divider)
