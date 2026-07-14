@@ -1,5 +1,9 @@
 // Copyright (c) 2026 Edison Lepiten / AIEONYX
 // License: Apache-2.0
+@file:OptIn(
+    androidx.compose.foundation.ExperimentalFoundationApi::class,
+    androidx.compose.foundation.layout.ExperimentalLayoutApi::class
+)
 package com.aieonyx.aistop.ui
 
 import android.content.Context
@@ -11,43 +15,24 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aieonyx.aistop.ui.theme.AiStopTheme
+import java.util.Locale
 
-private val PVoid  = Color(0xFF080A0D)
-private val PBlue  = Color(0xFF4F80D4)
-private val PTeal  = Color(0xFF3EB69F)
-private val PAmber = Color(0xFFF5A623)
-private val PPurp  = Color(0xFFA78BFA)
-private val PRed   = Color(0xFFD05050)
-private val PWhite = Color(0xFFEDF3FA)
-private val PSub   = Color(0x8CEDF3FA)
-private val PSurf1 = Color(0x0AEDF3FA)
-private val PSurf2 = Color(0x14EDF3FA)
-
-private enum class ProtectionLevel { FULL, PARTIAL, OFF }
-
-private data class ProtectionStatus(
-    val level:          ProtectionLevel,
-    val guardActive:    Boolean,
-    val keyboardActive: Boolean,
-    val scrubActive:    Boolean
-)
-
-private fun getProtectionStatus(context: Context): ProtectionStatus {
+private fun getProtectionStatus(context: Context): Triple<Boolean, Boolean, Boolean> {
     val guardActive = try {
         val enabled = Settings.Secure.getString(
             context.contentResolver,
@@ -61,28 +46,31 @@ private fun getProtectionStatus(context: Context): ProtectionStatus {
         imm.enabledInputMethodList.any { it.packageName == context.packageName }
     } catch (e: Exception) { false }
 
-    val level = when {
-        guardActive && keyboardActive -> ProtectionLevel.FULL
-        guardActive || keyboardActive -> ProtectionLevel.PARTIAL
-        else                          -> ProtectionLevel.OFF
-    }
-    return ProtectionStatus(level, guardActive, keyboardActive, scrubActive = true)
-}
-
-private fun modeAccentColor(mode: SovereignMode): Color = when (mode) {
-    SovereignMode.AUTOPILOT -> PTeal
-    SovereignMode.DEFAULT   -> PBlue
-    SovereignMode.MANUAL    -> PPurp
+    return Triple(guardActive, keyboardActive, true)
 }
 
 @Composable
-fun ProtectScreen() {
+fun ProtectScreen(
+    darkMode: Boolean = true,
+    onToggleTheme: () -> Unit = {}
+) {
     val context        = LocalContext.current
+    val colors         = AiStopTheme.colors
+    val typo           = AiStopTheme.typography
     var showDisclosure by remember { mutableStateOf(false) }
     var showCoverage   by remember { mutableStateOf(false) }
     var showModePicker by remember { mutableStateOf(false) }
     var currentMode    by remember { mutableStateOf(loadSovereignMode(context)) }
-    val status         = remember { getProtectionStatus(context) }
+
+    val (guardActive, keyboardActive, scrubActive) = remember {
+        getProtectionStatus(context)
+    }
+
+    val protectionLevel = when {
+        guardActive && keyboardActive -> 2 // FULL
+        guardActive || keyboardActive -> 1 // PARTIAL
+        else                          -> 0 // NONE
+    }
 
     if (showDisclosure) {
         AccessibilityDisclosureScreen(
@@ -98,7 +86,7 @@ fun ProtectScreen() {
     if (showModePicker) {
         ModePickerSheet(
             currentMode = currentMode,
-            onSelect    = { mode ->
+            onSelect    = { mode: SovereignMode ->
                 currentMode = mode
                 saveSovereignMode(context, mode)
                 showModePicker = false
@@ -111,134 +99,300 @@ fun ProtectScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(PVoid)
+            .background(colors.background)
             .verticalScroll(rememberScrollState())
     ) {
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(20.dp))
 
         // ── Header ──
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 18.dp),
+                .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(Modifier.weight(1f)) {
-                Text("AI Stop", color = PWhite, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                 Text(
-                    "Sovereign AI Guard",
-                    color = PSub, fontSize = 11.sp, fontFamily = FontFamily.Monospace
+                    "AI STOP",
+                    style = typo.h1,
+                    color = colors.textPrimary
+                )
+                Text(
+                    "SOVEREIGN AI GUARD",
+                    style = typo.labelSmall,
+                    color = colors.accentSecondary
                 )
             }
+            // Theme toggle
             Box(
                 modifier = Modifier
-                    .background(PSurf1, RoundedCornerShape(8.dp))
-                    .padding(horizontal = 10.dp, vertical = 4.dp)
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(colors.surface2)
+                    .border(1.dp, colors.outline, RoundedCornerShape(6.dp))
+                    .clickable { onToggleTheme() }
+                    .padding(horizontal = 10.dp, vertical = 6.dp)
             ) {
-                Text("v1.0", color = PSub, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                Text(
+                    if (darkMode) "☀ LIGHT" else "☾ DARK",
+                    style = typo.labelSmall,
+                    color = colors.textSecondary
+                )
             }
         }
 
         Spacer(Modifier.height(20.dp))
 
-        // ── Protection status bar (mode-aware) ──
-        ProtectionStatusBar(status, currentMode)
+        // ── Protection Status Card ──
+        val statusBg: Color
+        val statusBorder: Color
+        val statusLabel: String
+        val statusDetail: String
+        when (protectionLevel) {
+            2    -> { statusBg = colors.successContainer; statusBorder = colors.success;  statusLabel = "FULLY PROTECTED";    statusDetail = "All interception layers active" }
+            1    -> { statusBg = colors.warningContainer; statusBorder = colors.warning;  statusLabel = "PARTIAL PROTECTION"; statusDetail = "Enable all tools for full coverage" }
+            else -> { statusBg = colors.dangerContainer;  statusBorder = colors.danger;   statusLabel = "NOT PROTECTED";      statusDetail = "Tap START PROTECTING below" }
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .clip(RoundedCornerShape(14.dp))
+                .background(statusBg)
+                .border(2.dp, statusBorder, RoundedCornerShape(14.dp))
+        ) {
+            // Top status rail
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp)
+                    .background(statusBorder)
+            )
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "🛡",
+                        fontSize = 28.sp,
+                        modifier = Modifier.padding(end = 12.dp)
+                    )
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            statusLabel,
+                            style = typo.h2,
+                            color = colors.textPrimary
+                        )
+                        Text(
+                            statusDetail,
+                            style = typo.bodySmall,
+                            color = colors.textSecondary
+                        )
+                    }
+                    // Mode badge
+                    val modeColor = when (currentMode) {
+                        SovereignMode.AUTOPILOT -> colors.success
+                        SovereignMode.DEFAULT   -> colors.accentPrimary
+                        SovereignMode.MANUAL    -> Color(0xFFA78BFA)
+                    }
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(modeColor.copy(alpha = 0.15f))
+                            .border(1.dp, modeColor.copy(alpha = 0.4f), RoundedCornerShape(6.dp))
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            currentMode.badge,
+                            style = typo.labelSmall,
+                            color = modeColor
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(12.dp))
+
+                // Layer pills
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    LayerPill("GUARD",    guardActive,    colors)
+                    LayerPill("KEYBOARD", keyboardActive, colors)
+                    LayerPill("SCRUB",    scrubActive,    colors)
+                }
+            }
+        }
 
         Spacer(Modifier.height(12.dp))
 
-        // ── Mode card (tappable) ──
-        ModeCard(currentMode, onClick = { showModePicker = true })
+        // ── Mode card ──
+        val modeAccent = when (currentMode) {
+            SovereignMode.AUTOPILOT -> colors.success
+            SovereignMode.DEFAULT   -> colors.accentPrimary
+            SovereignMode.MANUAL    -> Color(0xFFA78BFA)
+        }
+        val modeIcon = when (currentMode) {
+            SovereignMode.AUTOPILOT -> "✈"
+            SovereignMode.DEFAULT   -> "◉"
+            SovereignMode.MANUAL    -> "⚙"
+        }
 
-        Spacer(Modifier.height(16.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(modeAccent.copy(alpha = 0.08f))
+                .border(2.dp, modeAccent.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
+                .clickable { showModePicker = true }
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(modeIcon, fontSize = 22.sp, modifier = Modifier.padding(end = 12.dp))
+            Column(Modifier.weight(1f)) {
+                Text(
+                    currentMode.displayName.uppercase(),
+                    style = typo.label,
+                    color = modeAccent
+                )
+                Text(
+                    currentMode.tagline,
+                    style = typo.caption,
+                    color = colors.textSecondary
+                )
+            }
+            Text(
+                "CHANGE →",
+                style = typo.labelSmall,
+                color = modeAccent
+            )
+        }
 
-        // ── Primary CTAs ──
+        Spacer(Modifier.height(20.dp))
+
+        // ── CTAs ──
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Button(
-                onClick = { showDisclosure = true },
-                modifier = Modifier.weight(1f).height(52.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (status.guardActive) PTeal else PBlue
-                ),
-                shape = RoundedCornerShape(14.dp)
+            // Primary CTA
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(56.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(
+                        if (guardActive) colors.success else colors.accentPrimary
+                    )
+                    .clickable { showDisclosure = true },
+                contentAlignment = Alignment.Center
             ) {
                 Text(
-                    if (status.guardActive) "Guard active ✓" else "Start protecting",
-                    fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = PWhite
+                    if (guardActive) "GUARD ACTIVE ✓" else "START PROTECTING",
+                    style = typo.label,
+                    color = colors.onPrimary
                 )
             }
-            OutlinedButton(
-                onClick = { showCoverage = true },
-                modifier = Modifier.weight(1f).height(52.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, PSurf2),
-                shape  = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = PSub)
+
+            // Secondary CTA
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(56.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(colors.surface2)
+                    .border(2.dp, colors.accentPrimary, RoundedCornerShape(8.dp))
+                    .clickable { showCoverage = true },
+                contentAlignment = Alignment.Center
             ) {
                 Text(
-                    "See my risk score",
-                    fontSize = 13.sp, fontWeight = FontWeight.Medium, color = PWhite
+                    "RISK SCORE",
+                    style = typo.label,
+                    color = colors.textPrimary
                 )
             }
         }
 
         Spacer(Modifier.height(24.dp))
 
-        // ── Protection tools ──
-        SectionLabel("PROTECTION TOOLS")
+        // ── Section: Protection Tools ──
+        SectionHeader("ACTIVE DEFENSE", colors, typo)
 
-        ToolCard(
-            icon   = "🛡",
-            label  = "Sovereign Guard",
-            detail = if (status.guardActive) "Active — monitoring AI app paste events"
-                     else "Tap to enable in Accessibility Settings",
-            status = if (status.guardActive) ToolStatus.ON else ToolStatus.ACTION,
-            onClick = { showDisclosure = true }
-        )
-        ToolCard(
-            icon   = "⌨",
-            label  = "AI Stop Keyboard",
-            detail = if (status.keyboardActive) "Active — type-time interception enabled"
-                     else "Enable in Settings → System → Language & Input",
-            status = if (status.keyboardActive) ToolStatus.ON else ToolStatus.ACTION,
-            onClick = { context.startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)) }
-        )
-        ToolCard(
-            icon    = "✂",
-            label   = "ScrubShare",
-            detail  = "Share any text to AI Stop to scrub PII before sending",
-            status  = ToolStatus.ON,
-            onClick = null
-        )
-        ToolCard(
-            icon    = "🖼",
-            label   = "Image Scrub",
-            detail  = "Strip GPS, camera metadata, and serial numbers from photos",
-            status  = ToolStatus.ON,
-            onClick = null
-        )
-
-        Spacer(Modifier.height(16.dp))
-
-        SectionLabel("WHAT'S DETECTED")
-        DetectionChipRow(
-            listOf(
-                "API keys", "Passwords", "SSN", "Passport",
-                "IBAN", "Crypto wallets", "Health data",
-                "GPS coords", "EXIF data", "JWTs", "PEM keys"
+        listOf(
+            Triple("🛡", "SOVEREIGN GUARD",
+                if (guardActive) "Monitoring AI app paste events"
+                else "Tap to enable in Accessibility Settings"),
+            Triple("⌨", "AI STOP KEYBOARD",
+                if (keyboardActive) "Type-time interception enabled"
+                else "Enable in Settings → Language & Input"),
+            Triple("✂", "SCRUBSHARE",
+                "Share any text to AI Stop to scrub PII"),
+            Triple("🖼", "IMAGE SCRUB",
+                "Strip GPS, camera, serial numbers from photos")
+        ).forEachIndexed { i, (icon, label, detail) ->
+            val isOn = when (i) {
+                0 -> guardActive
+                1 -> keyboardActive
+                else -> true
+            }
+            val needsAction = when (i) {
+                0 -> !guardActive
+                1 -> !keyboardActive
+                else -> false
+            }
+            NewToolCard(
+                icon        = icon,
+                label       = label,
+                detail      = detail,
+                isOn        = isOn,
+                needsAction = needsAction,
+                colors      = colors,
+                typo        = typo,
+                onClick     = when (i) {
+                    0 -> ({ showDisclosure = true })
+                    1 -> ({ context.startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)) })
+                    else -> null
+                }
             )
-        )
+            Spacer(Modifier.height(8.dp))
+        }
+
+        Spacer(Modifier.height(20.dp))
+
+        // ── Detection chips ──
+        SectionHeader("WHAT'S DETECTED", colors, typo)
+        Spacer(Modifier.height(8.dp))
+
+        androidx.compose.foundation.layout.FlowRow(
+            modifier              = Modifier.padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalArrangement   = Arrangement.spacedBy(6.dp)
+        ) {
+            listOf(
+                "API KEYS", "PASSWORDS", "SSN", "PASSPORT",
+                "IBAN", "CRYPTO", "HEALTH DATA",
+                "GPS COORDS", "EXIF DATA", "JWTS", "PEM KEYS"
+            ).forEach { item ->
+                Box(
+                    modifier = Modifier
+                        .clip(CutCornerShape(bottomEnd = 6.dp))
+                        .background(colors.surface2)
+                        .border(1.dp, colors.outline, CutCornerShape(bottomEnd = 6.dp))
+                        .padding(horizontal = 10.dp, vertical = 5.dp)
+                ) {
+                    Text(
+                        item,
+                        style = typo.labelSmall,
+                        color = colors.textSecondary
+                    )
+                }
+            }
+        }
 
         Spacer(Modifier.height(24.dp))
 
         Text(
-            "All analysis runs on-device. Nothing leaves your phone.",
-            color     = PSub.copy(alpha = 0.5f),
-            fontSize  = 10.sp,
-            fontFamily = FontFamily.Monospace,
+            "ALL ANALYSIS RUNS ON-DEVICE · NOTHING LEAVES YOUR PHONE",
+            style     = typo.caption,
+            color     = colors.textSecondary.copy(alpha = 0.5f),
             textAlign = TextAlign.Center,
             modifier  = Modifier.fillMaxWidth().padding(horizontal = 24.dp)
         )
@@ -247,120 +401,107 @@ fun ProtectScreen() {
     }
 }
 
-// ── Status bar ──
-
 @Composable
-private fun ProtectionStatusBar(status: ProtectionStatus, mode: SovereignMode) {
-    val (barColor, barLabel, barDetail) = when (status.level) {
-        ProtectionLevel.FULL    -> Triple(PTeal,  "FULLY PROTECTED",     "All interception layers active")
-        ProtectionLevel.PARTIAL -> Triple(PAmber, "PARTIALLY PROTECTED", "Enable all tools for full coverage")
-        ProtectionLevel.OFF     -> Triple(PRed,   "NOT PROTECTED",       "Tap 'Start protecting' below")
-    }
-    val modeColor = modeAccentColor(mode)
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .background(barColor.copy(alpha = 0.09f), RoundedCornerShape(16.dp))
-            .border(1.dp, barColor.copy(alpha = 0.22f), RoundedCornerShape(16.dp))
-            .padding(horizontal = 16.dp, vertical = 14.dp)
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.size(8.dp).background(barColor, CircleShape))
-            Spacer(Modifier.width(8.dp))
-            Text(
-                barLabel,
-                color         = barColor,
-                fontSize      = 12.sp,
-                fontWeight    = FontWeight.Bold,
-                fontFamily    = FontFamily.Monospace,
-                letterSpacing = 0.5.sp,
-                modifier      = Modifier.weight(1f)
-            )
-            // Mode badge
-            Box(
-                modifier = Modifier
-                    .background(modeColor.copy(alpha = 0.12f), RoundedCornerShape(6.dp))
-                    .border(1.dp, modeColor.copy(alpha = 0.3f), RoundedCornerShape(6.dp))
-                    .padding(horizontal = 7.dp, vertical = 3.dp)
-            ) {
-                Text(
-                    mode.badge,
-                    color      = modeColor,
-                    fontSize   = 8.sp,
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
-        Spacer(Modifier.height(6.dp))
-        Text(barDetail, color = PSub, fontSize = 12.sp)
-        Spacer(Modifier.height(10.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            LayerPill("Guard",    status.guardActive)
-            LayerPill("Keyboard", status.keyboardActive)
-            LayerPill("Scrub",    status.scrubActive)
-        }
-    }
-}
-
-@Composable
-private fun LayerPill(label: String, active: Boolean) {
-    val color = if (active) PTeal else PSub.copy(alpha = 0.4f)
+private fun LayerPill(label: String, active: Boolean, colors: com.aieonyx.aistop.ui.theme.AiStopColors) {
+    val typo  = AiStopTheme.typography
+    val color = if (active) colors.success else colors.disabled
     Box(
         modifier = Modifier
-            .background(color.copy(alpha = 0.12f), RoundedCornerShape(6.dp))
-            .border(1.dp, color.copy(alpha = 0.3f), RoundedCornerShape(6.dp))
-            .padding(horizontal = 8.dp, vertical = 3.dp)
+            .clip(RoundedCornerShape(4.dp))
+            .background(color.copy(alpha = 0.12f))
+            .border(1.dp, color.copy(alpha = 0.3f), RoundedCornerShape(4.dp))
+            .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Text(
             "${if (active) "✓" else "○"} $label",
-            color = color, fontSize = 9.sp, fontFamily = FontFamily.Monospace
+            style = typo.labelSmall,
+            color = color
         )
     }
 }
 
-// ── Mode card ──
+@Composable
+private fun SectionHeader(
+    title: String,
+    colors: com.aieonyx.aistop.ui.theme.AiStopColors,
+    typo: com.aieonyx.aistop.ui.theme.AiStopTypography
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .width(4.dp)
+                .height(20.dp)
+                .background(colors.accentSecondary)
+        )
+        Spacer(Modifier.width(10.dp))
+        Text(title, style = typo.label, color = colors.textPrimary)
+        Spacer(Modifier.width(10.dp))
+        HorizontalDivider(color = colors.divider, thickness = 1.dp, modifier = Modifier.weight(1f))
+    }
+}
 
 @Composable
-private fun ModeCard(mode: SovereignMode, onClick: () -> Unit) {
-    val accent = modeAccentColor(mode)
-    val icon   = when (mode) {
-        SovereignMode.AUTOPILOT -> "✈"
-        SovereignMode.DEFAULT   -> "◉"
-        SovereignMode.MANUAL    -> "⚙"
+private fun NewToolCard(
+    icon:        String,
+    label:       String,
+    detail:      String,
+    isOn:        Boolean,
+    needsAction: Boolean,
+    colors:      com.aieonyx.aistop.ui.theme.AiStopColors,
+    typo:        com.aieonyx.aistop.ui.theme.AiStopTypography,
+    onClick:     (() -> Unit)?
+) {
+    val badgeColor = when {
+        needsAction -> colors.accentSecondary
+        isOn        -> colors.success
+        else        -> colors.disabled
+    }
+    val badgeLabel = when {
+        needsAction -> "ACTION"
+        isOn        -> "ON"
+        else        -> "OFF"
     }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .background(accent.copy(alpha = 0.07f), RoundedCornerShape(14.dp))
-            .border(1.dp, accent.copy(alpha = 0.2f), RoundedCornerShape(14.dp))
-            .clickable { onClick() }
-            .padding(horizontal = 14.dp, vertical = 12.dp),
+            .clip(RoundedCornerShape(12.dp))
+            .background(colors.surface)
+            .border(1.dp, colors.outline, RoundedCornerShape(12.dp))
+            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(icon, fontSize = 20.sp, modifier = Modifier.width(32.dp))
+        Text(icon, fontSize = 24.sp, modifier = Modifier.width(38.dp))
         Column(Modifier.weight(1f)) {
+            Text(label, style = typo.label, color = colors.textPrimary)
+            Spacer(Modifier.height(2.dp))
+            Text(detail, style = typo.caption, color = colors.textSecondary)
+        }
+        Spacer(Modifier.width(8.dp))
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(6.dp))
+                .background(badgeColor)
+                .padding(horizontal = 10.dp, vertical = 6.dp),
+            contentAlignment = Alignment.Center
+        ) {
             Text(
-                mode.displayName,
-                color = accent, fontSize = 13.sp, fontWeight = FontWeight.Bold
-            )
-            Text(
-                mode.tagline,
-                color = PSub, fontSize = 11.sp, fontFamily = FontFamily.Monospace
+                badgeLabel,
+                style = typo.labelSmall,
+                color = colors.onSignal
             )
         }
-        Text(
-            "Change →",
-            color = accent, fontSize = 11.sp, fontFamily = FontFamily.Monospace
-        )
     }
 }
 
-// ── Mode picker (full-screen) ──
+// ── Mode Picker Sheet ─────────────────────────────────────────────────────────
 
 @Composable
 fun ModePickerSheet(
@@ -368,12 +509,16 @@ fun ModePickerSheet(
     onSelect:    (SovereignMode) -> Unit,
     onDismiss:   () -> Unit
 ) {
+    val colors = AiStopTheme.colors
+    val typo   = AiStopTheme.typography
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(PVoid)
+            .background(colors.background)
     ) {
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(20.dp))
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -381,25 +526,36 @@ fun ModePickerSheet(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "Choose your mode",
-                color = PWhite, fontSize = 20.sp, fontWeight = FontWeight.Bold,
+                "CHOOSE YOUR MODE",
+                style    = typo.h2,
+                color    = colors.textPrimary,
                 modifier = Modifier.weight(1f)
             )
-            TextButton(onClick = onDismiss) {
-                Text("Cancel", color = PSub)
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(colors.surface2)
+                    .clickable { onDismiss() }
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
+            ) {
+                Text("CANCEL", style = typo.labelSmall, color = colors.textSecondary)
             }
         }
+
         Text(
             "You can change this at any time.",
-            color = PSub, fontSize = 13.sp,
-            modifier = Modifier.padding(horizontal = 18.dp)
+            style    = typo.bodySmall,
+            color    = colors.textSecondary,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 20.dp)
         )
 
-        Spacer(Modifier.height(20.dp))
-
         SovereignMode.entries.forEach { mode ->
-            val accent   = modeAccentColor(mode)
-            val icon     = when (mode) {
+            val accent = when (mode) {
+                SovereignMode.AUTOPILOT -> colors.success
+                SovereignMode.DEFAULT   -> colors.accentPrimary
+                SovereignMode.MANUAL    -> androidx.compose.ui.graphics.Color(0xFFA78BFA)
+            }
+            val icon = when (mode) {
                 SovereignMode.AUTOPILOT -> "✈"
                 SovereignMode.DEFAULT   -> "◉"
                 SovereignMode.MANUAL    -> "⚙"
@@ -410,14 +566,15 @@ fun ModePickerSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 6.dp)
+                    .clip(RoundedCornerShape(12.dp))
                     .background(
-                        if (selected) accent.copy(alpha = 0.09f) else PSurf1,
-                        RoundedCornerShape(16.dp)
+                        if (selected) accent.copy(alpha = 0.09f)
+                        else colors.surface
                     )
                     .border(
-                        width = if (selected) 1.5.dp else 1.dp,
-                        color = if (selected) accent else PSurf2,
-                        shape = RoundedCornerShape(16.dp)
+                        width = if (selected) 2.dp else 1.dp,
+                        color = if (selected) accent else colors.outline,
+                        shape = RoundedCornerShape(12.dp)
                     )
                     .clickable { onSelect(mode) }
                     .padding(16.dp)
@@ -426,123 +583,36 @@ fun ModePickerSheet(
                     Text(icon, fontSize = 22.sp, modifier = Modifier.width(36.dp))
                     Column(Modifier.weight(1f)) {
                         Text(
-                            mode.displayName,
-                            color      = if (selected) PWhite else PSub,
-                            fontSize   = 16.sp,
-                            fontWeight = FontWeight.Bold
+                            mode.displayName.uppercase(),
+                            style      = typo.label,
+                            color      = if (selected) colors.textPrimary else colors.textSecondary
                         )
                         Text(
                             mode.tagline,
-                            color      = accent,
-                            fontSize   = 11.sp,
-                            fontFamily = FontFamily.Monospace
+                            style = typo.caption,
+                            color = accent
                         )
                     }
                     if (selected) {
                         Box(
                             modifier = Modifier
                                 .size(20.dp)
-                                .background(accent, CircleShape),
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(accent),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("✓", color = PWhite, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                            Text("✓", style = typo.caption, color = colors.onSignal)
                         }
                     }
                 }
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    mode.detail,
-                    color = PSub, fontSize = 12.sp, lineHeight = 17.sp
-                )
-            }
-        }
-
-        Spacer(Modifier.height(24.dp))
-    }
-}
-
-// ── Tool card ──
-
-private enum class ToolStatus { ON, ACTION, OFF }
-
-@Composable
-private fun ToolCard(
-    icon:    String,
-    label:   String,
-    detail:  String,
-    status:  ToolStatus,
-    onClick: (() -> Unit)?
-) {
-    val statusColor = when (status) {
-        ToolStatus.ON     -> PTeal
-        ToolStatus.ACTION -> PAmber
-        ToolStatus.OFF    -> PSub.copy(alpha = 0.4f)
-    }
-    val statusLabel = when (status) {
-        ToolStatus.ON     -> "ON"
-        ToolStatus.ACTION -> "ACTION"
-        ToolStatus.OFF    -> "OFF"
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp)
-            .background(PSurf1, RoundedCornerShape(14.dp))
-            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
-            .padding(horizontal = 14.dp, vertical = 14.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(icon, fontSize = 22.sp, modifier = Modifier.width(36.dp))
-        Column(Modifier.weight(1f)) {
-            Text(label, color = PWhite, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
-            Spacer(Modifier.height(2.dp))
-            Text(detail, color = PSub, fontSize = 11.sp, lineHeight = 15.sp)
-        }
-        Spacer(Modifier.width(8.dp))
-        Box(
-            modifier = Modifier
-                .background(statusColor.copy(alpha = 0.12f), RoundedCornerShape(6.dp))
-                .border(1.dp, statusColor.copy(alpha = 0.3f), RoundedCornerShape(6.dp))
-                .padding(horizontal = 7.dp, vertical = 3.dp)
-        ) {
-            Text(
-                statusLabel,
-                color = statusColor, fontSize = 8.sp,
-                fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}
-
-// ── Helpers ──
-
-@Composable
-private fun SectionLabel(label: String) {
-    Text(
-        label,
-        color = PSub, fontSize = 10.sp,
-        fontFamily = FontFamily.Monospace, letterSpacing = 0.5.sp,
-        modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp)
-    )
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun DetectionChipRow(items: List<String>) {
-    FlowRow(
-        modifier              = Modifier.padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-        verticalArrangement   = Arrangement.spacedBy(6.dp)
-    ) {
-        items.forEach { item ->
-            Box(
-                modifier = Modifier
-                    .background(PSurf1, RoundedCornerShape(8.dp))
-                    .border(1.dp, PSurf2, RoundedCornerShape(8.dp))
-                    .padding(horizontal = 10.dp, vertical = 5.dp)
-            ) {
-                Text(item, color = PSub, fontSize = 11.sp)
+                if (selected) {
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        mode.detail,
+                        style = typo.bodySmall,
+                        color = colors.textSecondary
+                    )
+                }
             }
         }
     }

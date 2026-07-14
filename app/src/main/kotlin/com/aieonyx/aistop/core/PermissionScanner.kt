@@ -14,17 +14,8 @@ import org.json.JSONObject
  */
 object PermissionScanner {
 
-    /** Known AI app packages — mirrors the <queries> manifest entries. */
-    val KNOWN_AI_PACKAGES = listOf(
-        "com.openai.chatgpt",
-        "com.google.android.apps.bard",
-        "com.microsoft.copilot",
-        "com.anthropic.claude",
-        "com.grammarly.android",
-        "com.notion.id",
-        "com.perplexity.app",
-        "ai.perplexity.app"
-    )
+    /** Single source of truth — delegates to TrustDatabase. */
+    val KNOWN_AI_PACKAGES: List<String> get() = TrustDatabase.KNOWN_AI_PACKAGES.toList()
 
     data class AuditedApp(
         val packageName:  String,

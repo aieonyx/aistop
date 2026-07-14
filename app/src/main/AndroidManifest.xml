@@ -28,6 +28,19 @@
         <package android:name="com.notion.id"/>
         <package android:name="com.perplexity.app"/>
         <package android:name="ai.perplexity.app"/>
+        <package android:name="ai.perplexity.app.android"/>
+        <package android:name="ai.x.grok"/>
+        <package android:name="com.deepseek.chat"/>
+        <package android:name="ai.mistral.chat"/>
+        <package android:name="com.mistral.android"/>
+        <package android:name="com.grammarly.android.keyboard"/>
+        <package android:name="com.qwen.chat"/>
+        <package android:name="com.alibaba.qwen"/>
+        <package android:name="com.character.ai"/>
+        <package android:name="ai.character.app"/>
+        <package android:name="com.poe.android"/>
+        <package android:name="com.inflection.pi"/>
+        <package android:name="io.talkpal.ai"/>
     </queries>
 
     <!-- ── No dangerous permissions in main app process ── -->
