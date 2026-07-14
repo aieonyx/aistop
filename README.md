@@ -35,6 +35,23 @@
 
 ---
 
+## Screenshots
+
+<p align="center">
+  <img src=".github/screenshots/screen_1.png" width="22%" alt="PROTECT tab" />
+  &nbsp;
+  <img src=".github/screenshots/screen_2.png" width="22%" alt="AUDIT tab — AI app trust scores" />
+  &nbsp;
+  <img src=".github/screenshots/screen_3.png" width="22%" alt="MORE tab — Sovereign Proof" />
+  &nbsp;
+  <img src=".github/screenshots/screen_4.png" width="22%" alt="Mode picker" />
+</p>
+
+<p align="center">
+  <em>PROTECT · AUDIT · MORE · Mode Picker</em>
+</p>
+
+---
 ## What is AI Stop?
 
 AI Stop intercepts what you paste into ChatGPT, Gemini, Copilot, Grok, DeepSeek, and other AI apps — **before it reaches their servers**. Everything runs 100% on your device. No cloud. No telemetry. No subscriptions.
