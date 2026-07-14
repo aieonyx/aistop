@@ -210,7 +210,7 @@ cd ..
 - [ ] Tier 2 localization — Filipino · Portuguese · Spanish · Czech
 - [ ] Full UI localization (Kotlin strings → string resources)
 - [ ] F-Droid submission
-- [ ] AIEONYX OÜ legal entity (Estonia e-Residency)
+- [ ] AIEONYX legal entity registration (jurisdiction TBD)
 - [ ] AWP protocol integration (Onyxia browser handoff)
 
 ---
