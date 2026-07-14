@@ -4,20 +4,29 @@
 
 **Copyright (c) 2026 Edison Lepiten / AIEONYX · Apache-2.0**
 
->  **Every time you paste into an AI app, your data leaves your device.**
-> ChatGPT retains conversations for up to 3 years. Gemini enables human review by default.
-> DeepSeek stores your data in China under PRC law. Grok shares everything with X Corp.
-> Most users have no idea this is happening — and no way to stop it.
+> **Your device is under surveillance. Most people just don't know it yet.**
 >
-> **AI Stop is the answer.**
+> Every time you paste into ChatGPT, your words are retained for up to 3 years.
+> Every time you open Gemini, human reviewers may read your conversations by default.
+> Every time you use DeepSeek, your data is stored in China under PRC law.
+> Every time you browse the web, AI crawlers harvest your behavior without consent.
+> Every app on your phone is a potential vector for AI data collection.
 >
-> Built by AIEONYX on sovereign computing principles, AI Stop sits between your clipboard
-> and every AI app on your phone. It detects sensitive data — API keys, passwords, SSNs,
-> health records, crypto wallets, GPS coordinates — and intercepts it before it ever leaves
-> your device. No cloud processing. No accounts. No subscriptions. No compromises.
+> **You did not agree to become training data. AI Stop makes sure you aren't.**
 >
-> This is not another privacy dashboard that shows you what already happened.
-> AI Stop stops it **before** it happens.
+> Built by AIEONYX on sovereign computing principles, AI Stop is the first Android app
+> designed to give users real, verifiable control over what AI systems can access.
+> It intercepts sensitive data at the clipboard, keyboard, and share sheet level —
+> stopping API keys, passwords, health records, SSNs, crypto wallets, and GPS coordinates
+> before they ever reach an AI server.
+>
+> AI Stop does not show you a dashboard of what already happened.
+> **AI Stop stops it before it happens.**
+>
+> No cloud processing. No external servers. No accounts. No subscriptions.
+> Every analysis runs on your device. Every decision stays with you.
+>
+> *This is what digital sovereignty looks like.*
 
 [![CI](https://github.com/aieonyx/aistop/actions/workflows/ci.yml/badge.svg)](https://github.com/aieonyx/aistop/actions)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
@@ -215,8 +224,9 @@ cd ..
 
 ---
 
-## What's Coming (v1.1)
+## What's Coming
 
+### v1.1 — Deeper Visibility
 - [ ] Data flow graph — per-app exposure visualization
 - [ ] Live exposure counter on PROTECT screen
 - [ ] Export wired — signed JSON download from MORE tab
@@ -227,6 +237,51 @@ cd ..
 - [ ] F-Droid submission
 - [ ] AIEONYX legal entity registration (jurisdiction TBD)
 - [ ] AWP protocol integration (Onyxia browser handoff)
+
+### v2.0 — Sovereign Shield (Network Layer)
+
+> *Because sovereignty is not just about what you paste — it is about everything that leaves your device without your knowledge.*
+
+AI Stop v1.0 protects your intentional input into AI apps.
+But the threat goes deeper. Every time you browse the web, open a news app, or scroll social media — trackers, crawlers, and AI training bots are harvesting your behavior, your device fingerprint, your location, and your reading patterns. Silently. Without consent.
+
+**AI Stop v2.0 will close that gap.**
+┌─────────────────────────────────────────────────────────────┐
+│              AI STOP v2.0 — SOVEREIGN SHIELD                │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  CURRENT (v1.0)              COMING (v2.0)                  │
+│  ─────────────               ───────────────                │
+│  ✅ Clipboard intercept      🔲 Local VPN engine            │
+│  ✅ IME paste intercept      🔲 DNS-level AI blocking       │
+│  ✅ AI app trust scores      🔲 AI crawler blocklist        │
+│  ✅ EXIF metadata scrub      🔲 Browser fingerprint guard   │
+│  ✅ SovereignMode            🔲 Network data flow map       │
+│                              🔲 Real-time exfil detection   │
+│                              🔲 Per-app network audit       │
+│                              🔲 Sovereign DNS resolver      │
+└─────────────────────────────────────────────────────────────┘
+**Known AI crawlers that will be blocked:**
+`GPTBot · CCBot · Google-Extended · PerplexityBot · Common Crawl`
+`Meta AI · Amazonbot · Bytespider · ClaudeBot · cohere-ai`
+
+**Known tracker networks that will be blocked:**
+`Meta Pixel · Google Analytics · DoubleClick · AppNexus`
+`Branch · Adjust · AppsFlyer · MoEngage · Mixpanel`
+
+**How it works — Local VPN (on-device, no external server):**
+Android's `VpnService` API allows a local tunnel that inspects all outbound traffic
+without routing it through any external server. Everything stays on your device.
+No third-party VPN provider. No logs. No trust required.
+
+- [ ] Local VPN engine (VpnService, on-device only)
+- [ ] AI crawler domain blocklist (auto-updated, sovereign)
+- [ ] Third-party tracker blocking
+- [ ] Browser fingerprint randomisation
+- [ ] Real-time network data flow visualisation
+- [ ] Per-app network sovereignty score
+- [ ] Sovereign DNS resolver (blocks AI harvest domains at DNS level)
+- [ ] Notification when any app attempts to contact known AI training endpoints
 
 ---
 
