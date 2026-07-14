@@ -163,6 +163,15 @@
             </intent-filter>
         </activity>
 
+        <!-- Vault save receiver -->
+        <receiver
+            android:name=".vault.VaultSaveReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.aieonyx.aistop.ACTION_SAVE_TO_VAULT" />
+            </intent-filter>
+        </receiver>
+
         <!-- Boot receiver -->
         <receiver
             android:name=".sentinel.SentinelBootReceiver"

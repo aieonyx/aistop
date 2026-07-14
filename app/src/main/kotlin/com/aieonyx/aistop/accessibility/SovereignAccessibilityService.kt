@@ -17,6 +17,7 @@ import com.aieonyx.aistop.db.EdisonExposureDatabase as ExposureDatabase
 import com.aieonyx.aistop.db.EventType
 import com.aieonyx.aistop.db.ExposureEvent
 import com.aieonyx.aistop.jni.AiStopCore
+import com.aieonyx.aistop.vault.SovereignVault
 import com.aieonyx.aistop.ui.SovereignMode
 import com.aieonyx.aistop.ui.loadSovereignMode
 import kotlinx.coroutines.CoroutineScope
@@ -47,8 +48,11 @@ class SovereignAccessibilityService : AccessibilityService() {
     )
 
     companion object {
-        private const val CHANNEL_ID   = "aistop_autopilot"
-        private const val NOTIF_ID     = 1001
+        private const val CHANNEL_ID      = "aistop_autopilot"
+        private const val NOTIF_ID        = 1001
+        const val ACTION_SAVE_VAULT       = "com.aieonyx.aistop.ACTION_SAVE_TO_VAULT"
+        const val EXTRA_TEXT              = "vault_text"
+        const val EXTRA_PII_CLASS         = "vault_pii_class"
     }
 
     override fun onServiceConnected() {
@@ -266,41 +270,72 @@ class SovereignAccessibilityService : AccessibilityService() {
                 logEvent("clipboard.sentinel", EventType.PASTE_BLOCKED, text, piiClasses, 0)
             }
 
+            val primaryClass = piiClasses.firstOrNull() ?: ""
             when (mode) {
                 SovereignMode.AUTOPILOT -> {
                     clearClipboard()
                     lastSentinelText = ""
-                    showSentinelNotification(piiClasses, silent = true)
+                    showSentinelNotification(piiClasses, silent = true, text = text, piiClass = primaryClass)
                 }
                 SovereignMode.DEFAULT -> {
                     val highConf = setOf("ApiKey","AwsKey","GitHubToken","JWT",
                         "PemKey","Password","Ssn","CreditCard","CryptoWallet")
                     if (piiClasses.any { it in highConf }) {
-                        showSentinelNotification(piiClasses, silent = false)
+                        showSentinelNotification(piiClasses, silent = false, text = text, piiClass = primaryClass)
                     }
                 }
                 SovereignMode.MANUAL -> {
-                    showSentinelNotification(piiClasses, silent = false)
+                    showSentinelNotification(piiClasses, silent = false, text = text, piiClass = primaryClass)
                 }
             }
         }
     }
 
-    private fun showSentinelNotification(piiClasses: List<String>, silent: Boolean) {
+    private fun showSentinelNotification(
+        piiClasses: List<String>,
+        silent:     Boolean,
+        text:       String = "",
+        piiClass:   String = ""
+    ) {
         val nm      = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val classes = piiClasses.take(3).joinToString(", ")
         val title   = if (silent) "🛡 Clipboard cleared — sensitive data blocked"
                       else "⚠ Sensitive data detected in clipboard"
-        val text    = "Detected: $classes"
 
-        val notif = androidx.core.app.NotificationCompat.Builder(this, CHANNEL_ID)
+        // Save to Vault action
+        val vaultIntent = android.app.PendingIntent.getBroadcast(
+            this, 3001,
+            android.content.Intent(ACTION_SAVE_VAULT).apply {
+                `package` = packageName
+                putExtra(EXTRA_TEXT, text)
+                putExtra(EXTRA_PII_CLASS, piiClass)
+            },
+            android.app.PendingIntent.FLAG_IMMUTABLE or
+            android.app.PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        // Open app action
+        val openIntent = android.app.PendingIntent.getActivity(
+            this, 3002,
+            android.content.Intent(this, com.aieonyx.aistop.ui.MainActivity::class.java),
+            android.app.PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val builder = androidx.core.app.NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(title)
-            .setContentText(text)
+            .setContentText("Detected: $classes")
             .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
-            .build()
-        nm.notify(1002, notif)
+            .setContentIntent(openIntent)
+
+        // Add Save to Vault action for non-silent (Default/Manual modes)
+        // and also for AutoPilot so user can recover cleared data
+        if (text.isNotEmpty()) {
+            builder.addAction(0, "🔐 Save to Vault", vaultIntent)
+        }
+
+        nm.notify(1002, builder.build())
     }
 
     override fun onInterrupt() {}
