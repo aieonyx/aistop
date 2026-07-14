@@ -246,21 +246,18 @@ AI Stop v1.0 protects your intentional input into AI apps.
 But the threat goes deeper. Every time you browse the web, open a news app, or scroll social media — trackers, crawlers, and AI training bots are harvesting your behavior, your device fingerprint, your location, and your reading patterns. Silently. Without consent.
 
 **AI Stop v2.0 will close that gap.**
-┌─────────────────────────────────────────────────────────────┐
-│              AI STOP v2.0 — SOVEREIGN SHIELD                │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  CURRENT (v1.0)              COMING (v2.0)                  │
-│  ─────────────               ───────────────                │
-│  ✅ Clipboard intercept      🔲 Local VPN engine            │
-│  ✅ IME paste intercept      🔲 DNS-level AI blocking       │
-│  ✅ AI app trust scores      🔲 AI crawler blocklist        │
-│  ✅ EXIF metadata scrub      🔲 Browser fingerprint guard   │
-│  ✅ SovereignMode            🔲 Network data flow map       │
-│                              🔲 Real-time exfil detection   │
-│                              🔲 Per-app network audit       │
-│                              🔲 Sovereign DNS resolver      │
-└─────────────────────────────────────────────────────────────┘
+
+| Current (v1.0) | Coming (v2.0) |
+|----------------|---------------|
+| ✅ Clipboard intercept | 🔲 Local VPN engine |
+| ✅ IME paste intercept | 🔲 DNS-level AI blocking |
+| ✅ AI app trust scores | 🔲 AI crawler blocklist |
+| ✅ EXIF metadata scrub | 🔲 Browser fingerprint guard |
+| ✅ SovereignMode | 🔲 Network data flow map |
+| ✅ On-device only | 🔲 Real-time exfil detection |
+| | 🔲 Per-app network audit |
+| | 🔲 Sovereign DNS resolver |
+
 **Known AI crawlers that will be blocked:**
 `GPTBot · CCBot · Google-Extended · PerplexityBot · Common Crawl`
 `Meta AI · Amazonbot · Bytespider · ClaudeBot · cohere-ai`
