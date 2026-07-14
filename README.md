@@ -254,7 +254,7 @@ Part of the AIEONYX ecosystem:
 
 ## Support AIEONYX
 
-AI Stop is a mobile project of **AIEONYX** — a sovereign computing platform built in Prague by a solo founder.
+AI Stop is a mobile project of **AIEONYX** — a sovereign computing platform.
 
 AIEONYX is building the infrastructure for a world where individuals own their digital identity, their data, and their computing environment. AI Stop is the first consumer product in that mission.
 
