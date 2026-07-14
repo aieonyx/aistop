@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.FragmentActivity
 import com.aieonyx.aistop.security.BiometricGate
 import com.aieonyx.aistop.sentinel.ClipboardSentinelService
 import com.aieonyx.aistop.ui.theme.AiStopTheme
@@ -92,9 +93,28 @@ fun ProtectScreen(
         ModePickerSheet(
             currentMode = currentMode,
             onSelect    = { mode: SovereignMode ->
-                currentMode = mode
-                saveSovereignMode(context, mode)
-                showModePicker = false
+                val activity = context as? FragmentActivity
+                if (activity != null) {
+                    BiometricGate.authenticate(
+                        activity    = activity,
+                        actionTitle = "Change Protection Mode",
+                        subtitle    = "Verify identity to change from ${currentMode.displayName} to ${mode.displayName}"
+                    ) { result ->
+                        when (result) {
+                            is BiometricGate.AuthResult.Success,
+                            is BiometricGate.AuthResult.NoHardware -> {
+                                currentMode = mode
+                                saveSovereignMode(context, mode)
+                                showModePicker = false
+                            }
+                            else -> { /* auth failed — do nothing */ }
+                        }
+                    }
+                } else {
+                    currentMode = mode
+                    saveSovereignMode(context, mode)
+                    showModePicker = false
+                }
             },
             onDismiss = { showModePicker = false }
         )
@@ -357,17 +377,57 @@ fun ProtectScreen(
                 colors      = colors,
                 typo        = typo,
                 onClick     = when (i) {
-                    0 -> ({ showDisclosure = true })
+                    0 -> ({
+                if (guardActive) {
+                    // Disabling guard requires biometric
+                    val activity = context as? FragmentActivity
+                    if (activity != null) {
+                        BiometricGate.authenticate(
+                            activity    = activity,
+                            actionTitle = "Disable Sovereign Guard",
+                            subtitle    = "Verify identity to change accessibility settings"
+                        ) { result ->
+                            when (result) {
+                                is BiometricGate.AuthResult.Success,
+                                is BiometricGate.AuthResult.NoHardware -> showDisclosure = true
+                                else -> { /* stay protected */ }
+                            }
+                        }
+                    }
+                } else {
+                    showDisclosure = true
+                }
+            })
                     1 -> ({ context.startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)) })
                     4 -> ({
+                        val activity = context as? FragmentActivity
                         if (sentinelActive) {
-                            ClipboardSentinelService.stop(context)
-                            sentinelActive = false
+                            // Gate turning OFF sentinel — requires biometric
+                            if (activity != null) {
+                                BiometricGate.authenticate(
+                                    activity    = activity,
+                                    actionTitle = "Disable Clipboard Sentinel",
+                                    subtitle    = "Verify identity to disable protection"
+                                ) { result ->
+                                    when (result) {
+                                        is BiometricGate.AuthResult.Success,
+                                        is BiometricGate.AuthResult.NoHardware -> {
+                                            ClipboardSentinelService.stop(context)
+                                            sentinelActive = false
+                                            context.getSharedPreferences("aistop_prefs",
+                                                android.content.Context.MODE_PRIVATE)
+                                                .edit().putBoolean("sentinel_enabled", false).apply()
+                                        }
+                                        else -> { /* auth failed — sentinel stays ON */ }
+                                    }
+                                }
+                            }
                         } else {
+                            // Turning ON sentinel — no gate needed
                             ClipboardSentinelService.start(context)
                             sentinelActive = true
-                            // Save preference for boot restart
-                            context.getSharedPreferences("aistop_prefs", android.content.Context.MODE_PRIVATE)
+                            context.getSharedPreferences("aistop_prefs",
+                                android.content.Context.MODE_PRIVATE)
                                 .edit().putBoolean("sentinel_enabled", true).apply()
                         }
                     })
