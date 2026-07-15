@@ -31,7 +31,7 @@
 [![CI](https://github.com/aieonyx/aistop/actions/workflows/ci.yml/badge.svg)](https://github.com/aieonyx/aistop/actions)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Android%2010%2B-green.svg)](https://developer.android.com)
-[![Version](https://img.shields.io/badge/version-1.0.0-teal.svg)](https://github.com/aieonyx/aistop/releases)
+[![Version](https://img.shields.io/badge/version-1.1.0-teal.svg)](https://github.com/aieonyx/aistop/releases)
 
 ---
 
