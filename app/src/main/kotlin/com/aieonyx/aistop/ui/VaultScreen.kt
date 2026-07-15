@@ -15,6 +15,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.asImageBitmap
+import com.aieonyx.aistop.security.BiometricGate
+import com.aieonyx.aistop.vault.VaultExportManager
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
-import com.aieonyx.aistop.security.BiometricGate
 import com.aieonyx.aistop.ui.theme.AiStopTheme
 import com.aieonyx.aistop.vault.SovereignVault
 import java.text.SimpleDateFormat
@@ -45,7 +48,11 @@ fun VaultScreen() {
     val typo     = AiStopTheme.typography
     val activity = context as? FragmentActivity
 
+    val scope         = rememberCoroutineScope()
     var unlocked      by remember { mutableStateOf(false) }
+    var exporting     by remember { mutableStateOf(false) }
+    var showQr        by remember { mutableStateOf(false) }
+    var qrBitmap      by remember { mutableStateOf<android.graphics.Bitmap?>(null) }
     var authFailed    by remember { mutableStateOf(false) }
     var entries       by remember { mutableStateOf(SovereignVault.listEntries(context)) }
     var copiedId      by remember { mutableStateOf<String?>(null) }
@@ -221,6 +228,124 @@ fun VaultScreen() {
                         if (index < entries.size - 1) {
                             HorizontalDivider(color = colors.divider, thickness = 1.dp,
                                 modifier = Modifier.padding(horizontal = 14.dp))
+                        }
+                    }
+                }
+            }
+
+            // Export + QR buttons
+            Spacer(Modifier.height(8.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // Export signed bundle
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(44.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(colors.accentPrimary.copy(alpha = if (exporting) 0.5f else 1f))
+                        .clickable {
+                            if (!exporting) scope.launch(kotlinx.coroutines.Dispatchers.Main) {
+                                exporting = true
+                                try {
+                                    val result = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                                        VaultExportManager.exportSignedBundle(context)
+                                    }
+                                    VaultExportManager.shareBundle(context, result.file)
+                                } catch (e: Exception) {
+                                    android.util.Log.e("AiStop", "Vault export failed: ${e.message}")
+                                } finally { exporting = false }
+                            }
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        if (exporting) "Signing…" else "📤 Export",
+                        style = typo.label,
+                        color = Color.White
+                    )
+                }
+
+                // QR backup
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(44.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color(0xFFA78BFA).copy(alpha = if (exporting) 0.5f else 1f))
+                        .clickable {
+                            if (!exporting) scope.launch {
+                                exporting = true
+                                try {
+                                    val bmp = VaultExportManager.generateBackupQr(context)
+                                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                        qrBitmap = bmp
+                                        showQr  = true
+                                    }
+                                } catch (e: Exception) {
+                                    android.util.Log.e("AiStop", "QR failed: ${e.message}")
+                                } finally { exporting = false }
+                            }
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("📱 QR Backup", style = typo.label, color = Color.White)
+                }
+            }
+
+            // QR display
+            if (showQr && qrBitmap != null) {
+                Spacer(Modifier.height(12.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color.White)
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    androidx.compose.foundation.Image(
+                        bitmap             = qrBitmap!!.asImageBitmap(),
+                        contentDescription = "Vault backup QR",
+                        modifier           = Modifier.size(240.dp)
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        "Scan to view vault record list",
+                        style = typo.caption,
+                        color = Color.DarkGray
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(Color(0xFF1A1A2E))
+                                .clickable {
+                                    scope.launch {
+                                        val file = VaultExportManager.saveQrToFile(context, qrBitmap!!)
+                                        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                            VaultExportManager.shareQr(context, file)
+                                        }
+                                    }
+                                }
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Text("Save QR", style = typo.label, color = Color.White)
+                        }
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(Color(0xFF333333))
+                                .clickable { showQr = false }
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Text("Close", style = typo.label, color = Color.White)
                         }
                     }
                 }
