@@ -31,7 +31,7 @@ pub const RULES: &[Rule] = &[
     Rule {
         class: PiiClass::Phone,
         // International formats: +420 555 014 822, (416)-555-0198, etc.
-        pattern: r"(\+\d[\d\s\-().]{7,}\d|\(\d{2,4}\)[\d\s\-().]{5,}\d|\d{3,4}-\d{3,4}-\d{3,4})",
+        pattern: r"(\+\d[\d\s\-().]{7,}\d|\(\d{2,4}\)[\d\s\-().]{5,}\d)",
     },
     Rule {
         class: PiiClass::DateOfBirth,
@@ -130,44 +130,44 @@ pub const RULES: &[Rule] = &[
     Rule {
         class: PiiClass::CryptoWallet,
         // Bitcoin address (P2PKH, P2SH, Bech32)
-        pattern: r"(?:1[a-km-zA-HJ-NP-Z1-9]{25,34}|3[a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-z0-9]{39,59})",
+        pattern: r"\b(?:1[a-km-zA-HJ-NP-Z1-9]{25,34}|3[a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-z0-9]{39,59})\b",
     },
     Rule {
         class: PiiClass::CryptoWallet,
         // Ethereum address
-        pattern: r"0x[a-fA-F0-9]{40}",
+        pattern: r"\b0x[a-fA-F0-9]{40}\b",
     },
     Rule {
         class: PiiClass::CryptoWallet,
         // BIP-39 seed phrase (12 consecutive known words — simplified detection)
-        pattern: r"(?i)(?:abandon|ability|able|about|above|absent|absorb|abstract|absurd|abuse|access|accident|account|accuse|achieve|acid|acoustic|acquire|across|act|action|actor|actress|actual|adapt|add|addict|address|adjust|admit|adult|advance|advice|aerobic|afford|afraid|again|age|agent|agree|ahead|aim|air|airport|aisle|alarm|album|alcohol|alert|alien|all|alley|allow|almost|alone|alpha|already|also|alter|always|amateur|amazing|among|amount|amused|analyst|anchor|ancient|anger|angle|angry|animal|ankle|announce|annual|answer|antenna|antique|anxiety|any|apart|apology|appear|apple|approve|april|arch|arctic|area|arena|argue|arm|armed|armor|army|around|arrange|arrest|arrive|arrow|art|artefact|artist|artwork|ask|aspect|assault|asset|assist|assume|asthma|athlete|atom|attack|attend|attitude|attract|auction|audit|august|aunt|author|auto|autumn|average|avocado|avoid|awake|aware|away|awesome|awful|awkward|axis)(?:\s+\w+){10,23}",
+        pattern: r"(?i)\b(?:abandon|ability|able|about|above|absent|absorb|abstract|absurd|abuse|access|accident|account|accuse|achieve|acid|acoustic|acquire|across|act|action|actor|actress|actual|adapt|add|addict|address|adjust|admit|adult|advance|advice|aerobic|afford|afraid|again|age|agent|agree|ahead|aim|air|airport|aisle|alarm|album|alcohol|alert|alien|all|alley|allow|almost|alone|alpha|already|also|alter|always|amateur|amazing|among|amount|amused|analyst|anchor|ancient|anger|angle|angry|animal|ankle|announce|annual|answer|antenna|antique|anxiety|any|apart|apology|appear|apple|approve|april|arch|arctic|area|arena|argue|arm|armed|armor|army|around|arrange|arrest|arrive|arrow|art|artefact|artist|artwork|ask|aspect|assault|asset|assist|assume|asthma|athlete|atom|attack|attend|attitude|attract|auction|audit|august|aunt|author|auto|autumn|average|avocado|avoid|awake|aware|away|awesome|awful|awkward|axis)\b(?:\s+\w+){10,23}",
     },
     // ── Financial ─────────────────────────────────────────────────────────────
     Rule {
         class: PiiClass::Financial,
         // IBAN (EU bank account)
-        pattern: r"[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}(?:[A-Z0-9]{0,16})?",
+        pattern: r"\b[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}(?:[A-Z0-9]{0,16})?\b",
     },
     Rule {
         class: PiiClass::Financial,
         // SWIFT/BIC code
-        pattern: r"[A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?",
+        pattern: r"\b[A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?\b",
     },
     // ── Government IDs ────────────────────────────────────────────────────────
     Rule {
         class: PiiClass::GovernmentId,
         // US Social Security Number
-        pattern: r"(?!000|666|9\d{2})\d{3}-(?!00)\d{2}-(?!0000)\d{4}",
+        pattern: r"\b\d{3}-\d{2}-\d{4}\b",
     },
     Rule {
         class: PiiClass::GovernmentId,
         // Czech rodné číslo (birth number)
-        pattern: r"\d{2}(?:0[1-9]|1[0-2]|5[1-9]|6[0-2])\d{2}[\/]?\d{3,4}",
+        pattern: r"\b\d{2}(?:0[1-9]|1[0-2]|5[1-9]|6[0-2])\d{2}[\/]?\d{3,4}\b",
     },
     Rule {
         class: PiiClass::GovernmentId,
         // Passport number (generic)
-        pattern: r"[A-Z]{1,2}[0-9]{6,9}",
+        pattern: r"\b[A-Z]{1,2}[0-9]{6,9}\b",
     },
     // ── Location ─────────────────────────────────────────────────────────────
     Rule {
