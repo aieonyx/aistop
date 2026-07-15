@@ -24,13 +24,14 @@ pub const RULES: &[Rule] = &[
         pattern: r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}",
     },
     Rule {
-        class: PiiClass::Phone,
-        // International formats: +420 555 014 822, (416)-555-0198, etc.
-        pattern: r"(\+?\d[\d\s\-().]{7,}\d)",
+        class: PiiClass::CreditCard,
+        // Check before Phone — card numbers match phone pattern
+        pattern: r"\b(?:4[0-9]{3}[\s\-]?[0-9]{4}[\s\-]?[0-9]{4}[\s\-]?[0-9]{4}|5[1-5][0-9]{2}[\s\-]?[0-9]{4}[\s\-]?[0-9]{4}[\s\-]?[0-9]{4}|3[47][0-9]{2}[\s\-]?[0-9]{6}[\s\-]?[0-9]{5})\b",
     },
     Rule {
-        class: PiiClass::CreditCard,
-        pattern: r"\b(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13})\b",
+        class: PiiClass::Phone,
+        // International formats: +420 555 014 822, (416)-555-0198, etc.
+        pattern: r"(\+\d[\d\s\-().]{7,}\d|\(\d{2,4}\)[\d\s\-().]{5,}\d|\d{3,4}-\d{3,4}-\d{3,4})",
     },
     Rule {
         class: PiiClass::DateOfBirth,
