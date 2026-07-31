@@ -38,7 +38,7 @@ object PermissionScanner {
                     pkg,
                     PackageManager.GET_PERMISSIONS
                 )
-                val label = pm.getApplicationLabel(info.applicationInfo).toString()
+                val label = pm.getApplicationLabel(info.applicationInfo!!).toString()
                 val perms = info.requestedPermissions?.toList() ?: emptyList()
 
                 // Build risk profile and send to Rust scorer
@@ -140,7 +140,7 @@ object PermissionScanner {
                          perms.any { it.contains("CLIPBOARD") }
             if (hasNet && risky) {
                 val label = try {
-                    pm.getApplicationLabel(pkg.applicationInfo).toString()
+                    pm.getApplicationLabel(pkg.applicationInfo!!).toString()
                 } catch (e: Exception) { pkg.packageName }
                 result.add(AuditedApp(
                     packageName = pkg.packageName,

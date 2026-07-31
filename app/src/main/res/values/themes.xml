@@ -13,8 +13,8 @@
         <item name="colorError">#E45F65</item>
         <item name="android:colorBackground">#080A0D</item>
         <item name="android:windowBackground">#080A0D</item>
-        <item name="android:statusBarColor">#080A0D</item>
-        <item name="android:navigationBarColor">#080A0D</item>
+        <!-- statusBarColor removed — handled by enableEdgeToEdge() -->
+        <!-- navigationBarColor removed — handled by enableEdgeToEdge() -->
     </style>
 
     <style name="Theme.AiStop.Translucent" parent="Theme.AiStop">
