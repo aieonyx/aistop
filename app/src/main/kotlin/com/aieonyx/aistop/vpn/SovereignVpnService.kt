@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Edison Lepiten / AIEONYX
-// AI Stop — Sovereign Shield VPN Engine v2.7
-// Route ONLY 8.8.8.8/32 through TUN — DNS traffic only
-// All TCP/HTTPS flows normally outside VPN
+// AI Stop — Sovereign Shield VPN Engine v2.8
+// Uses BlockedDomains + AllowlistManager
 // Package: com.aieonyx.aistop
 
 package com.aieonyx.aistop.vpn
@@ -56,6 +55,7 @@ class SovereignVpnService : VpnService() {
         super.onCreate()
         dnsFilter       = DnsFilter(applicationContext)
         aiCreepDetector = AiCreepDetector(applicationContext)
+        AllowlistManager.loadPersisted(applicationContext)
         createNotificationChannel()
     }
 
@@ -75,29 +75,22 @@ class SovereignVpnService : VpnService() {
 
     private fun startVpn() {
         if (tunFd != null) return
-        Log.i(TAG, "Starting Sovereign Shield v2.7")
+        Log.i(TAG, "Starting Sovereign Shield v2.8")
 
         tunFd = Builder()
             .setSession("AI Stop Sovereign Shield")
             .addAddress(TUN_ADDRESS, TUN_PREFIX)
-            // KEY: only route 8.8.8.8/32 through TUN
-            // This means ONLY DNS queries to 8.8.8.8 hit our intercept
-            // All TCP/HTTPS/other traffic flows normally
             .addRoute(UPSTREAM_DNS, 32)
             .addDnsServer(UPSTREAM_DNS)
             .setMtu(MTU)
             .addDisallowedApplication(packageName)
             .establish()
 
-        if (tunFd == null) {
-            Log.e(TAG, "Failed to establish tunnel")
-            stopSelf()
-            return
-        }
+        if (tunFd == null) { Log.e(TAG, "Failed to establish tunnel"); stopSelf(); return }
 
         writeQueue.clear()
+        AllowlistManager.startCleanup(serviceScope)
 
-        // Single dedicated writer
         writeJob = serviceScope.launch(Dispatchers.IO) {
             val out = FileOutputStream(tunFd!!.fileDescriptor)
             while (isActive) {
@@ -105,13 +98,10 @@ class SovereignVpnService : VpnService() {
                     val pkt = writeQueue.poll(100, java.util.concurrent.TimeUnit.MILLISECONDS)
                     if (pkt != null) out.write(pkt)
                 } catch (_: InterruptedException) {
-                } catch (e: Exception) {
-                    if (isActive) Log.w(TAG, "Write: ${e.message}")
-                }
+                } catch (e: Exception) { if (isActive) Log.w(TAG, "Write: ${e.message}") }
             }
         }
 
-        // Reader — only DNS packets arrive since we only route 8.8.8.8/32
         readJob = serviceScope.launch(Dispatchers.IO) {
             val inp = FileInputStream(tunFd!!.fileDescriptor)
             val buf = ByteArray(MTU)
@@ -119,10 +109,7 @@ class SovereignVpnService : VpnService() {
 
             while (isActive) {
                 val n = try { inp.read(buf) }
-                        catch (e: Exception) {
-                            if (isActive) Log.w(TAG, "Read: ${e.message}")
-                            break
-                        }
+                        catch (e: Exception) { if (isActive) Log.w(TAG, "Read: ${e.message}"); break }
                 if (n < 28) { delay(1); continue }
 
                 val version = (buf[0].toInt() ushr 4) and 0xF
@@ -130,7 +117,7 @@ class SovereignVpnService : VpnService() {
 
                 val ihl   = (buf[0].toInt() and 0xF) * 4
                 val proto = buf[9].toInt() and 0xFF
-                if (proto != 17) continue  // UDP only
+                if (proto != 17) continue
 
                 val dstPort = ((buf[ihl+2].toInt() and 0xFF) shl 8) or
                                (buf[ihl+3].toInt() and 0xFF)
@@ -150,7 +137,6 @@ class SovereignVpnService : VpnService() {
             Log.i(TAG, "DNS intercept loop exited")
         }
 
-        // Bridge to ShieldScreen every 2s
         bridgeJob = serviceScope.launch {
             while (isActive) {
                 delay(2000)
@@ -167,6 +153,14 @@ class SovereignVpnService : VpnService() {
     private suspend fun handleDns(dns: ByteArray, srcIp: ByteArray, srcPort: Int) {
         val hostname = extractHostname(dns)
 
+        // Check allowlist first
+        if (hostname != null && AllowlistManager.isAllowed(hostname)) {
+            Log.d(TAG, "DNS ALLOWED (user): $hostname")
+            forwardDns(dns, srcIp, srcPort, hostname)
+            return
+        }
+
+        // Check blocklist
         if (hostname != null && isBlocked(hostname)) {
             Log.i(TAG, "DNS BLOCK: $hostname")
             dnsFilter.recordBlock(hostname)
@@ -174,11 +168,16 @@ class SovereignVpnService : VpnService() {
             return
         }
 
-        // Forward to 8.8.8.8 via protected socket (bypasses our TUN)
+        forwardDns(dns, srcIp, srcPort, hostname)
+    }
+
+    private suspend fun forwardDns(
+        dns: ByteArray, srcIp: ByteArray, srcPort: Int, hostname: String?
+    ) {
         withContext(Dispatchers.IO) {
             try {
                 val sock = DatagramSocket()
-                protect(sock)  // critical — bypasses VPN so no loop
+                protect(sock)
                 sock.soTimeout = DNS_TIMEOUT
                 sock.send(DatagramPacket(dns, dns.size,
                     InetAddress.getByName(UPSTREAM_DNS), DNS_PORT))
@@ -205,58 +204,34 @@ class SovereignVpnService : VpnService() {
         }
     }
 
+    private fun isBlocked(h: String): Boolean {
+        val host = h.trimEnd('.')
+        return BlockedDomains.exact.contains(host) ||
+               BlockedDomains.suffixes.any { host.endsWith(it) }
+    }
+
     private fun buildIpUdpPacket(payload: ByteArray, dstIp: ByteArray, dstPort: Int): ByteArray {
         val udpLen = 8 + payload.size
         val ipLen  = 20 + udpLen
         val pkt    = ByteArray(ipLen)
-
         pkt[0] = 0x45.toByte(); pkt[1] = 0
         pkt[2] = (ipLen ushr 8).toByte(); pkt[3] = (ipLen and 0xFF).toByte()
-        pkt[4] = 0; pkt[5] = 0
-        pkt[6] = 0x40.toByte(); pkt[7] = 0
-        pkt[8] = 64; pkt[9] = 17
-        pkt[10] = 0; pkt[11] = 0
-        // src = 8.8.8.8 (device expects DNS reply from here)
+        pkt[4] = 0; pkt[5] = 0; pkt[6] = 0x40.toByte(); pkt[7] = 0
+        pkt[8] = 64; pkt[9] = 17; pkt[10] = 0; pkt[11] = 0
         pkt[12] = 8; pkt[13] = 8; pkt[14] = 8; pkt[15] = 8
         System.arraycopy(dstIp, 0, pkt, 16, 4)
-
         var sum = 0
         for (i in 0 until 20 step 2)
             sum += ((pkt[i].toInt() and 0xFF) shl 8) or (pkt[i+1].toInt() and 0xFF)
         while (sum shr 16 != 0) sum = (sum and 0xFFFF) + (sum ushr 16)
         val ck = sum.inv() and 0xFFFF
         pkt[10] = (ck ushr 8).toByte(); pkt[11] = (ck and 0xFF).toByte()
-
         pkt[20] = (DNS_PORT ushr 8).toByte(); pkt[21] = (DNS_PORT and 0xFF).toByte()
         pkt[22] = (dstPort ushr 8).toByte();  pkt[23] = (dstPort and 0xFF).toByte()
         pkt[24] = (udpLen ushr 8).toByte();   pkt[25] = (udpLen and 0xFF).toByte()
         pkt[26] = 0; pkt[27] = 0
         System.arraycopy(payload, 0, pkt, 28, payload.size)
         return pkt
-    }
-
-    private val blockedDomains = setOf(
-        "openai.com","oaistatic.com","oaiusercontent.com","chatgpt.com",
-        "anthropic.com","claude.ai",
-        "generativelanguage.googleapis.com","bard.google.com","gemini.google.com",
-        "ai.google.dev","aistudio.google.com","makersuite.google.com",
-        "perplexity.ai","cohere.ai","mistral.ai","x.ai","grok.x.ai",
-        "huggingface.co","api.huggingface.co","datasets-server.huggingface.co",
-        "commoncrawl.org","laion.ai","api.together.xyz","api.replicate.com",
-        "api.groq.com","telemetry.openai.com","events.anthropic.com",
-        "ml-telemetry.amazonaws.com","beacon.openai.com",
-        "mixpanel.com","api.segment.io","segment.io",
-        "amplitude.com","api.amplitude.com"
-    )
-
-    private val blockedSuffixes = listOf(
-        ".openai.com",".anthropic.com",".perplexity.ai",
-        ".cohere.ai",".mistral.ai",".openai.azure.com"
-    )
-
-    private fun isBlocked(h: String): Boolean {
-        val host = h.trimEnd('.')
-        return blockedDomains.contains(host) || blockedSuffixes.any { host.endsWith(it) }
     }
 
     private fun extractHostname(dns: ByteArray): String? {
@@ -291,6 +266,8 @@ class SovereignVpnService : VpnService() {
 
     private fun stopVpn() {
         Log.i(TAG, "Stopping Sovereign Shield")
+        AllowlistManager.clearSession()
+        AllowlistManager.stopCleanup()
         bridgeJob?.cancel(); readJob?.cancel(); writeJob?.cancel()
         bridgeJob = null; readJob = null; writeJob = null
         writeQueue.clear()
