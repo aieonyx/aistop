@@ -4,6 +4,7 @@ package com.aieonyx.aistop.ui
 
 import android.app.Activity
 import android.os.Bundle
+import android.content.Intent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,6 +39,26 @@ private const val TAB_MORE    = 3
 
 class MainActivity : androidx.fragment.app.FragmentActivity() {
 
+    // Shared tab state — updated from both onCreate and onNewIntent
+    companion object {
+        var pendingTab: Int? = null
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        val openTab = intent.getStringExtra("open_tab")
+        pendingTab = when (openTab) {
+            "more"   -> TAB_MORE
+            "shield" -> TAB_SHIELD
+            "audit"  -> TAB_AUDIT
+            else     -> null
+        }
+        setIntent(intent)
+        recreate()
+    }
+
+
+
     private val vpnPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -53,8 +74,19 @@ class MainActivity : androidx.fragment.app.FragmentActivity() {
             android.view.WindowManager.LayoutParams.FLAG_SECURE,
             android.view.WindowManager.LayoutParams.FLAG_SECURE
         )
+        // Handle notification deep-link intent
+        val openTab = intent?.getStringExtra("open_tab")
+        val startTab = pendingTab ?: when (openTab) {
+            "more"   -> TAB_MORE
+            "shield" -> TAB_SHIELD
+            "audit"  -> TAB_AUDIT
+            else     -> TAB_PROTECT
+        }
+        pendingTab = null
+
         setContent {
             AiStopRoot(
+                startTab = startTab,
                 onRequestVpn = { VpnIntegration.requestAndStart(this, vpnPermissionLauncher) },
                 onStopVpn    = { VpnIntegration.stop(this) }
             )
@@ -65,7 +97,8 @@ class MainActivity : androidx.fragment.app.FragmentActivity() {
 @Composable
 fun AiStopRoot(
     onRequestVpn: () -> Unit = {},
-    onStopVpn:    () -> Unit = {}
+    onStopVpn:    () -> Unit = {},
+    startTab:     Int = TAB_PROTECT
 ) {
     val context  = LocalContext.current
     var darkMode by remember { mutableStateOf(loadDarkMode(context)) }
@@ -84,12 +117,13 @@ fun AiStopApp(
     darkMode: Boolean,
     onToggleTheme: () -> Unit,
     onRequestVpn: () -> Unit = {},
-    onStopVpn:    () -> Unit = {}
+    onStopVpn:    () -> Unit = {},
+    startTab:     Int = TAB_PROTECT
 ) {
     val context        = LocalContext.current
     val colors         = AiStopTheme.colors
     var showOnboarding by remember { mutableStateOf(!isOnboardingComplete(context)) }
-    var selectedTab    by remember { mutableStateOf(TAB_PROTECT) }
+    var selectedTab    by remember { mutableStateOf(startTab) }
 
     if (showOnboarding) {
         OnboardingScreen(onComplete = { showOnboarding = false })

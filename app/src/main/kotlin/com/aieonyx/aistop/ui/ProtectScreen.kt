@@ -555,7 +555,10 @@ fun ProtectScreen(
             listOf(
                 "API KEYS", "PASSWORDS", "SSN", "PASSPORT",
                 "IBAN", "CRYPTO", "HEALTH DATA",
-                "GPS COORDS", "EXIF DATA", "JWTS", "PEM KEYS"
+                "GPS COORDS", "EXIF DATA", "JWTS", "PEM KEYS",
+                "AI CRAWLERS", "DNS BLOCKS", "TELEMETRY",
+                "APP NETWORK", "CLIPBOARD", "PASTE EVENTS",
+                "CRYPTO KEYS", "BIOMETRICS", "DEVICE ID"
             ).forEach { item ->
                 Box(
                     modifier = Modifier

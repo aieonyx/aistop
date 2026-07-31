@@ -22,6 +22,7 @@ import com.aieonyx.aistop.jni.AiStopCore
 import com.aieonyx.aistop.vault.SovereignVault
 import com.aieonyx.aistop.ui.SovereignMode
 import com.aieonyx.aistop.ui.loadSovereignMode
+import com.aieonyx.aistop.accessibility.AiAppWarning
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -93,6 +94,10 @@ class SovereignAccessibilityService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         event ?: return
         val pkg = event.packageName?.toString() ?: return
+        // DEBUG — remove after confirming
+        if (pkg.contains("bard") || pkg.contains("gemini") || pkg.contains("google")) {
+            android.util.Log.d("SovereignAccess", "EVENT pkg=$pkg type=${event.eventType}")
+        }
 
         // Global sentinel — scan text changes in ANY app
         if (event.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
@@ -105,6 +110,12 @@ class SovereignAccessibilityService : AccessibilityService() {
                 }
             }
             return
+        }
+
+        // AI app bypass warning — fires for ANY package, before early return
+        if (event.eventType == android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
+            event.eventType == android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
+            AiAppWarning.onForegroundAppChanged(this, pkg)
         }
 
         // AI app specific clipboard monitoring

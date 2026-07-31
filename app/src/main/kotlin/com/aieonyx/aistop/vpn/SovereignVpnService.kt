@@ -56,6 +56,7 @@ class SovereignVpnService : VpnService() {
         dnsFilter       = DnsFilter(applicationContext)
         aiCreepDetector = AiCreepDetector(applicationContext)
         AllowlistManager.loadPersisted(applicationContext)
+        AppBlockList.load(applicationContext)
         createNotificationChannel()
     }
 
@@ -84,6 +85,13 @@ class SovereignVpnService : VpnService() {
             .addDnsServer(UPSTREAM_DNS)
             .setMtu(MTU)
             .addDisallowedApplication(packageName)
+            .also { builder ->
+                // Block user-selected apps from network access
+                AppBlockList.getBlockedPackages().forEach { pkg ->
+                    try { builder.addDisallowedApplication(pkg) }
+                    catch (e: Exception) { android.util.Log.w(TAG, "Cannot block $pkg: ${e.message}") }
+                }
+            }
             .establish()
 
         if (tunFd == null) { Log.e(TAG, "Failed to establish tunnel"); stopSelf(); return }
