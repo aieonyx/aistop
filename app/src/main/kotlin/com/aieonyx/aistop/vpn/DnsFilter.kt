@@ -107,6 +107,7 @@ class DnsFilter(private val context: Context) {
     // Runtime block log: hostname → block count (for UI)
     private val blockLog = mutableMapOf<String, Int>()
     fun getBlockLog(): Map<String, Int> = blockLog.toMap()
+    fun recordBlock(hostname: String) { blockLog[hostname] = (blockLog[hostname] ?: 0) + 1 }
 
     // ── Public API ────────────────────────────────────────────────────────────
 
