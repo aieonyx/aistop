@@ -12,6 +12,8 @@ import android.content.Intent
 import android.view.accessibility.AccessibilityEvent
 import androidx.core.app.NotificationCompat
 import com.aieonyx.aistop.R
+import com.aieonyx.aistop.core.ExemptDatabase
+import com.aieonyx.aistop.sentinel.BankingModeManager
 import com.aieonyx.aistop.core.TrustDatabase
 import com.aieonyx.aistop.db.EdisonExposureDatabase as ExposureDatabase
 import com.aieonyx.aistop.db.EventType

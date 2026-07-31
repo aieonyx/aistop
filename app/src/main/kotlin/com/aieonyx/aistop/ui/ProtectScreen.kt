@@ -339,6 +339,53 @@ fun ProtectScreen(
         Spacer(Modifier.height(24.dp))
 
         // ── Section: Protection Tools ──
+        // ── Banking Mode card ──
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 4.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(colors.surface)
+                .border(1.dp, Color(0xFFD7A84B).copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+                .padding(14.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        "🏦 BANKING MODE",
+                        style = typo.label,
+                        color = Color(0xFFD7A84B)
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        "Some apps, like GCash, block Accessibility Services. PAUSE AI STOP before opening GCash, then re-enable Guardian afterward.",
+                        style = typo.caption,
+                        color = colors.textSecondary
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color(0xFFD7A84B).copy(alpha = 0.15f))
+                        .border(1.dp, Color(0xFFD7A84B).copy(alpha = 0.4f), RoundedCornerShape(8.dp))
+                        .clickable {
+                            context.startActivity(
+                                android.content.Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                    .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                            )
+                        }
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    Text("⏸ PAUSE", style = typo.label, color = Color(0xFFD7A84B))
+                }
+            }
+        }
+        Spacer(Modifier.height(8.dp))
+
         SectionHeader("ACTIVE DEFENSE", colors, typo)
 
         listOf(

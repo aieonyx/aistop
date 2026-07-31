@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2026 Edison Lepiten / AIEONYX
+  License: Apache-2.0
+
+  isAccessibilityTool="true" — declares AI Stop as a legitimate accessibility tool.
+  Required for Android 17+ Advanced Protection Mode compatibility.
+  May also resolve conflicts with strict banking apps like GCash.
+-->
+<accessibility-service
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged|typeViewFocused|typeViewTextChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagReportViewIds|flagRetrieveInteractiveWindows"
+    android:canRetrieveWindowContent="true"
+    android:description="@string/accessibility_service_description"
+    android:notificationTimeout="100"
+    android:settingsActivity="com.aieonyx.aistop.ui.AccessibilityDisclosureScreen"
+    android:isAccessibilityTool="true" />
