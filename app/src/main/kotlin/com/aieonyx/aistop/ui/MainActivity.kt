@@ -2,10 +2,12 @@
 // License: Apache-2.0
 package com.aieonyx.aistop.ui
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,12 +28,23 @@ import com.aieonyx.aistop.R
 import com.aieonyx.aistop.ui.theme.AiStopTheme
 import com.aieonyx.aistop.ui.theme.loadDarkMode
 import com.aieonyx.aistop.ui.theme.saveDarkMode
+import com.aieonyx.aistop.vpn.VpnIntegration
 
 private const val TAB_PROTECT = 0
 private const val TAB_AUDIT   = 1
 private const val TAB_MORE    = 2
 
 class MainActivity : androidx.fragment.app.FragmentActivity() {
+
+    // VPN permission launcher — registered before onCreate per Jetpack best practice
+    private val vpnPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            VpnIntegration.start(this)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,22 +52,32 @@ class MainActivity : androidx.fragment.app.FragmentActivity() {
             android.view.WindowManager.LayoutParams.FLAG_SECURE,
             android.view.WindowManager.LayoutParams.FLAG_SECURE
         )
-        setContent { AiStopRoot() }
+        setContent {
+            AiStopRoot(
+                onRequestVpn = { VpnIntegration.requestAndStart(this, vpnPermissionLauncher) },
+                onStopVpn    = { VpnIntegration.stop(this) }
+            )
+        }
     }
 }
 
 @Composable
-fun AiStopRoot() {
+fun AiStopRoot(
+    onRequestVpn: () -> Unit = {},
+    onStopVpn:    () -> Unit = {}
+) {
     val context  = LocalContext.current
     var darkMode by remember { mutableStateOf(loadDarkMode(context)) }
 
     AiStopTheme(darkTheme = darkMode) {
         AiStopApp(
-            darkMode   = darkMode,
+            darkMode      = darkMode,
             onToggleTheme = {
                 darkMode = !darkMode
                 saveDarkMode(context, darkMode)
-            }
+            },
+            onRequestVpn = onRequestVpn,
+            onStopVpn    = onStopVpn
         )
     }
 }
@@ -62,7 +85,9 @@ fun AiStopRoot() {
 @Composable
 fun AiStopApp(
     darkMode: Boolean,
-    onToggleTheme: () -> Unit
+    onToggleTheme: () -> Unit,
+    onRequestVpn: () -> Unit = {},
+    onStopVpn:    () -> Unit = {}
 ) {
     val context       = LocalContext.current
     val colors        = com.aieonyx.aistop.ui.theme.AiStopTheme.colors
@@ -90,7 +115,9 @@ fun AiStopApp(
             when (selectedTab) {
                 TAB_PROTECT -> ProtectScreen(
                     darkMode      = darkMode,
-                    onToggleTheme = onToggleTheme
+                    onToggleTheme = onToggleTheme,
+                    onRequestVpn  = onRequestVpn,
+                    onStopVpn     = onStopVpn
                 )
                 TAB_AUDIT   -> AuditScreen()
                 TAB_MORE    -> MoreScreen()

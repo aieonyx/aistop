@@ -33,6 +33,7 @@ import androidx.fragment.app.FragmentActivity
 import com.aieonyx.aistop.security.BiometricGate
 import com.aieonyx.aistop.sentinel.ClipboardSentinelService
 import com.aieonyx.aistop.ui.theme.AiStopTheme
+import com.aieonyx.aistop.vpn.VpnIntegration
 import java.util.Locale
 
 private fun getProtectionStatus(context: Context): Triple<Boolean, Boolean, Boolean> {
@@ -55,7 +56,9 @@ private fun getProtectionStatus(context: Context): Triple<Boolean, Boolean, Bool
 @Composable
 fun ProtectScreen(
     darkMode: Boolean = true,
-    onToggleTheme: () -> Unit = {}
+    onToggleTheme: () -> Unit = {},
+    onRequestVpn: () -> Unit = {},
+    onStopVpn:    () -> Unit = {}
 ) {
     val context        = LocalContext.current
     val colors         = AiStopTheme.colors
@@ -68,6 +71,10 @@ fun ProtectScreen(
     var sentinelActive by remember {
         mutableStateOf(ClipboardSentinelService.isRunning(context))
     }
+
+    // ── VPN state ──
+    var vpnActive by remember { mutableStateOf(VpnIntegration.isRunning(context)) }
+
     val (guardActive, keyboardActive, scrubActive) = remember {
         getProtectionStatus(context)
     }
@@ -240,6 +247,7 @@ fun ProtectScreen(
                     LayerPill("GUARD",    guardActive,    colors)
                     LayerPill("KEYBOARD", keyboardActive, colors)
                     LayerPill("SCRUB",    scrubActive,    colors)
+                    LayerPill("VPN",      vpnActive,      colors)
                 }
             }
         }
@@ -338,7 +346,6 @@ fun ProtectScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        // ── Section: Protection Tools ──
         // ── Banking Mode card ──
         Box(
             modifier = Modifier
@@ -388,98 +395,148 @@ fun ProtectScreen(
 
         SectionHeader("ACTIVE DEFENSE", colors, typo)
 
-        listOf(
-            Triple("🛡", "SOVEREIGN GUARD",
-                if (guardActive) "Monitoring AI app paste events"
-                else "Tap to enable in Accessibility Settings"),
-            Triple("⌨", "AI STOP KEYBOARD",
-                if (keyboardActive) "Type-time interception enabled"
-                else "Enable in Settings → Language & Input"),
-            Triple("✂", "SCRUBSHARE",
-                "Share any text to AI Stop to scrub PII"),
-            Triple("🖼", "IMAGE SCRUB",
-                "Strip GPS, camera, serial numbers from photos"),
-            Triple("👁", "CLIPBOARD SENTINEL",
-                if (sentinelActive) "Watching clipboard for sensitive data 24/7"
-                else "Tap to enable always-on clipboard monitoring")
-        ).forEachIndexed { i, (icon, label, detail) ->
-            val isOn = when (i) {
-                0 -> guardActive
-                1 -> keyboardActive
-                4 -> sentinelActive
-                else -> true
-            }
-            val needsAction = when (i) {
-                0 -> !guardActive
-                1 -> !keyboardActive
-                4 -> !sentinelActive
-                else -> false
-            }
-            NewToolCard(
-                icon        = icon,
-                label       = label,
-                detail      = detail,
-                isOn        = isOn,
-                needsAction = needsAction,
-                colors      = colors,
-                typo        = typo,
-                onClick     = when (i) {
-                    0 -> ({
-                if (guardActive) {
-                    // Disabling guard requires biometric
-                    val activity = context as? FragmentActivity
-                    if (activity != null) {
-                        BiometricGate.authenticate(
-                            activity    = activity,
-                            actionTitle = "Disable Sovereign Guard",
-                            subtitle    = "Verify identity to change accessibility settings"
-                        ) { result ->
-                            when (result) {
-                                is BiometricGate.AuthResult.Success,
-                                is BiometricGate.AuthResult.NoHardware -> showDisclosure = true
-                                else -> { /* stay protected */ }
-                            }
-                        }
-                    }
-                } else {
-                    showDisclosure = true
-                }
-            })
-                    1 -> ({ context.startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)) })
-                    4 -> ({
+        // ── Tool list including Sovereign Shield VPN ──
+        data class ToolDef(
+            val icon: String,
+            val label: String,
+            val detail: String,
+            val isOn: Boolean,
+            val needsAction: Boolean,
+            val onClick: (() -> Unit)?
+        )
+
+        val tools = listOf(
+            ToolDef(
+                icon        = "🛡",
+                label       = "SOVEREIGN GUARD",
+                detail      = if (guardActive) "Monitoring AI app paste events" else "Tap to enable in Accessibility Settings",
+                isOn        = guardActive,
+                needsAction = !guardActive,
+                onClick     = {
+                    if (guardActive) {
                         val activity = context as? FragmentActivity
-                        if (sentinelActive) {
-                            // Gate turning OFF sentinel — requires biometric
-                            if (activity != null) {
-                                BiometricGate.authenticate(
-                                    activity    = activity,
-                                    actionTitle = "Disable Clipboard Sentinel",
-                                    subtitle    = "Verify identity to disable protection"
-                                ) { result ->
-                                    when (result) {
-                                        is BiometricGate.AuthResult.Success,
-                                        is BiometricGate.AuthResult.NoHardware -> {
-                                            ClipboardSentinelService.stop(context)
-                                            sentinelActive = false
-                                            context.getSharedPreferences("aistop_prefs",
-                                                android.content.Context.MODE_PRIVATE)
-                                                .edit().putBoolean("sentinel_enabled", false).apply()
-                                        }
-                                        else -> { /* auth failed — sentinel stays ON */ }
-                                    }
+                        if (activity != null) {
+                            BiometricGate.authenticate(
+                                activity    = activity,
+                                actionTitle = "Disable Sovereign Guard",
+                                subtitle    = "Verify identity to change accessibility settings"
+                            ) { result ->
+                                when (result) {
+                                    is BiometricGate.AuthResult.Success,
+                                    is BiometricGate.AuthResult.NoHardware -> showDisclosure = true
+                                    else -> { }
                                 }
                             }
-                        } else {
-                            // Turning ON sentinel — no gate needed
-                            ClipboardSentinelService.start(context)
-                            sentinelActive = true
-                            context.getSharedPreferences("aistop_prefs",
-                                android.content.Context.MODE_PRIVATE)
-                                .edit().putBoolean("sentinel_enabled", true).apply()
                         }
-                    })
-                    else -> null
+                    } else {
+                        showDisclosure = true
+                    }
                 }
+            ),
+            ToolDef(
+                icon        = "⌨",
+                label       = "AI STOP KEYBOARD",
+                detail      = if (keyboardActive) "Type-time interception enabled" else "Enable in Settings → Language & Input",
+                isOn        = keyboardActive,
+                needsAction = !keyboardActive,
+                onClick     = { context.startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)) }
+            ),
+            ToolDef(
+                icon        = "🌐",
+                label       = "SOVEREIGN SHIELD VPN",
+                detail      = if (vpnActive) "Blocking AI crawlers at network level" else "Tap to enable DNS-level AI blocking",
+                isOn        = vpnActive,
+                needsAction = !vpnActive,
+                onClick     = {
+                    val activity = context as? FragmentActivity
+                    if (vpnActive) {
+                        if (activity != null) {
+                            BiometricGate.authenticate(
+                                activity    = activity,
+                                actionTitle = "Disable Sovereign Shield",
+                                subtitle    = "Verify identity to stop VPN protection"
+                            ) { result ->
+                                when (result) {
+                                    is BiometricGate.AuthResult.Success,
+                                    is BiometricGate.AuthResult.NoHardware -> {
+                                        onStopVpn()
+                                        vpnActive = false
+                                    }
+                                    else -> { }
+                                }
+                            }
+                        }
+                    } else {
+                        onRequestVpn()
+                        vpnActive = true
+                    }
+                }
+            ),
+            ToolDef(
+                icon        = "✂",
+                label       = "SCRUBSHARE",
+                detail      = "Share any text to AI Stop to scrub PII",
+                isOn        = true,
+                needsAction = false,
+                onClick     = null
+            ),
+            ToolDef(
+                icon        = "🖼",
+                label       = "IMAGE SCRUB",
+                detail      = "Strip GPS, camera, serial numbers from photos",
+                isOn        = true,
+                needsAction = false,
+                onClick     = null
+            ),
+            ToolDef(
+                icon        = "👁",
+                label       = "CLIPBOARD SENTINEL",
+                detail      = if (sentinelActive) "Watching clipboard for sensitive data 24/7" else "Tap to enable always-on clipboard monitoring",
+                isOn        = sentinelActive,
+                needsAction = !sentinelActive,
+                onClick     = {
+                    val activity = context as? FragmentActivity
+                    if (sentinelActive) {
+                        if (activity != null) {
+                            BiometricGate.authenticate(
+                                activity    = activity,
+                                actionTitle = "Disable Clipboard Sentinel",
+                                subtitle    = "Verify identity to disable protection"
+                            ) { result ->
+                                when (result) {
+                                    is BiometricGate.AuthResult.Success,
+                                    is BiometricGate.AuthResult.NoHardware -> {
+                                        ClipboardSentinelService.stop(context)
+                                        sentinelActive = false
+                                        context.getSharedPreferences("aistop_prefs",
+                                            android.content.Context.MODE_PRIVATE)
+                                            .edit().putBoolean("sentinel_enabled", false).apply()
+                                    }
+                                    else -> { }
+                                }
+                            }
+                        }
+                    } else {
+                        ClipboardSentinelService.start(context)
+                        sentinelActive = true
+                        context.getSharedPreferences("aistop_prefs",
+                            android.content.Context.MODE_PRIVATE)
+                            .edit().putBoolean("sentinel_enabled", true).apply()
+                    }
+                }
+            )
+        )
+
+        tools.forEach { tool ->
+            NewToolCard(
+                icon        = tool.icon,
+                label       = tool.label,
+                detail      = tool.detail,
+                isOn        = tool.isOn,
+                needsAction = tool.needsAction,
+                colors      = colors,
+                typo        = typo,
+                onClick     = tool.onClick
             )
             Spacer(Modifier.height(8.dp))
         }
@@ -706,9 +763,8 @@ fun ModePickerSheet(
                         shape = RoundedCornerShape(12.dp)
                     )
                     .clickable {
-                        // Protect mode changes with biometric — sovereign settings protection
                         if (mode == currentMode) return@clickable
-                        onSelect(mode) // BiometricGate wired at call site in ProtectScreen
+                        onSelect(mode)
                     }
                     .padding(16.dp)
             ) {
