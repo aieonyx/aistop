@@ -3,19 +3,16 @@
 package com.aieonyx.aistop.ui
 
 import android.app.Activity
-import android.os.Bundle
 import android.content.Intent
+import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,33 +28,25 @@ import com.aieonyx.aistop.ui.theme.AiStopTheme
 import com.aieonyx.aistop.ui.theme.loadDarkMode
 import com.aieonyx.aistop.ui.theme.saveDarkMode
 import com.aieonyx.aistop.vpn.VpnIntegration
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
-private const val TAB_PROTECT = 0
-private const val TAB_AUDIT   = 1
-private const val TAB_SHIELD  = 2
-private const val TAB_MORE    = 3
+const val TAB_PROTECT = 0
+const val TAB_AUDIT   = 1
+const val TAB_SHIELD  = 2
+const val TAB_MORE    = 3
 
 class MainActivity : androidx.fragment.app.FragmentActivity() {
 
-    // Shared tab state — updated from both onCreate and onNewIntent
     companion object {
-        var pendingTab: Int? = null
+        const val ACTION_OPEN_TAB = "com.aieonyx.aistop.OPEN_TAB"
+        const val EXTRA_TAB       = "tab"
+        const val TAB_MORE        = 3
+
+        // StateFlow observed by Composable — no recreate() needed
+        private val _pendingTab = MutableStateFlow<Int?>(null)
+        val pendingTab = _pendingTab.asStateFlow()
     }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        val openTab = intent.getStringExtra("open_tab")
-        pendingTab = when (openTab) {
-            "more"   -> TAB_MORE
-            "shield" -> TAB_SHIELD
-            "audit"  -> TAB_AUDIT
-            else     -> null
-        }
-        setIntent(intent)
-        recreate()
-    }
-
-
 
     private val vpnPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -74,22 +63,24 @@ class MainActivity : androidx.fragment.app.FragmentActivity() {
             android.view.WindowManager.LayoutParams.FLAG_SECURE,
             android.view.WindowManager.LayoutParams.FLAG_SECURE
         )
-        // Handle notification deep-link intent
-        val openTab = intent?.getStringExtra("open_tab")
-        val startTab = pendingTab ?: when (openTab) {
-            "more"   -> TAB_MORE
-            "shield" -> TAB_SHIELD
-            "audit"  -> TAB_AUDIT
-            else     -> TAB_PROTECT
-        }
-        pendingTab = null
-
+        handleIntent(intent)
         setContent {
             AiStopRoot(
-                startTab = startTab,
                 onRequestVpn = { VpnIntegration.requestAndStart(this, vpnPermissionLauncher) },
                 onStopVpn    = { VpnIntegration.stop(this) }
             )
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        if (intent?.action == ACTION_OPEN_TAB) {
+            val tab = intent.getIntExtra(EXTRA_TAB, -1)
+            if (tab >= 0) _pendingTab.value = tab
         }
     }
 }
@@ -97,8 +88,7 @@ class MainActivity : androidx.fragment.app.FragmentActivity() {
 @Composable
 fun AiStopRoot(
     onRequestVpn: () -> Unit = {},
-    onStopVpn:    () -> Unit = {},
-    startTab:     Int = TAB_PROTECT
+    onStopVpn:    () -> Unit = {}
 ) {
     val context  = LocalContext.current
     var darkMode by remember { mutableStateOf(loadDarkMode(context)) }
@@ -117,13 +107,29 @@ fun AiStopApp(
     darkMode: Boolean,
     onToggleTheme: () -> Unit,
     onRequestVpn: () -> Unit = {},
-    onStopVpn:    () -> Unit = {},
-    startTab:     Int = TAB_PROTECT
+    onStopVpn:    () -> Unit = {}
 ) {
     val context        = LocalContext.current
     val colors         = AiStopTheme.colors
     var showOnboarding by remember { mutableStateOf(!isOnboardingComplete(context)) }
-    var selectedTab    by remember { mutableStateOf(startTab) }
+    var selectedTab    by remember { mutableStateOf(TAB_PROTECT) }
+
+    // Observe pending tab from notification deep-link
+    val pendingTab by MainActivity.pendingTab.collectAsState()
+    LaunchedEffect(pendingTab) {
+        pendingTab?.let { tab ->
+            selectedTab = tab
+            MainActivity.pendingTab.value?.let {
+                // Clear after consuming
+                (MainActivity::class.java.getDeclaredField("_pendingTab")
+                    .also { it.isAccessible = true }
+                    .get(null) as MutableStateFlow<*>).let {
+                    @Suppress("UNCHECKED_CAST")
+                    (it as MutableStateFlow<Int?>).value = null
+                }
+            }
+        }
+    }
 
     if (showOnboarding) {
         OnboardingScreen(onComplete = { showOnboarding = false })
@@ -132,8 +138,6 @@ fun AiStopApp(
 
     val purple = Color(0xFFA78BFA)
 
-    // Tab definitions: (iconRes, label, tabIdx)
-    // SHIELD uses ic_nav_radar — ensure this drawable exists in res/drawable/
     data class TabDef(val iconRes: Int, val label: String, val idx: Int)
     val tabs = listOf(
         TabDef(R.drawable.ic_nav_shield,   "PROTECT", TAB_PROTECT),
@@ -147,7 +151,6 @@ fun AiStopApp(
             .fillMaxSize()
             .background(colors.background)
     ) {
-        // ── Content ──
         Box(Modifier.weight(1f)) {
             when (selectedTab) {
                 TAB_PROTECT -> ProtectScreen(
@@ -162,7 +165,6 @@ fun AiStopApp(
             }
         }
 
-        // ── Bottom nav bar (4 tabs) ──
         HorizontalDivider(color = colors.divider, thickness = 2.dp)
         Row(
             modifier = Modifier
@@ -172,17 +174,12 @@ fun AiStopApp(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             tabs.forEach { tab ->
-                val active     = selectedTab == tab.idx
-                val isShield   = tab.idx == TAB_SHIELD
+                val active      = selectedTab == tab.idx
+                val isShield    = tab.idx == TAB_SHIELD
                 val activeColor = if (isShield) purple else colors.accentPrimary
-                val iconColor   = when {
-                    active -> activeColor
-                    else   -> colors.textSecondary
-                }
-                val textColor = when {
-                    active -> if (isShield) purple else colors.textPrimary
-                    else   -> colors.textSecondary
-                }
+                val iconColor   = if (active) activeColor else colors.textSecondary
+                val textColor   = if (active) (if (isShield) purple else colors.textPrimary)
+                                  else colors.textSecondary
 
                 Box(
                     modifier = Modifier
@@ -191,7 +188,6 @@ fun AiStopApp(
                         .clickable { selectedTab = tab.idx },
                     contentAlignment = Alignment.Center
                 ) {
-                    // Top indicator rail
                     if (active) {
                         Box(
                             modifier = Modifier
@@ -202,7 +198,6 @@ fun AiStopApp(
                                 .background(activeColor)
                         )
                     }
-
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
@@ -214,7 +209,7 @@ fun AiStopApp(
                             modifier = Modifier.size(22.dp)
                         )
                         Spacer(Modifier.height(3.dp))
-                        Text(
+                        androidx.compose.material3.Text(
                             tab.label,
                             style     = AiStopTheme.typography.labelSmall,
                             color     = textColor,

@@ -14,128 +14,71 @@ import com.aieonyx.aistop.vpn.AllowlistManager
 import com.aieonyx.aistop.vpn.AppBlockList
 import com.aieonyx.aistop.vpn.VpnIntegration
 
-/**
- * AiAppWarning — fires a persistent notification when a known AI app
- * comes to foreground while Sovereign Shield VPN is active.
- *
- * Why: AI apps (Gemini, ChatGPT, DeepSeek, etc.) use hardcoded IPs or
- * DNS-over-HTTPS, bypassing our DNS filter. The user must know Shield
- * cannot protect them inside these apps.
- *
- * Shown once per app session (debounced by lastWarnedPackage).
- * Dismissed automatically when user leaves the AI app.
- */
 object AiAppWarning {
 
     private const val CHANNEL_ID = "aistop_app_warning"
-    private const val NOTIF_ID   = 2001
+    const val NOTIF_ID   = 2001
+    private const val PREFS_EXEMPTED = "aistop_exempted_packages"
 
-    // Apps that bypass DNS filtering — hardcoded IPs or DoH
     private val bypassingApps: Map<String, BypassInfo> = mapOf(
-
-        // ── Google AI ─────────────────────────────────────────────────────
-        "com.google.android.googlequicksearchbox" to BypassInfo(
-            label    = "Gemini",
-            reason   = "Google AI apps use hardcoded IP addresses that bypass DNS filtering.",
-            risk     = "Conversations, clipboard content, and personal data may be sent to Google AI servers and used for model training."
-        ),
-        "com.google.android.apps.bard" to BypassInfo(
-            label    = "Gemini",
-            reason   = "Google AI apps use hardcoded IP addresses that bypass DNS filtering.",
-            risk     = "Conversations, clipboard content, and personal data may be sent to Google AI servers and used for model training."
-        ),
-        "com.google.android.apps.gemini" to BypassInfo(
-            label    = "Gemini",
-            reason   = "Google AI apps use hardcoded IP addresses that bypass DNS filtering.",
-            risk     = "Conversations and personal data may be sent to Google AI servers."
-        ),
-
-        // ── OpenAI / ChatGPT ──────────────────────────────────────────────
-        "com.openai.chatgpt" to BypassInfo(
-            label    = "ChatGPT",
-            reason   = "ChatGPT uses DNS-over-HTTPS, bypassing Sovereign Shield DNS filter.",
-            risk     = "All conversations are sent to OpenAI servers. Data may be used for training unless opted out in settings."
-        ),
-
-        // ── Anthropic / Claude ────────────────────────────────────────────
-        "com.anthropic.claude" to BypassInfo(
-            label    = "Claude",
-            reason   = "Claude app uses DNS-over-HTTPS, bypassing Sovereign Shield DNS filter.",
-            risk     = "Conversations sent to Anthropic servers. Review privacy settings."
-        ),
-
-        // ── Microsoft Copilot ─────────────────────────────────────────────
-        "com.microsoft.copilot" to BypassInfo(
-            label    = "Microsoft Copilot",
-            reason   = "Copilot uses hardcoded Microsoft endpoints bypassing DNS filtering.",
-            risk     = "Data may flow between Microsoft and OpenAI infrastructure."
-        ),
-        "com.microsoft.bing" to BypassInfo(
-            label    = "Bing AI",
-            reason   = "Bing uses hardcoded Microsoft endpoints bypassing DNS filtering.",
-            risk     = "Search queries and AI conversations sent to Microsoft servers."
-        ),
-
-        // ── DeepSeek ─────────────────────────────────────────────────────
-        "com.deepseek.chat" to BypassInfo(
-            label    = "DeepSeek",
-            reason   = "DeepSeek uses DNS-over-HTTPS, bypassing Sovereign Shield DNS filter.",
-            risk     = "Conversations sent to servers in China. Data used to train DeepSeek models by default. Chinese data jurisdiction applies."
-        ),
-
-        // ── Perplexity ────────────────────────────────────────────────────
-        "ai.perplexity.app.android" to BypassInfo(
-            label    = "Perplexity AI",
-            reason   = "Perplexity uses hardcoded endpoints bypassing DNS filtering.",
-            risk     = "Search queries and conversations sent to Perplexity servers."
-        ),
-
-        // ── Meta AI ───────────────────────────────────────────────────────
-        "com.facebook.katana" to BypassInfo(
-            label    = "Facebook (Meta AI)",
-            reason   = "Facebook uses hardcoded Meta CDN IPs bypassing DNS filtering.",
-            risk     = "Meta AI interactions and behavioral data collected for ad targeting and AI training."
-        ),
-        "com.instagram.android" to BypassInfo(
-            label    = "Instagram (Meta AI)",
-            reason   = "Instagram uses hardcoded Meta CDN IPs bypassing DNS filtering.",
-            risk     = "Meta AI features collect behavioral data for ad targeting."
-        ),
-
-        // ── Grammarly ─────────────────────────────────────────────────────
-        "com.grammarly.android.keyboard" to BypassInfo(
-            label    = "Grammarly",
-            reason   = "Grammarly uses DNS-over-HTTPS, bypassing Sovereign Shield DNS filter.",
-            risk     = "All typed text is sent to Grammarly servers for AI processing."
-        ),
-
-        // ── Kimi ──────────────────────────────────────────────────────────
-        "com.moonshot.kimi" to BypassInfo(
-            label    = "Kimi AI",
-            reason   = "Kimi uses hardcoded endpoints bypassing DNS filtering.",
-            risk     = "Conversations sent to Moonshot AI servers in China."
-        ),
-
-        // ── Character AI ──────────────────────────────────────────────────
-        "ai.character.app" to BypassInfo(
-            label    = "Character AI",
-            reason   = "Character AI uses DNS-over-HTTPS bypassing DNS filtering.",
-            risk     = "Conversations sent to Character AI servers and may be used for training."
-        ),
-
-        // ── Poe ───────────────────────────────────────────────────────────
-        "com.quora.poe" to BypassInfo(
-            label    = "Poe",
-            reason   = "Poe aggregates multiple AI models and bypasses DNS filtering.",
-            risk     = "Conversations routed through multiple AI providers."
-        )
+        "com.google.android.googlequicksearchbox" to BypassInfo("Gemini",
+            "gemini.google.com"),
+        "com.google.android.apps.bard" to BypassInfo("Gemini",
+            "bard.google.com"),
+        "com.openai.chatgpt" to BypassInfo("ChatGPT",
+            "openai.com"),
+        "com.anthropic.claude" to BypassInfo("Claude",
+            "anthropic.com"),
+        "com.microsoft.copilot" to BypassInfo("Microsoft Copilot",
+            "copilot.microsoft.com"),
+        "com.microsoft.bing" to BypassInfo("Bing AI",
+            "bing.com"),
+        "com.deepseek.chat" to BypassInfo("DeepSeek",
+            "deepseek.com"),
+        "ai.perplexity.app.android" to BypassInfo("Perplexity AI",
+            "perplexity.ai"),
+        "com.facebook.katana" to BypassInfo("Facebook",
+            "graph.facebook.com"),
+        "com.instagram.android" to BypassInfo("Instagram",
+            "instagram.com"),
+        "com.grammarly.android.keyboard" to BypassInfo("Grammarly",
+            "grammarly.com"),
+        "com.moonshot.kimi" to BypassInfo("Kimi AI",
+            "kimi.ai"),
+        "ai.character.app" to BypassInfo("Character AI",
+            "character.ai"),
+        "com.quora.poe" to BypassInfo("Poe",
+            "poe.com")
     )
 
-    data class BypassInfo(
-        val label:  String,
-        val reason: String,
-        val risk:   String
-    )
+    data class BypassInfo(val label: String, val primaryDomain: String)
+
+    private var lastWarnedPackage = ""
+    private var lastWarnedTimeMs  = 0L
+    private const val DEBOUNCE_MS = 30_000L
+
+    // ── Exempt list ───────────────────────────────────────────────────────────
+
+    fun exemptPackage(context: Context, packageName: String) {
+        val prefs = context.getSharedPreferences(PREFS_EXEMPTED, Context.MODE_PRIVATE)
+        val set   = prefs.getStringSet("exempted", mutableSetOf())?.toMutableSet() ?: mutableSetOf()
+        set.add(packageName)
+        prefs.edit().putStringSet("exempted", set).apply()
+    }
+
+    fun revokeExemption(context: Context, packageName: String) {
+        val prefs = context.getSharedPreferences(PREFS_EXEMPTED, Context.MODE_PRIVATE)
+        val set   = prefs.getStringSet("exempted", mutableSetOf())?.toMutableSet() ?: mutableSetOf()
+        set.remove(packageName)
+        prefs.edit().putStringSet("exempted", set).apply()
+    }
+
+    private fun isExempted(context: Context, packageName: String): Boolean {
+        val prefs = context.getSharedPreferences(PREFS_EXEMPTED, Context.MODE_PRIVATE)
+        return prefs.getStringSet("exempted", emptySet())?.contains(packageName) == true
+    }
+
+    // ── Suppress check ────────────────────────────────────────────────────────
 
     private val packageDomains: Map<String, List<String>> = mapOf(
         "com.google.android.googlequicksearchbox" to listOf("gemini.google.com","bard.google.com","generativelanguage.googleapis.com"),
@@ -154,6 +97,7 @@ object AiAppWarning {
     )
 
     private fun isSuppressed(context: Context, packageName: String): Boolean {
+        if (isExempted(context, packageName)) return true
         if (AppBlockList.isBlocked(packageName)) return true
         val domains = packageDomains[packageName] ?: return false
         return domains.any { domain ->
@@ -162,18 +106,11 @@ object AiAppWarning {
         }
     }
 
-    private var lastWarnedPackage = ""
-    private var lastWarnedTimeMs  = 0L
-    private const val DEBOUNCE_MS = 30_000L  // warn at most once per 30s per app
+    // ── Public API ────────────────────────────────────────────────────────────
 
-    /**
-     * Call from SovereignAccessibilityService.onAccessibilityEvent
-     * when TYPE_WINDOW_STATE_CHANGED fires with a new package.
-     */
     fun onForegroundAppChanged(context: Context, packageName: String) {
         val info = bypassingApps[packageName] ?: return
         if (!VpnIntegration.isRunning(context)) return
-
         if (isSuppressed(context, packageName)) return
 
         val now = System.currentTimeMillis()
@@ -192,14 +129,41 @@ object AiAppWarning {
         }
     }
 
+    // ── Notification ──────────────────────────────────────────────────────────
+
     private fun showWarning(context: Context, packageName: String, info: BypassInfo) {
         createChannel(context)
 
+        // Tap body → open MORE tab in MainActivity
         val openIntent = PendingIntent.getActivity(
             context, 0,
             Intent(context, MainActivity::class.java).apply {
-                putExtra("open_tab", "more")
+                action = MainActivity.ACTION_OPEN_TAB
+                putExtra(MainActivity.EXTRA_TAB, MainActivity.TAB_MORE)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        // EXEMPT action
+        val exemptIntent = PendingIntent.getBroadcast(
+            context, 1,
+            Intent(context, NotificationActionReceiver::class.java).apply {
+                action = NotificationActionReceiver.ACTION_EXEMPT
+                putExtra(NotificationActionReceiver.EXTRA_PACKAGE, packageName)
+                putExtra(NotificationActionReceiver.EXTRA_LABEL,   info.label)
+                putExtra(NotificationActionReceiver.EXTRA_DOMAIN,  info.primaryDomain)
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        // BLOCK APP action
+        val blockIntent = PendingIntent.getBroadcast(
+            context, 2,
+            Intent(context, NotificationActionReceiver::class.java).apply {
+                action = NotificationActionReceiver.ACTION_BLOCK_APP
+                putExtra(NotificationActionReceiver.EXTRA_PACKAGE, packageName)
+                putExtra(NotificationActionReceiver.EXTRA_LABEL,   info.label)
             },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -209,13 +173,14 @@ object AiAppWarning {
             .setContentTitle("⚠ ${info.label} bypasses Sovereign Shield")
             .setContentText("DNS filter cannot block this app.")
             .setStyle(NotificationCompat.BigTextStyle()
-                .bigText("DNS filter cannot block this app.\nTap to manage in MORE → App Block List.")
+                .bigText("DNS filter cannot block this app.\nTap EXEMPT to silence · BLOCK to cut network.")
             )
             .setColor(0xFFFBBF24.toInt())
             .setColorized(true)
             .setContentIntent(openIntent)
-            .setAutoCancel(false)
-            .setOngoing(false)
+            .addAction(0, "✓ EXEMPT", exemptIntent)
+            .addAction(0, "🚫 BLOCK APP", blockIntent)
+            .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
 
@@ -230,16 +195,13 @@ object AiAppWarning {
 
     private fun createChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val ch = NotificationChannel(
-                CHANNEL_ID,
-                "AI App Warnings",
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
+            val ch = NotificationChannel(CHANNEL_ID, "AI App Warnings",
+                NotificationManager.IMPORTANCE_HIGH).apply {
                 description = "Warns when an AI app bypasses Sovereign Shield"
                 enableVibration(false)
             }
-            val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            nm.createNotificationChannel(ch)
+            (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+                .createNotificationChannel(ch)
         }
     }
 }

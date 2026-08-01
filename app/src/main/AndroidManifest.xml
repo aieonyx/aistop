@@ -183,6 +183,16 @@
             </intent-filter>
         </receiver>
 
+        <!-- ── Notification Action Receiver ── -->
+        <receiver
+            android:name=".accessibility.NotificationActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.aieonyx.aistop.NOTIF_EXEMPT" />
+                <action android:name="com.aieonyx.aistop.NOTIF_BLOCK_APP" />
+            </intent-filter>
+        </receiver>
+
         <!-- ── Sovereign Shield VPN Service ── -->
         <service
             android:name=".vpn.SovereignVpnService"
