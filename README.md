@@ -16,9 +16,9 @@
 >
 > Built by AIEONYX on sovereign computing principles, AI Stop is the first Android app
 > designed to give users real, verifiable control over what AI systems can access.
-> It intercepts sensitive data at the clipboard, keyboard, and share sheet level —
-> stopping API keys, passwords, health records, SSNs, crypto wallets, and GPS coordinates
-> before they ever reach an AI server.
+> It intercepts sensitive data at the clipboard, keyboard, share sheet, and network level —
+> stopping API keys, passwords, health records, SSNs, crypto wallets, GPS coordinates,
+> and AI crawler DNS queries before they ever reach an AI server.
 >
 > AI Stop does not show you a dashboard of what already happened.
 > **AI Stop stops it before it happens.**
@@ -31,30 +31,33 @@
 [![CI](https://github.com/aieonyx/aistop/actions/workflows/ci.yml/badge.svg)](https://github.com/aieonyx/aistop/actions)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Android%2010%2B-green.svg)](https://developer.android.com)
-[![Version](https://img.shields.io/badge/version-1.1.0-teal.svg)](https://github.com/aieonyx/aistop/releases)
+[![Version](https://img.shields.io/badge/version-2.0.0-teal.svg)](https://github.com/aieonyx/aistop/releases)
 
 ---
 
 ## Screenshots
 
 <p align="center">
-  <img src=".github/screenshots/screen_1.png" width="22%" alt="PROTECT tab" />
+  <img src=".github/screenshots/screen_1.png" width="18%" alt="PROTECT tab" />
   &nbsp;
-  <img src=".github/screenshots/screen_2.png" width="22%" alt="AUDIT tab — AI app trust scores" />
+  <img src=".github/screenshots/screen_2.png" width="18%" alt="AUDIT tab — AI app trust scores" />
   &nbsp;
-  <img src=".github/screenshots/screen_3.png" width="22%" alt="MORE tab — Sovereign Proof" />
+  <img src=".github/screenshots/screen_3.png" width="18%" alt="SHIELD tab — live threat monitor" />
   &nbsp;
-  <img src=".github/screenshots/screen_4.png" width="22%" alt="Mode picker" />
+  <img src=".github/screenshots/screen_4.png" width="18%" alt="MORE tab — App Block List" />
+  &nbsp;
+  <img src=".github/screenshots/screen_5.png" width="18%" alt="Unblock sheet with timer" />
 </p>
 
 <p align="center">
-  <em>PROTECT · AUDIT · MORE · Mode Picker</em>
+  <em>PROTECT · AUDIT · SHIELD · MORE · Unblock Timer</em>
 </p>
 
 ---
+
 ## What is AI Stop?
 
-AI Stop intercepts what you paste into ChatGPT, Gemini, Copilot, Grok, DeepSeek, and other AI apps — **before it reaches their servers**. Everything runs 100% on your device. No cloud. No telemetry. No subscriptions.
+AI Stop intercepts what you paste into ChatGPT, Gemini, Copilot, Grok, DeepSeek, and other AI apps — **before it reaches their servers**. In v2.0, it also blocks AI crawlers and trackers at the DNS level, warns you when an AI app bypasses the filter, and lets you cut network access for any app entirely. Everything runs 100% on your device. No cloud. No telemetry. No subscriptions.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -76,11 +79,20 @@ AI Stop intercepts what you paste into ChatGPT, Gemini, Copilot, Grok, DeepSeek,
 │              │  PEM / JWT  ✗       │                        │
 │              └──────────┬──────────┘                        │
 │                         │                                   │
-│              ┌──────────▼──────────┐                        │
-│              │    EdisonDB         │                        │
-│              │  Exposure Log       │                        │
-│              │  (On-device only)   │                        │
-│              └─────────────────────┘                        │
+│  ┌──────────────────────▼──────────────────────────────┐    │
+│  │           SOVEREIGN SHIELD VPN (v2.0)               │    │
+│  │                                                     │    │
+│  │  DNS query → DnsFilter → BLOCKED? → NXDOMAIN       │    │
+│  │                        → ALLOWED? → 8.8.8.8        │    │
+│  │                                                     │    │
+│  │  100+ AI domains blocked · 0 data leaves device    │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                             │
+│              ┌──────────────────────┐                       │
+│              │    EdisonDB          │                       │
+│              │  Exposure Log        │                       │
+│              │  (On-device only)    │                       │
+│              └──────────────────────┘                       │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -120,7 +132,7 @@ without asking.
 
 ---
 
-## Protection Stack
+## Protection Stack (v2.0)
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -134,6 +146,15 @@ without asking.
 │     IME-based · Type-time interception          │
 │     Intercepts paste via commitText()           │
 ├─────────────────────────────────────────────────┤
+│  🌐  SOVEREIGN SHIELD VPN          ← NEW v2.0  │
+│     Local VPN · DNS-level AI blocking           │
+│     100+ domains · No external server           │
+│     Timed allowlist · App Block List            │
+├─────────────────────────────────────────────────┤
+│  ⚠   AI APP BYPASS WARNINGS       ← NEW v2.0  │
+│     Notifies when app uses hardcoded IPs        │
+│     Suppressed if app permanently allowed       │
+├─────────────────────────────────────────────────┤
 │  ✂   SCRUBSHARE                                │
 │     Share sheet · Any app → AI Stop → Clean    │
 │     PII stripped before sharing anywhere        │
@@ -141,7 +162,57 @@ without asking.
 │  🖼  IMAGE SCRUB                               │
 │     EXIF metadata removal                       │
 │     GPS · Camera model · Serial · Timestamp     │
+├─────────────────────────────────────────────────┤
+│  👁  CLIPBOARD SENTINEL                        │
+│     Always-on clipboard monitoring              │
+│     24/7 · Biometric gate to disable            │
 └─────────────────────────────────────────────────┘
+```
+
+---
+
+## Sovereign Shield — What Gets Blocked
+
+**100+ domains across categories:**
+
+| Category | Examples |
+|---|---|
+| AI Assistants | openai.com, anthropic.com, gemini.google.com, deepseek.com, perplexity.ai |
+| Chinese AI | qwen.aliyun.com, wenxin.baidu.com, zhipuai.cn, minimax.chat, doubao.com |
+| AI Media | midjourney.com, suno.ai, pika.art, runwayml.com, lumalabs.ai |
+| AI Infrastructure | huggingface.co, commoncrawl.org, laion.ai, scale.com |
+| Ad/Tracking | doubleclick.net, google-analytics.com, connect.facebook.net |
+| Telemetry | mixpanel.com, segment.io, amplitude.com, sentry.io, hotjar.com |
+| AWS AI | sagemaker.amazonaws.com, bedrock.amazonaws.com |
+| Azure AI | openai.azure.com, cognitive.microsoft.com |
+
+**Timed Allowlist** — unblock any domain for 2min · 5min · 30min · 1hr · session · permanent. Biometric gate required. Countdown timer shown in SHIELD tab.
+
+**App Block List** — cut network access for any installed app when Shield is ON. Zero extra RAM — handled by Android's VPN kernel framework.
+
+---
+
+## SHIELD Tab — Live Threat Monitor
+
+```
+┌─────────────────────────────────────┐
+│  SHIELD              ● LIVE         │
+│                                     │
+│  [47 BLOCKED] [1.2KB] [12 CRAWLERS] │
+│                                     │
+│  TRAFFIC · LAST 24 MIN              │
+│  ████░░░░░░░░░░░░░░░░░░░░░░░░░░░░  │
+│                                     │
+│  AI THREATS BLOCKED                 │
+│  ⛔ openai.com          DNS ×55     │
+│  ⛔ telemetry.openai.com TELEMETRY  │
+│  ⛔ deepseek.com        DNS ×21     │
+│  ⛔ segment.io          TELEMETRY   │
+│                                     │
+│  ACTIVE FLOWS                       │
+│  UDP  8.8.8.8:53           9.4 KB   │
+│  ████████░░░░░░░░░░░░░░░░░░░░░░░░  │
+└─────────────────────────────────────┘
 ```
 
 ---
@@ -162,19 +233,28 @@ aistop/
 │   ├── kotlin/com/aieonyx/aistop/
 │   │   ├── ui/               # Compose screens
 │   │   │   ├── theme/        # AiStopColors · AiStopTypography · Theme
-│   │   │   ├── MainActivity  # 3-tab nav · dark/light toggle
-│   │   │   ├── ProtectScreen # Status bar · mode card · tool cards
+│   │   │   ├── MainActivity  # 4-tab nav (PROTECT/AUDIT/SHIELD/MORE)
+│   │   │   ├── ProtectScreen # Status · mode · tools · VPN toggle
 │   │   │   ├── AuditScreen   # Trust scores · real app icons
-│   │   │   ├── MoreScreen    # Export · PII scanner · sovereign proof
-│   │   │   └── OnboardingScreen # 5-screen · mode picker on screen 5
-│   │   ├── accessibility/    # SovereignAccessibilityService (mode-aware)
-│   │   ├── ime/              # SovereignIME · PasteMediator (mode-aware)
-│   │   ├── core/             # TrustDatabase v1.1 · PermissionScanner
+│   │   │   ├── ShieldScreen  # Live threat monitor · flow map
+│   │   │   ├── MoreScreen    # Export · Shield Monitor · App Block List
+│   │   │   ├── UnblockSheet  # Timed allowlist UI · biometric gate
+│   │   │   └── AppBlockListScreen # Per-app network block UI
+│   │   ├── accessibility/    # SovereignAccessibilityService + AiAppWarning
+│   │   ├── ime/              # SovereignIME · PasteMediator
+│   │   ├── vpn/              # SovereignVpnService · DnsFilter
+│   │   │   ├── BlockedDomains       # 100+ domain blocklist
+│   │   │   ├── AllowlistManager     # Timed allowlist
+│   │   │   ├── AppBlockList         # Per-app network block
+│   │   │   ├── VpnDataBridge        # UI ↔ service data bridge
+│   │   │   ├── FlowTracker          # Network flow accumulator
+│   │   │   └── AiCreepDetector      # TLS SNI inspection
+│   │   ├── core/             # TrustDatabase · PermissionScanner
 │   │   ├── db/               # EdisonDB Android SDK · ExposureDao
 │   │   └── jni/              # AiStopCore JNI bridge
 │   └── res/
-│       ├── font/             # League Spartan · Inter (bundled, no network)
-│       └── drawable/         # Onboarding images ob_new_1–5
+│       ├── font/             # League Spartan · Inter (bundled)
+│       └── drawable/         # Icons including ic_nav_radar
 │
 └── store-assets/             # Play Store icon + feature graphic
 ```
@@ -183,7 +263,7 @@ aistop/
 
 ## Storage — EdisonDB
 
-AI Stop uses [EdisonDB](https://github.com/aieonyx/edisondb) — a sovereign embedded database replacing Room:
+AI Stop uses [EdisonDB](https://github.com/aieonyx/edisondb) — a sovereign embedded database:
 
 - **ARPi provenance header** (78 bytes) on every write
 - **BLAKE3** integrity hash per record
@@ -211,91 +291,56 @@ cd ..
 ./gradlew assembleDebug \
   -Dorg.gradle.java.home=/usr/lib/jvm/java-17-openjdk-amd64
 
-# 4. Build signed release APK
-./gradlew assembleRelease \
+# 4. Build signed release bundle
+./gradlew bundleRelease \
   -Dorg.gradle.java.home=/usr/lib/jvm/java-17-openjdk-amd64
+# Credentials read from local.properties (never commit this file)
 ```
 
 ---
 
-## What's Complete (v1.0.0)
+## Changelog
 
-- [x] Rust PII detection engine — 32 tests, 11 PII classes
-- [x] Sovereign Guard (Accessibility Service) — mode-aware
-- [x] AI Stop Keyboard (IME) — type-time interception
-- [x] ScrubShare — share sheet integration
-- [x] Image Scrub — EXIF metadata removal
-- [x] SovereignMode — AutoPilot / Default / Manual
-- [x] EdisonDB Android SDK — replaces Room (M1–M3)
-- [x] Exposure log — 30-day local retention, Ed25519 export
-- [x] Trust Database v1.1 — 10 AI apps scored
-- [x] Real app icons in AUDIT tab
-- [x] 5-screen onboarding with mode picker
-- [x] Sovereign design system — League Spartan + Inter
-- [x] Dark / Light mode toggle
-- [x] Tier 1 localization — DE · JA · KO · FR
-- [x] Signed release APK — v2 scheme, 17MB
-- [x] CI — Rust tests · Android build · Copyright headers
-- [x] Privacy policy — aieonyx.github.io/aistop/privacy.html
-- [x] Play Store submission — pending Google identity verification
+### v2.0.0 — Sovereign Shield (2026-08-01)
+- **Sovereign Shield VPN** — local DNS-level AI blocking, no external server
+- **100+ blocked domains** — OpenAI, Anthropic, Google AI, DeepSeek, Qwen,
+  Baidu, Zhipu, MiniMax, ByteDance, Tencent, iFlytek, Stability, Midjourney,
+  Suno, Pika, Luma, HuggingFace, Common Crawl + ad/tracking networks
+- **SHIELD tab** — 4th nav tab, live threat monitor, traffic graph, flow map
+- **Timed allowlist** — unblock domains for 2min/5min/30min/1hr/session/permanent
+- **App Block List** — cut any app's network access when Shield is ON
+- **AI app bypass warnings** — notification when VPN-bypassing app opens
+- **Unblock sheet** — biometric gate, countdown timer, risk warning
+- `versionCode` 4→5, `versionName` 1.1.0→2.0.0
+
+### v1.1.0 — Production Access (2026-07-31)
+- Photo AI Scanner (ML Kit OCR + Rust PII)
+- Vault export QR code + Ed25519 signed bundle
+- Banking Mode card, ExemptDatabase (40+ banking apps)
+- Android 15 boot crash fix, SDK 36 compliance
+
+### v1.0.0 — Launch (2026-07)
+- Sovereign Guard, AI Stop Keyboard, ScrubShare, Image Scrub
+- EdisonDB Android SDK, Sovereign Vault, BiometricGate
+- Play Store submission
 
 ---
 
 ## What's Coming
 
-### v1.1 — Deeper Visibility
-- [ ] Data flow graph — per-app exposure visualization
-- [ ] Live exposure counter on PROTECT screen
-- [ ] Export wired — signed JSON download from MORE tab
-- [ ] Re-audit button — live rescan
-- [ ] Per-app block count in AUDIT tab
-- [ ] Tier 2 localization — Filipino · Portuguese · Spanish · Czech
-- [ ] Full UI localization (Kotlin strings → string resources)
-- [ ] F-Droid submission
-- [ ] AIEONYX legal entity registration (jurisdiction TBD)
-- [ ] AWP protocol integration (Onyxia browser handoff)
+### v2.1 — Per-App Network Audit
+- Per-app AI traffic breakdown in Audit tab
+- Block history export (signed bundle)
+- DNS blocklist user-editable custom rules
+- `AI_MODEL_API` blocking toggle (configurable)
 
-### v2.0 — Sovereign Shield (Network Layer)
+### v2.2 — IP-Range Blocking
+- Block AI endpoints even when apps use hardcoded IPs or DoH
+- CIDR-level blocking for Google AI, OpenAI, Anthropic, DeepSeek ASN ranges
 
-> *Because sovereignty is not just about what you paste — it is about everything that leaves your device without your knowledge.*
-
-AI Stop v1.0 protects your intentional input into AI apps.
-But the threat goes deeper. Every time you browse the web, open a news app, or scroll social media — trackers, crawlers, and AI training bots are harvesting your behavior, your device fingerprint, your location, and your reading patterns. Silently. Without consent.
-
-**AI Stop v2.0 will close that gap.**
-
-| Current (v1.0) | Coming (v2.0) |
-|----------------|---------------|
-| ✅ Clipboard intercept | 🔲 Local VPN engine |
-| ✅ IME paste intercept | 🔲 DNS-level AI blocking |
-| ✅ AI app trust scores | 🔲 AI crawler blocklist |
-| ✅ EXIF metadata scrub | 🔲 Browser fingerprint guard |
-| ✅ SovereignMode | 🔲 Network data flow map |
-| ✅ On-device only | 🔲 Real-time exfil detection |
-| | 🔲 Per-app network audit |
-| | 🔲 Sovereign DNS resolver |
-
-**Known AI crawlers that will be blocked:**
-`GPTBot · CCBot · Google-Extended · PerplexityBot · Common Crawl`
-`Meta AI · Amazonbot · Bytespider · ClaudeBot · cohere-ai`
-
-**Known tracker networks that will be blocked:**
-`Meta Pixel · Google Analytics · DoubleClick · AppNexus`
-`Branch · Adjust · AppsFlyer · MoEngage · Mixpanel`
-
-**How it works — Local VPN (on-device, no external server):**
-Android's `VpnService` API allows a local tunnel that inspects all outbound traffic
-without routing it through any external server. Everything stays on your device.
-No third-party VPN provider. No logs. No trust required.
-
-- [ ] Local VPN engine (VpnService, on-device only)
-- [ ] AI crawler domain blocklist (auto-updated, sovereign)
-- [ ] Third-party tracker blocking
-- [ ] Browser fingerprint randomisation
-- [ ] Real-time network data flow visualisation
-- [ ] Per-app network sovereignty score
-- [ ] Sovereign DNS resolver (blocks AI harvest domains at DNS level)
-- [ ] Notification when any app attempts to contact known AI training endpoints
+### v3.0 — AWP Protocol Integration
+- `awp://` handoff to Onyxia browser
+- EdisonDB cloud-free sync across AIEONYX devices
 
 ---
 
@@ -316,16 +361,13 @@ Part of the AIEONYX ecosystem:
 | HANIEL     | Rendering engine   | github.com/aieonyx/haniel     |
 | Onyxia     | Sovereign browser  | github.com/aieonyx/onyxia     |
 | AI Stop    | AI data guard      | github.com/aieonyx/aistop     |
-
----
+| aiXos      | Sovereign desktop  | github.com/aieonyx/aixos      |
 
 ---
 
 ## Support AIEONYX
 
 AI Stop is a mobile project of **AIEONYX** — a sovereign computing platform.
-
-AIEONYX is building the infrastructure for a world where individuals own their digital identity, their data, and their computing environment. AI Stop is the first consumer product in that mission.
 
 **Every download directly funds:**
 - Continued development of AI Stop
@@ -338,9 +380,6 @@ AIEONYX is building the infrastructure for a world where individuals own their d
 ### 📲 Download AI Stop on Google Play
 
 > **One-time purchase. No subscription. All future updates included — forever.**
-
-When you download AI Stop, you are not buying a service.
-You are funding sovereign open-source computing.
 
 [![Get it on Google Play](https://img.shields.io/badge/Google%20Play-Download%20AI%20Stop-3DDC84?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=com.aieonyx.aistop)
 
