@@ -2,12 +2,9 @@
 // License: Apache-2.0
 package com.aieonyx.aistop.ui
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -27,35 +24,13 @@ import com.aieonyx.aistop.R
 import com.aieonyx.aistop.ui.theme.AiStopTheme
 import com.aieonyx.aistop.ui.theme.loadDarkMode
 import com.aieonyx.aistop.ui.theme.saveDarkMode
-import com.aieonyx.aistop.vpn.VpnIntegration
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
-const val TAB_PROTECT = 0
-const val TAB_AUDIT   = 1
-const val TAB_SHIELD  = 2
-const val TAB_MORE    = 3
+private const val TAB_PROTECT = 0
+private const val TAB_AUDIT   = 1
+private const val TAB_PULSE   = 2
+private const val TAB_MORE    = 3
 
 class MainActivity : androidx.fragment.app.FragmentActivity() {
-
-    companion object {
-        const val ACTION_OPEN_TAB = "com.aieonyx.aistop.OPEN_TAB"
-        const val EXTRA_TAB       = "tab"
-        const val TAB_MORE        = 3
-
-        // StateFlow observed by Composable — no recreate() needed
-        private val _pendingTab = MutableStateFlow<Int?>(null)
-        val pendingTab = _pendingTab.asStateFlow()
-    }
-
-    private val vpnPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            VpnIntegration.start(this)
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -63,41 +38,18 @@ class MainActivity : androidx.fragment.app.FragmentActivity() {
             android.view.WindowManager.LayoutParams.FLAG_SECURE,
             android.view.WindowManager.LayoutParams.FLAG_SECURE
         )
-        handleIntent(intent)
-        setContent {
-            AiStopRoot(
-                onRequestVpn = { VpnIntegration.requestAndStart(this, vpnPermissionLauncher) },
-                onStopVpn    = { VpnIntegration.stop(this) }
-            )
-        }
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        handleIntent(intent)
-    }
-
-    private fun handleIntent(intent: Intent?) {
-        if (intent?.action == ACTION_OPEN_TAB) {
-            val tab = intent.getIntExtra(EXTRA_TAB, -1)
-            if (tab >= 0) _pendingTab.value = tab
-        }
+        setContent { AiStopRoot() }
     }
 }
 
 @Composable
-fun AiStopRoot(
-    onRequestVpn: () -> Unit = {},
-    onStopVpn:    () -> Unit = {}
-) {
+fun AiStopRoot() {
     val context  = LocalContext.current
     var darkMode by remember { mutableStateOf(loadDarkMode(context)) }
     AiStopTheme(darkTheme = darkMode) {
         AiStopApp(
             darkMode      = darkMode,
-            onToggleTheme = { darkMode = !darkMode; saveDarkMode(context, darkMode) },
-            onRequestVpn  = onRequestVpn,
-            onStopVpn     = onStopVpn
+            onToggleTheme = { darkMode = !darkMode; saveDarkMode(context, darkMode) }
         )
     }
 }
@@ -105,31 +57,12 @@ fun AiStopRoot(
 @Composable
 fun AiStopApp(
     darkMode: Boolean,
-    onToggleTheme: () -> Unit,
-    onRequestVpn: () -> Unit = {},
-    onStopVpn:    () -> Unit = {}
+    onToggleTheme: () -> Unit
 ) {
     val context        = LocalContext.current
     val colors         = AiStopTheme.colors
     var showOnboarding by remember { mutableStateOf(!isOnboardingComplete(context)) }
     var selectedTab    by remember { mutableStateOf(TAB_PROTECT) }
-
-    // Observe pending tab from notification deep-link
-    val pendingTab by MainActivity.pendingTab.collectAsState()
-    LaunchedEffect(pendingTab) {
-        pendingTab?.let { tab ->
-            selectedTab = tab
-            MainActivity.pendingTab.value?.let {
-                // Clear after consuming
-                (MainActivity::class.java.getDeclaredField("_pendingTab")
-                    .also { it.isAccessible = true }
-                    .get(null) as MutableStateFlow<*>).let {
-                    @Suppress("UNCHECKED_CAST")
-                    (it as MutableStateFlow<Int?>).value = null
-                }
-            }
-        }
-    }
 
     if (showOnboarding) {
         OnboardingScreen(onComplete = { showOnboarding = false })
@@ -142,49 +75,38 @@ fun AiStopApp(
     val tabs = listOf(
         TabDef(R.drawable.ic_nav_shield,   "PROTECT", TAB_PROTECT),
         TabDef(R.drawable.ic_nav_log,      "AUDIT",   TAB_AUDIT),
-        TabDef(R.drawable.ic_nav_radar,    "SHIELD",  TAB_SHIELD),
+        TabDef(R.drawable.ic_nav_radar,    "PULSE",   TAB_PULSE),
         TabDef(R.drawable.ic_nav_settings, "MORE",    TAB_MORE)
     )
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colors.background)
+        modifier = Modifier.fillMaxSize().background(colors.background)
     ) {
         Box(Modifier.weight(1f)) {
             when (selectedTab) {
-                TAB_PROTECT -> ProtectScreen(
-                    darkMode      = darkMode,
-                    onToggleTheme = onToggleTheme,
-                    onRequestVpn  = onRequestVpn,
-                    onStopVpn     = onStopVpn
-                )
-                TAB_AUDIT  -> AuditScreen()
-                TAB_SHIELD -> ShieldScreen()
-                TAB_MORE   -> MoreScreen()
+                TAB_PROTECT -> ProtectScreen(darkMode = darkMode, onToggleTheme = onToggleTheme)
+                TAB_AUDIT   -> AuditScreen()
+                TAB_PULSE   -> PulseScreen()
+                TAB_MORE    -> MoreScreen()
             }
         }
 
         HorizontalDivider(color = colors.divider, thickness = 2.dp)
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(colors.surface)
-                .height(72.dp),
+            modifier = Modifier.fillMaxWidth().background(colors.surface).height(72.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             tabs.forEach { tab ->
-                val active      = selectedTab == tab.idx
-                val isShield    = tab.idx == TAB_SHIELD
-                val activeColor = if (isShield) purple else colors.accentPrimary
+                val active     = selectedTab == tab.idx
+                val isPulse    = tab.idx == TAB_PULSE
+                val activeColor = if (isPulse) purple else colors.accentPrimary
                 val iconColor   = if (active) activeColor else colors.textSecondary
-                val textColor   = if (active) (if (isShield) purple else colors.textPrimary)
+                val textColor   = if (active) (if (isPulse) purple else colors.textPrimary)
                                   else colors.textSecondary
 
                 Box(
                     modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
+                        .weight(1f).fillMaxHeight()
                         .clickable { selectedTab = tab.idx },
                     contentAlignment = Alignment.Center
                 ) {
@@ -192,8 +114,7 @@ fun AiStopApp(
                         Box(
                             modifier = Modifier
                                 .align(Alignment.TopCenter)
-                                .width(36.dp)
-                                .height(4.dp)
+                                .width(36.dp).height(4.dp)
                                 .clip(RoundedCornerShape(bottomStart = 4.dp, bottomEnd = 4.dp))
                                 .background(activeColor)
                         )

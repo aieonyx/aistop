@@ -48,7 +48,6 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
@@ -192,20 +191,6 @@
                 <action android:name="com.aieonyx.aistop.NOTIF_BLOCK_APP" />
             </intent-filter>
         </receiver>
-
-        <!-- ── Sovereign Shield VPN Service ── -->
-        <service
-            android:name=".vpn.SovereignVpnService"
-            android:exported="false"
-            android:permission="android.permission.BIND_VPN_SERVICE"
-            android:foregroundServiceType="specialUse">
-            <intent-filter>
-                <action android:name="android.net.VpnService" />
-            </intent-filter>
-            <property
-                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="Blocks AI crawler traffic from leaving the device" />
-        </service>
 
     </application>
 

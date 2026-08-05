@@ -34,8 +34,6 @@ fun MoreScreen() {
     val typo        = AiStopTheme.typography
     var showDisclosure by remember { mutableStateOf(false) }
     var showCoverage      by remember { mutableStateOf(false) }
-    var showShieldMonitor by remember { mutableStateOf(false) }
-    var showAppBlockList  by remember { mutableStateOf(false) }
 
     val scope       = rememberCoroutineScope()
     var exporting   by remember { mutableStateOf(false) }
@@ -57,14 +55,6 @@ fun MoreScreen() {
         CoverageMatrixScreen(onBack = { showCoverage = false })
         return
     }
-    if (showShieldMonitor) {
-        ShieldScreen()
-        return
-    }
-    if (showAppBlockList) {
-        AppBlockListScreen(onBack = { showAppBlockList = false })
-        return
-    }
 
     LazyColumn(
         modifier = Modifier
@@ -84,35 +74,6 @@ fun MoreScreen() {
         }
 
         // ── Export ──
-        // ── Sovereign Shield ──
-        item { MoreSectionHeader("SOVEREIGN SHIELD", colors, typo) }
-        item {
-            MoreCard(colors) {
-                MoreActionRow(
-                    label   = "SHIELD MONITOR",
-                    detail  = "Live network data flow map · DNS blocks · AI creep detections",
-                    color   = colors.accentPrimary,
-                    action  = "VIEW →",
-                    colors  = colors,
-                    typo    = typo
-                ) { showShieldMonitor = true }
-                HorizontalDivider(color = colors.divider)
-                MoreActionRow(
-                    label   = "APP BLOCK LIST",
-                    detail  = "Block specific apps from network when Shield is ON",
-                    color   = colors.danger,
-                    action  = "MANAGE →",
-                    colors  = colors,
-                    typo    = typo
-                ) { showAppBlockList = true }
-                HorizontalDivider(color = colors.divider)
-                MoreRow("DNS Filter",    "60+ AI crawler domains blocked",    colors.success, colors, typo)
-                HorizontalDivider(color = colors.divider)
-                MoreRow("AI Creep",      "TLS SNI inspection · Port 443",     colors.success, colors, typo)
-                HorizontalDivider(color = colors.divider)
-                MoreRow("Upstream DNS",  "Cloudflare 1.1.1.1 (configurable)", colors.textSecondary, colors, typo)
-            }
-        }
 
         item { MoreSectionHeader("EXPORT", colors, typo) }
         item {

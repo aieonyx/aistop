@@ -33,7 +33,6 @@ import androidx.fragment.app.FragmentActivity
 import com.aieonyx.aistop.security.BiometricGate
 import com.aieonyx.aistop.sentinel.ClipboardSentinelService
 import com.aieonyx.aistop.ui.theme.AiStopTheme
-import com.aieonyx.aistop.vpn.VpnIntegration
 import java.util.Locale
 
 private fun getProtectionStatus(context: Context): Triple<Boolean, Boolean, Boolean> {
@@ -56,9 +55,7 @@ private fun getProtectionStatus(context: Context): Triple<Boolean, Boolean, Bool
 @Composable
 fun ProtectScreen(
     darkMode: Boolean = true,
-    onToggleTheme: () -> Unit = {},
-    onRequestVpn: () -> Unit = {},
-    onStopVpn:    () -> Unit = {}
+    onToggleTheme: () -> Unit = {}
 ) {
     val context        = LocalContext.current
     val colors         = AiStopTheme.colors
@@ -71,9 +68,6 @@ fun ProtectScreen(
     var sentinelActive by remember {
         mutableStateOf(ClipboardSentinelService.isRunning(context))
     }
-
-    // ── VPN state ──
-    var vpnActive by remember { mutableStateOf(VpnIntegration.isRunning(context)) }
 
     val (guardActive, keyboardActive, scrubActive) = remember {
         getProtectionStatus(context)
@@ -247,7 +241,6 @@ fun ProtectScreen(
                     LayerPill("GUARD",    guardActive,    colors)
                     LayerPill("KEYBOARD", keyboardActive, colors)
                     LayerPill("SCRUB",    scrubActive,    colors)
-                    LayerPill("VPN",      vpnActive,      colors)
                 }
             }
         }
@@ -395,7 +388,7 @@ fun ProtectScreen(
 
         SectionHeader("ACTIVE DEFENSE", colors, typo)
 
-        // ── Tool list including Sovereign Shield VPN ──
+        // ── Tool list ──
         data class ToolDef(
             val icon: String,
             val label: String,
@@ -440,37 +433,6 @@ fun ProtectScreen(
                 isOn        = keyboardActive,
                 needsAction = !keyboardActive,
                 onClick     = { context.startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)) }
-            ),
-            ToolDef(
-                icon        = "🌐",
-                label       = "SOVEREIGN SHIELD VPN",
-                detail      = if (vpnActive) "Blocking AI crawlers at network level" else "Tap to enable DNS-level AI blocking",
-                isOn        = vpnActive,
-                needsAction = !vpnActive,
-                onClick     = {
-                    val activity = context as? FragmentActivity
-                    if (vpnActive) {
-                        if (activity != null) {
-                            BiometricGate.authenticate(
-                                activity    = activity,
-                                actionTitle = "Disable Sovereign Shield",
-                                subtitle    = "Verify identity to stop VPN protection"
-                            ) { result ->
-                                when (result) {
-                                    is BiometricGate.AuthResult.Success,
-                                    is BiometricGate.AuthResult.NoHardware -> {
-                                        onStopVpn()
-                                        vpnActive = false
-                                    }
-                                    else -> { }
-                                }
-                            }
-                        }
-                    } else {
-                        onRequestVpn()
-                        vpnActive = true
-                    }
-                }
             ),
             ToolDef(
                 icon        = "✂",
